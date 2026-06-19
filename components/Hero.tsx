@@ -4,6 +4,10 @@ import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
+import Link from "next/link";
+
+const MotionLink = motion.create(Link);
+
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -72,8 +76,8 @@ export default function Hero() {
         className="absolute inset-0 flex items-center justify-center"
         style={{ y: contentY }}
       >
-        <motion.a
-          href="#collections"
+        <MotionLink
+          href="/shop"
           className="group relative"
           id="hero-shop-all"
           initial={{ opacity: 0, scale: 0.92 }}
@@ -102,7 +106,7 @@ export default function Hero() {
             variants={{ hover: { scaleX: 1 } }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           />
-        </motion.a>
+        </MotionLink>
       </motion.div>
     </motion.section>
   );
