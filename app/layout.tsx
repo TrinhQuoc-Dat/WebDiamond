@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export const metadata: Metadata = {
   title: "WebDiamond — Luxury Jewelry",
@@ -28,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LoadingOverlay />
+        {children}
+      </body>
     </html>
   );
 }
