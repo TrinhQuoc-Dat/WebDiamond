@@ -24,7 +24,28 @@ export default function ProductOrderSelector({
   onAddToBag,
 }: ProductOrderSelectorProps) {
   return (
-    <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4 order-2 lg:order-none">
+    <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4 order-2 lg:order-none w-full">
+      {/* Mobile-only info block */}
+      <div className="lg:hidden flex flex-col gap-3 mb-2">
+        <Link
+          href="/shop"
+          className="text-xs font-black italic uppercase text-white/60 hover:text-white transition-colors duration-200 flex items-center gap-1 self-start"
+        >
+          <span>&lsaquo;</span> BACK
+        </Link>
+        <h1
+          className="text-[28px] sm:text-[32px] font-black uppercase leading-none tracking-[0.1em] text-white"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {product.name}
+        </h1>
+        <span
+          className="text-[24px] sm:text-[28px] font-black italic tracking-wider text-white"
+          style={{ fontFamily: "var(--font-sans)" }}
+        >
+          {product.price.replace(" VNĐ", " VND")}
+        </span>
+      </div>
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
         <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
@@ -57,9 +78,18 @@ export default function ProductOrderSelector({
 
       {/* Size Select */}
       <div className="flex flex-col gap-3">
-        <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
-          Size:
-        </span>
+        <div className="flex items-center justify-between w-full">
+          <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
+            Size:
+          </span>
+          {/* Size Guide Link */}
+          <Link
+            href="#"
+            className="text-sm font-black italic uppercase text-white hover:text-white/80 transition-colors duration-200 underline"
+          >
+            Size Guide
+          </Link>
+        </div>
         <div className="flex flex-wrap gap-2">
           {product.sizes.map((size) => {
             const isSelected = selectedSize === size;
@@ -78,18 +108,10 @@ export default function ProductOrderSelector({
             );
           })}
         </div>
-
-        {/* Size Guide Link */}
-        <Link
-          href="#"
-          className="text-[16px] font-black italic uppercase text-white hover:text-white/80 transition-colors duration-200 underline mt-1"
-        >
-          Size Guide
-        </Link>
       </div>
 
-      {/* Price Tag */}
-      <div className="flex flex-col gap-1 mt-4">
+      {/* Price Tag - Desktop only */}
+      <div className="hidden lg:flex flex-col gap-1 mt-4">
         <span
           className="text-[28px] md:text-[32px] font-black italic tracking-wider text-white"
           style={{ fontFamily: "var(--font-sans)" }}
@@ -110,8 +132,8 @@ export default function ProductOrderSelector({
         </motion.button>
       </div>
 
-      {/* BACK BUTTON */}
-      <div className="mt-8 flex justify-end">
+      {/* BACK BUTTON - Desktop only */}
+      <div className="mt-8 flex justify-end hidden lg:flex">
         <Link
           href="/shop"
           className="text-[14px] md:text-[16px] tracking-[0.15em] font-black uppercase text-white/60 hover:text-white transition-colors duration-200 block border-b border-transparent hover:border-white/40 pb-1"

@@ -40,7 +40,10 @@ export default function ShopProductSection({
       </motion.h2>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-y-8 md:gap-y-12 gap-x-4 md:gap-x-8 w-full max-w-[950px]">
+      <div 
+        className="grid grid-cols-2 md:grid-cols-3 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-8 w-full max-w-[950px]"
+        style={{ paddingLeft: "16px", paddingRight: "16px" }}
+      >
         {products.map((product, idx) => (
           <ShopProductCard
             key={product.slug}

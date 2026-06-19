@@ -20,35 +20,70 @@ export default function ProductImageGallery({
   onNextImage,
 }: ProductImageGalleryProps) {
   return (
-    <div className="lg:col-span-5 flex flex-col items-center gap-12 relative order-1 lg:order-none">
-      {/* Mannequin / Main Image Container */}
-      <div className="relative w-full aspect-[4/5] max-w-[420px] bg-[#080808] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex items-center justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeImageIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="relative w-full h-full"
-          >
-            <Image
-              src={product.images[activeImageIndex]}
-              alt={`${product.name} display`}
-              fill
-              priority
-              className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </motion.div>
-        </AnimatePresence>
+    <div className="lg:col-span-5 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
+      {/* Main Image with side arrows on mobile */}
+      <div className="flex items-center justify-center gap-4 w-full relative">
+        {/* Left Arrow for mobile/tablet */}
+        <button
+          onClick={onPrevImage}
+          className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden"
+          aria-label="Previous image"
+        >
+          <span className="text-2xl leading-none">←</span>
+        </button>
 
-        {/* Edge vignette */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/25" />
+        {/* Mannequin / Main Image Container */}
+        <div className="relative w-full aspect-[4/5] max-w-[280px] lg:max-w-[420px] bg-[#080808] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeImageIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="relative w-full h-full"
+            >
+              <Image
+                src={product.images[activeImageIndex]}
+                alt={`${product.name} display`}
+                fill
+                priority
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Edge vignette */}
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/25" />
+        </div>
+
+        {/* Right Arrow for mobile/tablet */}
+        <button
+          onClick={onNextImage}
+          className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden"
+          aria-label="Next image"
+        >
+          <span className="text-2xl leading-none">→</span>
+        </button>
       </div>
 
-      {/* Curved Thumbnail Arc Controls */}
-      <div className="flex items-center gap-6 w-full max-w-[440px] justify-center mt-4">
+      {/* Dots Indicator on Mobile */}
+      <div className="flex items-center justify-center gap-2 lg:hidden">
+        {product.images.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveImageIndex(idx)}
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+              idx === activeImageIndex ? "bg-white w-3" : "bg-white/30"
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Thumbnails Row - Desktop only */}
+      <div className="hidden lg:flex items-center gap-6 w-full max-w-[440px] justify-center mt-4">
         {/* Left Arrow */}
         <button
           onClick={onPrevImage}

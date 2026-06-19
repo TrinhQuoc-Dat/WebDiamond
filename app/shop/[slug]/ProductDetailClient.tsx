@@ -53,18 +53,8 @@ export default function ProductDetailClient({ product }: Props) {
           backgroundSize: "600px 600px",
         }}
       >
-        <div className="w-full px-6 md:px-12 flex flex-col items-center pb-20">
+        <div className="w-full flex flex-col items-center pb-20" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
           
-          {/* Mobile Product Title */}
-          <div className="w-full text-center lg:hidden mb-6 mt-4">
-            <h1
-              className="text-[28px] sm:text-[36px] font-black uppercase leading-tight tracking-[0.1em] text-white"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              {product.name}
-            </h1>
-          </div>
-
           {/* ─── 3-Column Product Core ─── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start mb-24 w-full max-w-[1280px]">
             

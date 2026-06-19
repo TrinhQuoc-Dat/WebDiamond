@@ -17,7 +17,7 @@ export default function ShopPage() {
       <Header />
 
       <main className="w-full bg-black text-white pb-12 min-h-screen" style={{ paddingTop: "95px" }}>
-        <div className="w-full px-6 md:px-12 flex flex-col items-center">
+        <div className="w-full flex flex-col items-center" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
           
           {/* Page Title */}
           <motion.h1

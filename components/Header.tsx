@@ -26,11 +26,12 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-300 ease-out px-6 md:px-12 ${
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-300 ease-out ${
         shouldShowBg
           ? "bg-black border-b border-white/5 py-4"
           : "bg-transparent pt-10 pb-6"
       }`}
+      style={{ paddingLeft: "5%", paddingRight: "5%" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}

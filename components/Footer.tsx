@@ -8,8 +8,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
         
         {/* ── Left Column: Logo & Socials ── */}
-        <div className="md:col-span-4 flex flex-col gap-6">
-          <div className="flex items-center gap-4">
+        <div className="md:col-span-4 flex flex-col items-center md:items-start gap-6 text-center md:text-left">
+          <div className="flex items-center gap-4 justify-center md:justify-start">
             {/* Text logo */}
             <div className="flex flex-col leading-none gap-[4px]">
               <span
@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
 
           {/* Social Icons */}
-          <div className="flex items-center gap-4 mt-2">
+          <div className="flex items-center gap-4 mt-2 justify-center md:justify-start">
             {/* Facebook */}
             <a
               href="https://facebook.com"
@@ -172,7 +172,7 @@ export default function Footer() {
         </div>
 
         {/* ── Right Column: Links ── */}
-        <div className="md:col-span-4 grid grid-cols-3 gap-6 w-full">
+        <div className="md:col-span-4 grid grid-cols-3 gap-4 w-full text-center sm:text-left">
           {/* Topic 1 */}
           <div className="flex flex-col gap-4">
             <span className="text-[11px] tracking-[0.25em] font-black uppercase text-black" style={{ fontFamily: "var(--font-sans)" }}>
