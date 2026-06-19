@@ -53,10 +53,10 @@ export default function ProductDetailClient({ product }: Props) {
           backgroundSize: "600px 600px",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-20">
+        <div className="w-full px-6 md:px-12 flex flex-col items-center pb-20">
           
           {/* ─── 3-Column Product Core ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start mb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start mb-24 w-full max-w-[1280px]">
             
             {/* 1. Left Column: Specs & QR */}
             <ProductInfo product={product} />
@@ -84,7 +84,9 @@ export default function ProductDetailClient({ product }: Props) {
           </div>
 
           {/* ─── 4-Grid Benefits Section ─── */}
-          <ProductBenefits />
+          <div className="w-full max-w-[1280px]">
+            <ProductBenefits />
+          </div>
 
         </div>
       </main>

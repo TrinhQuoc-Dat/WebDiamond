@@ -82,15 +82,12 @@ export default function Header() {
         id="bag-button"
         aria-label="Shopping bag"
       >
-        <svg width="65" height="35" viewBox="0 0 70 35" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
-          {/* Jet rocket outline */}
-          <path d="M12 6 L58 17.5 L12 29 L20 17.5 Z" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
-          <path d="M20 17.5 L58 17.5" stroke="currentColor" strokeWidth="2" />
-          {/* Text BAG inside the jet */}
-          <text x="24" y="21" fill="currentColor" fontSize="9" fontFamily="var(--font-sans)" fontWeight="900" letterSpacing="1">BAG</text>
-          {/* Small number 1 below the left wing */}
-          <text x="11" y="34" fill="currentColor" fontSize="8" fontFamily="var(--font-sans)" fontWeight="900">1</text>
-        </svg>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/airplane.jpeg"
+          alt="Shopping bag"
+          className="h-9 w-auto block object-contain"
+        />
       </motion.button>
     </motion.header>
   );

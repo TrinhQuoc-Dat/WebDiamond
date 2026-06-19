@@ -26,11 +26,11 @@ export default function ProductOrderSelector({
   return (
     <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4">
       {/* Colour Select */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-row items-center gap-4">
         <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
           Colour:
         </span>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
             const fillHex = color.id === "gold" ? "#D4AF37" : "#E5E5E5";

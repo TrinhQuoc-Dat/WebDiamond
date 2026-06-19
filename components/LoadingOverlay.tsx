@@ -18,7 +18,7 @@ export default function LoadingOverlay() {
     const timer = setTimeout(() => {
       setIsVisible(false);
       document.body.style.overflow = "";
-    }, 1500); // minimum 1.5 seconds
+    }, 1000); // minimum 1.0 second
 
     return () => {
       clearTimeout(timer);
@@ -33,7 +33,7 @@ export default function LoadingOverlay() {
           key="loader"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black"
           style={{ cursor: "none" }}
         >
