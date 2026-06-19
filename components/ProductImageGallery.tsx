@@ -20,7 +20,7 @@ export default function ProductImageGallery({
   onNextImage,
 }: ProductImageGalleryProps) {
   return (
-    <div className="lg:col-span-5 flex flex-col items-center gap-12 relative">
+    <div className="lg:col-span-5 flex flex-col items-center gap-12 relative order-1 lg:order-none">
       {/* Mannequin / Main Image Container */}
       <div className="relative w-full aspect-[4/5] max-w-[420px] bg-[#080808] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex items-center justify-center">
         <AnimatePresence mode="wait">
@@ -58,24 +58,16 @@ export default function ProductImageGallery({
           <span className="text-xl leading-none">◀</span>
         </button>
 
-        {/* Thumbnails Row in Arc Layout */}
-        <div className="flex items-center justify-between flex-1 relative h-28 px-4">
+        {/* Thumbnails Row */}
+        <div className="flex items-center justify-between flex-1 relative h-20 px-4">
           {product.images.map((img, idx) => {
             const isActive = idx === activeImageIndex;
-
-            // Arc offsets: Center (idx 2) is at peak, sides drop lower and rotate
-            const distFromCenter = idx - 2; // -2, -1, 0, 1, 2
-            const rotate = distFromCenter * 6; // -12, -6, 0, 6, 12 deg
-            const translateY = Math.abs(distFromCenter) * 10; // 20px, 10px, 0px, 10px, 20px
 
             return (
               <motion.div
                 key={idx}
                 className="relative cursor-pointer select-none"
-                style={{
-                  transform: `translateY(${translateY}px) rotate(${rotate}deg)`,
-                }}
-                whileHover={{ scale: 1.15, zIndex: 10, y: translateY - 5 }}
+                whileHover={{ scale: 1.15, zIndex: 10, y: -5 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 onClick={() => setActiveImageIndex(idx)}
               >

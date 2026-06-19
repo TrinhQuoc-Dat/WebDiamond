@@ -104,7 +104,12 @@ export default function Footer() {
 
         {/* ── Middle Column: QR Code ── */}
         <div className="md:col-span-4 flex justify-center md:justify-start">
-          <div className="flex flex-col items-center p-4 border border-black/10 rounded-xl bg-white shadow-sm max-w-[200px]">
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noreferrer"
+            className="flex flex-col items-center p-4 border border-black/10 rounded-xl bg-white shadow-sm max-w-[200px] hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
+          >
             {/* Elegant Vector QR code */}
             <svg width="140" height="140" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               {/* Outer border & corners */}
@@ -163,7 +168,7 @@ export default function Footer() {
             <span className="text-[9px] tracking-[0.25em] uppercase text-black/50 font-bold mt-2 text-center leading-none">
               INSTAGRAM
             </span>
-          </div>
+          </a>
         </div>
 
         {/* ── Right Column: Links ── */}

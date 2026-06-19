@@ -24,7 +24,7 @@ export default function ProductOrderSelector({
   onAddToBag,
 }: ProductOrderSelectorProps) {
   return (
-    <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4">
+    <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4 order-2 lg:order-none">
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
         <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
@@ -33,37 +33,22 @@ export default function ProductOrderSelector({
         <div className="flex items-center gap-3">
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
-            const fillHex = color.id === "gold" ? "#D4AF37" : "#E5E5E5";
 
             return (
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`p-2 rounded-full border transition-all duration-300 flex items-center justify-center ${
+                className={`p-1 rounded-full border transition-all duration-300 flex items-center justify-center overflow-hidden ${
                   isSelected ? "border-white bg-white/5 scale-110" : "border-white/10 hover:border-white/30"
                 }`}
                 title={color.name}
               >
-                {/* Spider logo emblem in tiny size */}
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 100 100"
-                  className="transition-colors duration-300"
-                  style={{ color: fillHex }}
-                  fill="currentColor"
-                >
-                  <circle cx="50" cy="40" r="12" />
-                  <circle cx="50" cy="58" r="8" />
-                  <path d="M40 35 C30 30, 20 40, 22 55" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M38 42 C24 40, 16 55, 18 70" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M39 50 C26 53, 20 70, 24 82" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M42 58 C32 66, 28 82, 34 90" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M60 35 C70 30, 80 40, 78 55" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M62 42 C76 40, 84 55, 82 70" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M61 50 C74 53, 80 70, 76 82" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                  <path d="M58 58 C68 66, 72 82, 66 90" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
-                </svg>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={color.id === "gold" ? "/yellow.jpeg" : "/gray.jpeg"}
+                  alt={color.name}
+                  className="w-6 h-6 rounded-full object-cover"
+                />
               </button>
             );
           })}

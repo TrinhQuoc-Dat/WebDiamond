@@ -9,9 +9,9 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="lg:col-span-4 flex flex-col gap-6">
+    <div className="lg:col-span-4 flex flex-col gap-6 order-3 lg:order-none">
       <motion.h1
-        className="text-[36px] md:text-[44px] font-black uppercase leading-tight tracking-[0.1em]"
+        className="hidden lg:block text-[36px] md:text-[44px] font-black uppercase leading-tight tracking-[0.1em]"
         style={{ fontFamily: "var(--font-display)" }}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -33,7 +33,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </p>
 
       {/* QR Scan Section */}
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="hidden lg:flex flex-col gap-4 mt-4">
         <span className="text-[11px] tracking-[0.3em] font-extrabold uppercase text-white/50">
           SCAN FOR ADVISE
         </span>

@@ -51,14 +51,14 @@ export default function ShopProductCard({
 
         {/* Product Details (Clean spacing) */}
         <h3
-          className="text-[12px] tracking-[0.08em] font-extrabold text-center uppercase leading-none text-white"
-          style={{ fontFamily: "var(--font-sans)", marginTop: "24px" }}
+          className="text-[11px] md:text-[12px] tracking-[0.08em] font-extrabold text-center uppercase leading-none text-white mt-4 md:mt-6"
+          style={{ fontFamily: "var(--font-sans)" }}
         >
           {product.name}
         </h3>
         <p
-          className="text-[11px] tracking-[0.05em] text-white opacity-80 text-center font-medium"
-          style={{ fontFamily: "var(--font-sans)", marginTop: "12px" }}
+          className="text-[10px] md:text-[11px] tracking-[0.05em] text-white opacity-80 text-center font-medium mt-2 md:mt-3"
+          style={{ fontFamily: "var(--font-sans)" }}
         >
           {product.price.replace(" VNĐ", " VND")}
         </p>
