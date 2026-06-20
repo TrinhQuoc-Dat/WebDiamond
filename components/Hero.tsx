@@ -4,16 +4,20 @@ import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
-import Link from "next/link";
-
-const MotionLink = motion.create(Link);
-
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+    }
+  }, []);
 
   // Subtle parallax on scroll
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
@@ -33,15 +37,16 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full"
         style={{ scale: imageScale, y: imageY }}
       >
-        <Image
-          src="/hero.png"
-          alt="WebDiamond — signature jewelry piece"
-          fill
-          priority
-          quality={95}
-          className="object-cover object-center"
-          sizes="100vw"
-        />
+        <video
+          ref={videoRef}
+          autoPlay={true}
+          loop={true}
+          muted={true}
+          playsInline={true}
+          className="w-full h-full object-cover object-center"
+        >
+          <source src="/videobanner.mp4" type="video/mp4" />
+        </video>
       </motion.div>
 
       {/* ── Edge vignette — matches the deep dark corners in the reference ── */}
@@ -76,8 +81,8 @@ export default function Hero() {
         className="absolute inset-0 flex items-center justify-center"
         style={{ y: contentY }}
       >
-        <MotionLink
-          href="/shop"
+        <motion.a
+          href="#collections"
           className="group relative"
           id="hero-shop-all"
           initial={{ opacity: 0, scale: 0.92 }}
@@ -87,12 +92,12 @@ export default function Hero() {
           whileTap={{ scale: 0.97 }}
         >
           <span
-            className="block text-white leading-none tracking-[0.06em] uppercase select-none"
+            className="block text-white font-bold leading-none tracking-[0.06em] uppercase select-none"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "clamp(1.6rem, 3.5vw, 3.5rem)",
               letterSpacing: "0.15em",
-              WebkitTextStroke: "1.5px white",
+              WebkitTextStroke: "2px white",
               textShadow: "0 0 20px rgba(255,255,255,0.15)",
             }}
           >
@@ -106,7 +111,7 @@ export default function Hero() {
             variants={{ hover: { scaleX: 1 } }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           />
-        </MotionLink>
+        </motion.a>
       </motion.div>
     </motion.section>
   );

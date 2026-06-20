@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import LoadingOverlay from "@/components/LoadingOverlay";
 
 export const metadata: Metadata = {
-  title: "WebDiamond — Luxury Jewelry",
+  title: "GODG1FT — Luxury Jewelry",
   description:
     "Discover our curated collection of handcrafted luxury jewelry. Bracelets, necklaces, rings, and earrings crafted for the discerning few.",
   keywords: [
@@ -16,9 +15,12 @@ export const metadata: Metadata = {
     "custom jewelry",
   ],
   openGraph: {
-    title: "WebDiamond — Luxury Jewelry",
+    title: "GODG1FT — Luxury Jewelry",
     description: "Handcrafted luxury jewelry for the discerning few.",
     type: "website",
+  },
+  icons: {
+    icon: "/favicon.svg",
   },
 };
 
@@ -29,10 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <LoadingOverlay />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
