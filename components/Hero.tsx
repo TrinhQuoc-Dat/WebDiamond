@@ -94,21 +94,28 @@ export default function Hero() {
       window.removeEventListener("touchstart", handleInteraction);
     };
   }, [banner, isMuted]);
-
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+    }
+  }, []);
 
   // Subtle parallax on scroll
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
-  // Sử dụng dữ liệu động nếu có, ngược lại sử dụng dữ liệu mặc định
-  const bannerImage = banner?.image || "/hero.png";
+  // Sử dụng dữ liệu động nếu có, ngược lại sử dụng dữ liệu mặc định từ main (video /videobanner.mp4)
+  const isVideoBanner = banner ? banner.type === "video" : true;
+  const bannerImage = banner?.image || "/videobanner.mp4";
   const bannerText = banner?.subtitle || "Shop All";
-  const bannerLink = banner?.link || "/shop";
+  const bannerLink = banner?.link || "#collections";
 
   return (
     <motion.section
@@ -123,7 +130,7 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full"
         style={{ scale: imageScale, y: imageY }}
       >
-        {banner?.type === "video" ? (
+        {isVideoBanner ? (
           (() => {
             const youtubeId = getYouTubeId(bannerImage);
             const driveDirectLink = getGoogleDriveDirectLink(bannerImage);
@@ -229,7 +236,7 @@ export default function Hero() {
         className="absolute inset-0 flex items-center justify-center"
         style={{ y: contentY }}
       >
-        <MotionLink
+        <motion.a
           href={bannerLink}
           className="group relative"
           id="hero-shop-all"
@@ -240,12 +247,12 @@ export default function Hero() {
           whileTap={{ scale: 0.97 }}
         >
           <span
-            className="block text-white leading-none tracking-[0.06em] uppercase select-none"
+            className="block text-white font-bold leading-none tracking-[0.06em] uppercase select-none"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "clamp(1.6rem, 3.5vw, 3.5rem)",
               letterSpacing: "0.15em",
-              WebkitTextStroke: "1.5px white",
+              WebkitTextStroke: "2px white",
               textShadow: "0 0 20px rgba(255,255,255,0.15)",
             }}
           >
@@ -259,7 +266,7 @@ export default function Hero() {
             variants={{ hover: { scaleX: 1 } }}
             transition={{ duration: 0.35, ease: "easeOut" }}
           />
-        </MotionLink>
+        </motion.a>
       </motion.div>
     </motion.section>
   );
