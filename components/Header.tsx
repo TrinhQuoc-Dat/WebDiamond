@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -16,7 +17,7 @@ export default function Header() {
       <div className="flex items-center gap-4">
 
         {/* Text block */}
-        <div className="flex flex-col items-end leading-none gap-[6px]">
+        <Link href="/" className="flex flex-col items-end leading-none gap-[6px] hover:opacity-80 transition-opacity">
           {/* GODG1FT — wide spacing giữa các ký tự */}
           <span
             className="text-white/80 font-normal uppercase leading-none block"
@@ -42,15 +43,17 @@ export default function Header() {
           >
             JEWELRY
           </span>
-        </div>
+        </Link>
 
         {/* logo.svg — placed in /public/logo.svg */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo.svg"
-          alt="WebDiamond logo"
-          style={{ height: "45px", width: "auto", display: "block" }}
-        />
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <img
+            src="/logo.svg"
+            alt="WebDiamond logo"
+            style={{ height: "45px", width: "auto", display: "block" }}
+          />
+        </Link>
       </div>
 
       {/* ── BAG top-right ── */}

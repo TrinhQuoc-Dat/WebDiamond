@@ -115,7 +115,7 @@ export default function Hero() {
   const isVideoBanner = banner ? banner.type === "video" : true;
   const bannerImage = banner?.image || "/videobanner.mp4";
   const bannerText = banner?.subtitle || "Shop All";
-  const bannerLink = banner?.link || "#collections";
+  const bannerLink = banner?.link || "/shop";
 
   return (
     <motion.section
