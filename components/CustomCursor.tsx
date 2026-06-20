@@ -29,12 +29,12 @@ export default function CustomCursor() {
       {/* Dot cursor */}
       <motion.div
         className="cursor"
-        style={{ left: mouseX, top: mouseY }}
+        style={{ left: mouseX, top: mouseY, pointerEvents: "none" }}
       />
       {/* Ring follower */}
       <motion.div
         className="cursor-follower"
-        style={{ left: followerX, top: followerY }}
+        style={{ left: followerX, top: followerY, pointerEvents: "none" }}
       />
     </>
   );

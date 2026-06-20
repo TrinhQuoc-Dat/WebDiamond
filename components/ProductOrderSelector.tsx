@@ -59,8 +59,8 @@ export default function ProductOrderSelector({
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`p-1 rounded-full border transition-all duration-300 flex items-center justify-center overflow-hidden ${
-                  isSelected ? "border-white bg-white/5 scale-110" : "border-white/10 hover:border-white/30"
+                className={`p-0.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer ${
+                  isSelected ? "border-white scale-110" : "border-transparent hover:border-white/30"
                 }`}
                 title={color.name}
               >
