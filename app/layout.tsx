@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import LoadingOverlay from "@/components/LoadingOverlay";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "WebDiamond — Luxury Jewelry",
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body>
         <LoadingOverlay />
         {children}
+        <ScrollToTop />
       </body>
     </html>
   );
