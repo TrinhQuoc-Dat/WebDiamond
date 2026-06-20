@@ -1,15 +1,37 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ShopProductSection from "@/components/ShopProductSection";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import { motion } from "framer-motion";
 
 export default function ShopPage() {
-  const necklaces = products.filter((p) => p.category === "NECKLACE");
-  const bracelets = products.filter((p) => p.category === "BRACELETS");
+  const [displayedProducts, setDisplayedProducts] = useState<any[]>([]);
+
+  // Đọc dữ liệu sản phẩm động từ LocalStorage phía Client-side
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("wd_products");
+      if (stored) {
+        setDisplayedProducts(JSON.parse(stored));
+      } else {
+        setDisplayedProducts(staticProducts);
+      }
+    } catch (e) {
+      console.error("Lỗi đọc sản phẩm tại trang shop", e);
+      setDisplayedProducts(staticProducts);
+    }
+  }, []);
+
+  // Lọc bỏ sản phẩm đã bị ẩn (hidden === true) từ trang quản trị
+  const activeProducts = displayedProducts.filter((p) => !p.hidden);
+
+  const necklaces = activeProducts.filter((p) => p.category === "NECKLACE");
+  const bracelets = activeProducts.filter((p) => p.category === "BRACELETS");
+
 
   return (
     <>

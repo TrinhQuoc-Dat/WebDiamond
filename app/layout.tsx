@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "GODG1FT — Luxury Jewelry",
@@ -31,7 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LoadingOverlay />
+        {children}
+        <ScrollToTop />
+      </body>
     </html>
   );
 }
