@@ -24,34 +24,25 @@ export default function ProductOrderSelector({
   onAddToBag,
 }: ProductOrderSelectorProps) {
   return (
-    <div className="lg:col-span-3 flex flex-col gap-8 lg:pl-4 order-2 lg:order-none w-full">
+    <div className="lg:col-span-3 flex flex-col gap-6 lg:pl-8 order-2 lg:order-none w-full relative h-full">
+      {/* Explicit spacer to push text down on desktop */}
+      <div className="hidden lg:block h-[120px] w-full shrink-0" />
       {/* Mobile-only info block */}
       <div className="lg:hidden flex flex-col gap-3 mb-2">
-        <Link
-          href="/shop"
-          className="text-xs font-black italic uppercase text-white/60 hover:text-white transition-colors duration-200 flex items-center gap-1 self-start"
-        >
-          <span>&lsaquo;</span> BACK
-        </Link>
         <h1
           className="text-[28px] sm:text-[32px] font-black uppercase leading-none tracking-[0.1em] text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {product.name}
         </h1>
-        <span
-          className="text-[24px] sm:text-[28px] font-black italic tracking-wider text-white"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          {product.price.replace(" VNĐ", " VND")}
-        </span>
       </div>
+
       {/* Colour Select */}
-      <div className="flex flex-row items-center gap-4">
-        <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
+      <div className="flex flex-row items-center gap-4 mt-8">
+        <span className="text-[24px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
           Colour:
         </span>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
 
@@ -59,8 +50,8 @@ export default function ProductOrderSelector({
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`p-0.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer ${
-                  isSelected ? "border-white scale-110" : "border-transparent hover:border-white/30"
+                className={`transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer ${
+                  isSelected ? "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "opacity-70 hover:opacity-100"
                 }`}
                 title={color.name}
               >
@@ -68,7 +59,7 @@ export default function ProductOrderSelector({
                 <img
                   src={color.id === "gold" ? "/yellow.jpeg" : "/gray.jpeg"}
                   alt={color.name}
-                  className="w-6 h-6 rounded-full object-cover"
+                  className="w-12 h-12 object-contain mix-blend-screen"
                 />
               </button>
             );
@@ -77,66 +68,51 @@ export default function ProductOrderSelector({
       </div>
 
       {/* Size Select */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between w-full">
-          <span className="text-[20px] font-black italic uppercase tracking-wider text-white">
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex items-center gap-4">
+          <span className="text-[24px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
             Size:
           </span>
-          {/* Size Guide Link */}
-          <Link
-            href="#"
-            className="text-sm font-black italic uppercase text-white hover:text-white/80 transition-colors duration-200 underline"
-          >
-            Size Guide
-          </Link>
+          {/* We'll just leave this blank for now as per screenshot layout (size selector was hidden or just text) */}
         </div>
-        <div className="flex flex-wrap gap-2">
-          {product.sizes.map((size) => {
-            const isSelected = selectedSize === size;
-            return (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`w-9 h-9 text-xs font-black rounded-sm border uppercase transition-all duration-200 ${
-                  isSelected
-                    ? "bg-white text-black border-white"
-                    : "bg-transparent text-white border-white/20 hover:border-white/40"
-                }`}
-              >
-                {size}
-              </button>
-            );
-          })}
-        </div>
+        
+        {/* Size Guide Link */}
+        <Link
+          href="#"
+          className="text-[24px] font-normal italic text-white hover:text-white/80 transition-colors duration-200 mt-2"
+          style={{ fontFamily: "var(--font-sans)" }}
+        >
+          Size Guide
+        </Link>
       </div>
 
-      {/* Price Tag - Desktop only */}
-      <div className="hidden lg:flex flex-col gap-1 mt-4">
+      {/* Price Tag */}
+      <div className="flex flex-col gap-1 mt-8">
         <span
-          className="text-[28px] md:text-[32px] font-black italic tracking-wider text-white"
-          style={{ fontFamily: "var(--font-sans)" }}
+          className="text-[28px] md:text-[32px] lg:text-[40px] font-black tracking-widest text-white whitespace-nowrap"
+          style={{ fontFamily: "var(--font-display)" }}
         >
           {product.price}
         </span>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col gap-4 mt-2">
-        <motion.button
-          onClick={onAddToBag}
-          whileTap={{ scale: 0.96 }}
-          className="w-full py-4 text-center text-[28px] tracking-[0.05em] text-black bg-white uppercase font-black italic select-none hover:bg-neutral-200 transition-colors cursor-pointer rounded-sm"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          {isAdded ? "ADDED" : "ADD TO BAG"}
-        </motion.button>
-      </div>
-
-      {/* BACK BUTTON - Desktop only */}
-      <div className="mt-8 flex justify-end hidden lg:flex">
+      {/* BACK BUTTON */}
+      <div className="absolute bottom-0 right-0 lg:flex justify-end hidden">
         <Link
           href="/shop"
-          className="text-[14px] md:text-[16px] tracking-[0.15em] font-black uppercase text-white/60 hover:text-white transition-colors duration-200 block border-b border-transparent hover:border-white/40 pb-1"
+          className="text-[18px] md:text-[22px] tracking-[0.1em] font-black uppercase text-white hover:text-white/70 transition-colors duration-200 block"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          BACK
+        </Link>
+      </div>
+      
+      {/* Mobile BACK button */}
+      <div className="mt-8 flex justify-end lg:hidden">
+        <Link
+          href="/shop"
+          className="text-[18px] md:text-[22px] tracking-[0.1em] font-black uppercase text-white hover:text-white/70 transition-colors duration-200 block"
+          style={{ fontFamily: "var(--font-display)" }}
         >
           BACK
         </Link>

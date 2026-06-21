@@ -1,37 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ShopProductSection from "@/components/ShopProductSection";
-import { products as staticProducts } from "@/data/products";
+import { usePublicProducts } from "@/hooks/usePublicProducts";
 import { motion } from "framer-motion";
 
 export default function ShopPage() {
-  const [displayedProducts, setDisplayedProducts] = useState<any[]>([]);
+  const { products } = usePublicProducts();
 
-  // Đọc dữ liệu sản phẩm động từ LocalStorage phía Client-side
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("wd_products");
-      if (stored) {
-        setDisplayedProducts(JSON.parse(stored));
-      } else {
-        setDisplayedProducts(staticProducts);
-      }
-    } catch (e) {
-      console.error("Lỗi đọc sản phẩm tại trang shop", e);
-      setDisplayedProducts(staticProducts);
-    }
-  }, []);
-
-  // Lọc bỏ sản phẩm đã bị ẩn (hidden === true) từ trang quản trị
-  const activeProducts = displayedProducts.filter((p) => !p.hidden);
-
-  const necklaces = activeProducts.filter((p) => p.category === "NECKLACE");
-  const bracelets = activeProducts.filter((p) => p.category === "BRACELETS");
-
+  const necklaces = products.filter((p) => p.category === "NECKLACE");
+  const bracelets = products.filter((p) => p.category === "BRACELETS");
 
   return (
     <>
@@ -40,8 +20,6 @@ export default function ShopPage() {
 
       <main className="w-full bg-black text-white pb-12 min-h-screen" style={{ paddingTop: "95px" }}>
         <div className="w-full flex flex-col items-center" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
-          
-          {/* Page Title */}
           <motion.h1
             className="text-[clamp(2.5rem,6vw,5.5rem)] font-black uppercase tracking-[0.2em] text-center mb-2"
             style={{ fontFamily: "var(--font-display)", marginRight: "-0.2em" }}
@@ -52,15 +30,11 @@ export default function ShopPage() {
             SHOP ALL
           </motion.h1>
 
-          {/* ─── NECKLACE SECTION ─── */}
           <ShopProductSection title="NECKLACE" products={necklaces} />
-
-          {/* Spacing Divider */}
+          
           <div className="h-20 w-full" />
-
-          {/* ─── BRACELETS SECTION ─── */}
+          
           <ShopProductSection title="BRACELETS" products={bracelets} viewportOnce />
-
         </div>
       </main>
 

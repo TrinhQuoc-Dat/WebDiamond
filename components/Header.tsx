@@ -6,8 +6,8 @@ import Link from "next/link";
 export default function Header() {
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 flex items-start justify-between"
-      style={{ paddingTop: "40px", paddingLeft: "24px", paddingRight: "24px", paddingBottom: "24px" }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-transparent"
+      style={{ paddingTop: "12px", paddingLeft: "24px", paddingRight: "24px", paddingBottom: "12px" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}

@@ -2,60 +2,77 @@
 
 export default function ProductBenefits() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-0 md:gap-x-12 md:gap-y-16 border-t border-white/10 pt-4 md:pt-16 mb-16 divide-y divide-white/10 md:divide-y-0">
-      {/* Item 1: Global Shipping */}
-      <div className="flex flex-row md:flex-col gap-4 py-5 md:py-0 items-start">
-        <div className="text-white/80 shrink-0 mt-0.5 md:mt-0">
-          <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-            <path d="M2 12h20" />
-          </svg>
-        </div>
-        <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light tracking-wide max-w-md">
-          We ship our jewelry globally. Your order will be processed within 2–3 business days. Delivery typically takes 7–15 business days.
+    <div className="w-full flex flex-col items-center pt-8 md:pt-16 mb-16">
+      {/* Title Section */}
+      <div className="flex flex-col items-center text-center mb-16 gap-2">
+        <h2 className="text-[28px] md:text-[36px] font-black tracking-[0.15em] uppercase text-white" style={{ fontFamily: "var(--font-display)" }}>
+          HOW IT WORKS
+        </h2>
+        <p className="text-[9px] md:text-[10px] text-white/50 uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-display)" }}>
+          THE PROCESS IN CREATING YOUR CUSTOM JEWELERY PIECE
         </p>
       </div>
 
-      {/* Item 2: Reflection & Bespoke */}
-      <div className="flex flex-row md:flex-col gap-4 py-5 md:py-0 items-start">
-        <div className="text-white/80 shrink-0 mt-0.5 md:mt-0">
-          <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
+      {/* 2x2 Grid Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 w-full max-w-[1000px]">
+        {/* Step 1 */}
+        <div className="flex flex-row gap-6 items-start">
+          <div className="text-white/60 shrink-0">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="8" y1="13" x2="16" y2="13" />
+              <line x1="8" y1="17" x2="16" y2="17" />
+              <line x1="8" y1="9" x2="10" y2="9" />
+            </svg>
+          </div>
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide max-w-sm">
+            Fill out the form below to share your ideas and requirements for your custom jewelry piece. We will then look into determining the best solution and providing a quote.
+          </p>
         </div>
-        <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light tracking-wide max-w-md">
-          GODGIFT turn jewelry into a reflection of you. Whether it’s an engraved date, a custom initial, or a bespoke design, we specialize in bringing your vision to life.
-        </p>
-      </div>
 
-      {/* Item 3: Secure Checkout */}
-      <div className="flex flex-row md:flex-col gap-4 py-5 md:py-0 items-start">
-        <div className="text-white/80 shrink-0 mt-0.5 md:mt-0">
-          <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
+        {/* Step 2 */}
+        <div className="flex flex-row gap-6 items-start">
+          <div className="text-white/60 shrink-0">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+          </div>
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide max-w-sm">
+            We will provide you with a personalized quote for your custom piece. If you are ready to proceed, we require a 50% deposit to begin work on your custom jewelry.
+          </p>
         </div>
-        <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light tracking-wide max-w-md">
-          All online payments are processed through secure, encrypted gateways. We do not store your credit card information on our servers.
-        </p>
-      </div>
 
-      {/* Item 4: Dispatch Commitment */}
-      <div className="flex flex-row md:flex-col gap-4 py-5 md:py-0 items-start">
-        <div className="text-white/80 shrink-0 mt-0.5 md:mt-0">
-          <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
+        {/* Step 3 */}
+        <div className="flex flex-row gap-6 items-start">
+          <div className="text-white/60 shrink-0">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <path d="M11 8v4" />
+              <path d="M9 10h4" />
+            </svg>
+          </div>
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide max-w-sm">
+            We will create design concepts for your custom piece, and once you are satisfied, we will begin craftsmanship on your custom jewelry piece.
+          </p>
         </div>
-        <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light tracking-wide max-w-md">
-          GODGIFT respect your time as much as we value our craft. We are committed to ensuring your order is meticulously prepared and dispatched according to our promised schedule.
-        </p>
+
+        {/* Step 4 */}
+        <div className="flex flex-row gap-6 items-start">
+          <div className="text-white/60 shrink-0">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M9 15l2 2 4-4" />
+            </svg>
+          </div>
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide max-w-sm">
+            Once final payment is received, your completed final piece will be ready for collection or delivery.
+          </p>
+        </div>
       </div>
     </div>
   );
