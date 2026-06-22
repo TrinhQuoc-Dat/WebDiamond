@@ -44,13 +44,20 @@ export default function ProductOrderSelector({
         <div className="flex items-center gap-4">
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
+            const isNecklace = product.category === "NECKLACE";
 
             return (
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer ${
-                  isSelected ? "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "opacity-70 hover:opacity-100"
+                className={`transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                  isNecklace ? "" : "overflow-hidden"
+                } ${
+                  isSelected
+                    ? isNecklace
+                      ? "scale-110"
+                      : "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                    : "opacity-70 hover:opacity-100"
                 }`}
                 title={color.name}
               >
@@ -58,7 +65,14 @@ export default function ProductOrderSelector({
                 <img
                   src={color.id === "gold" ? "/yellow.svg" : "/gray.svg"}
                   alt={color.name}
-                  className="w-12 h-12 object-contain mix-blend-screen"
+                  className="w-12 h-12 object-contain mix-blend-screen transition-all duration-300"
+                  style={{
+                    filter: isNecklace && isSelected
+                      ? color.id === "gold"
+                        ? "drop-shadow(0 0 6px rgba(212,175,55,0.5)) drop-shadow(0 0 12px rgba(212,175,55,0.25))"
+                        : "drop-shadow(0 0 6px rgba(255,255,255,0.5)) drop-shadow(0 0 12px rgba(255,255,255,0.25))"
+                      : undefined
+                  }}
                 />
               </button>
             );
