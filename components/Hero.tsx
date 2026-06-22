@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 // Parse Google Drive share link → direct download URL
 const getGoogleDriveDirectLink = (url: string): string | null => {
