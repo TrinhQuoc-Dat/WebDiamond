@@ -95,14 +95,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminDataProvider>
       <style jsx global>{`
-        body {
-          cursor: default !important;
-        }
-        .cursor,
-        .cursor-follower {
-          display: none !important;
-        }
-
         /* Force cursor pointer on all clickable / interactive elements */
         .admin-layout a,
         .admin-layout button,
