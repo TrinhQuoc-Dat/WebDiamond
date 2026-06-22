@@ -80,7 +80,7 @@ export default function Header() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/bag.svg"
+          src="/airplane.jpeg"
           alt="Shopping bag"
           className="
             h-[38px]
