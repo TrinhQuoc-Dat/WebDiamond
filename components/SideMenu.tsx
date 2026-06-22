@@ -63,19 +63,6 @@ export default function SideMenu() {
               }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              {/* Left dash indicator */}
-              <AnimatePresence>
-                {isHovered && (
-                  <motion.span
-                    className="absolute -left-5 top-1/2 -translate-y-1/2 block h-[2px] bg-white origin-left"
-                    initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 14, opacity: 1 }}
-                    exit={{ width: 0, opacity: 0 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                  />
-                )}
-              </AnimatePresence>
-
               {/* Label text */}
               <span
                 className="text-white font-bold uppercase leading-tight relative"

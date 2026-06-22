@@ -52,10 +52,10 @@ const AdminDataContext = createContext<AdminContextType | undefined>(undefined);
 const defaultBanners: Banner[] = [
   {
     id: "banner-1",
-    title: "WebDiamond",
+    title: "GODG1FT",
     subtitle: "Shop All",
-    image: "/hero.png",
-    type: "image",
+    image: "/videobanner.mp4",
+    type: "video",
     link: "/shop",
     active: true,
     muted: true,
@@ -133,8 +133,17 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (localBanners) {
           try {
             const parsed = JSON.parse(localBanners) as Banner[];
+
+            // Auto-migrate: nếu banner-1 vẫn còn dùng hero.png cũ → đổi sang videobanner.mp4
+            const migrated = parsed.map((b) => {
+              if (b.id === "banner-1" && b.image === "/hero.png" && b.type === "image") {
+                return { ...b, image: "/videobanner.mp4", type: "video" as const, title: "GODG1FT" };
+              }
+              return b;
+            });
+
             let hasActive = false;
-            initialBanners = parsed.map((b) => {
+            initialBanners = migrated.map((b) => {
               if (b.active) {
                 if (hasActive) {
                   return { ...b, active: false }; // De-activate các banner active trùng lặp phía sau

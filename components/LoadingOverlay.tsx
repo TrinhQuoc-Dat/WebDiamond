@@ -6,25 +6,32 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingOverlay() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
+  // false on server → no SSR/client mismatch
+  const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Show loader on path change
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     setIsVisible(true);
-    
-    // Lock scroll
     document.body.style.overflow = "hidden";
-    
+
     const timer = setTimeout(() => {
       setIsVisible(false);
       document.body.style.overflow = "";
-    }, 1000); // minimum 1.0 second
+    }, 1200);
 
     return () => {
       clearTimeout(timer);
       document.body.style.overflow = "";
     };
-  }, [pathname]);
+  }, [pathname, mounted]);
+
+  if (!mounted) return null;
 
   return (
     <AnimatePresence mode="wait">
@@ -33,21 +40,41 @@ export default function LoadingOverlay() {
           key="loader"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black"
-          style={{ cursor: "none" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            minWidth: "100%",
+            minHeight: "100%",
+            cursor: "none",
+          }}
         >
-          {/* Logo animation / GIF */}
-          <div className="relative flex flex-col items-center gap-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.gif"
-              alt="GODG1FT JEWELRY"
-              className="w-48 h-auto max-w-[80vw] object-contain select-none pointer-events-none"
-            />
-            {/* Elegant subtext loading bar or letters */}
+          <div className="flex flex-col items-center gap-6">
+            {/* Wrapper: translateZ(0) forces GPU layer → prevents 3D alias artifact */}
+            <div
+              style={{
+                transform: "translateZ(0)",
+                willChange: "transform",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.gif"
+                alt="GODG1FT JEWELRY"
+                className="select-none pointer-events-none"
+                style={{
+                  width: 192,
+                  maxWidth: "80vw",
+                  height: "auto",
+                  display: "block",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              />
+            </div>
             <motion.span
-              className="text-[10px] tracking-[0.4em] text-white/50 uppercase block mt-2"
+              className="text-[10px] tracking-[0.4em] text-white/50 uppercase"
               initial={{ opacity: 0.3 }}
               animate={{ opacity: [0.3, 0.8, 0.3] }}
               transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}

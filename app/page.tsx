@@ -6,9 +6,7 @@ import CustomCursor from "@/components/CustomCursor";
 export default function Home() {
   return (
     <>
-      {/* Custom cursor — luôn hiển thị ngược màu nền nhờ mix-blend-mode: difference */}
       <CustomCursor />
-
       <Header />
       <SideMenu />
       <main>

@@ -21,6 +21,7 @@ export default function ProductImageGallery({
 }: ProductImageGalleryProps) {
   return (
     <div className="lg:col-span-5 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
+      <div className="w-full flex flex-col items-center lg:-translate-y-[48px]">
       {/* Main Image with side arrows on mobile */}
       <div className="flex items-center justify-center gap-4 w-full relative">
         {/* Left Arrow for mobile/tablet */}
@@ -33,7 +34,7 @@ export default function ProductImageGallery({
         </button>
 
         {/* Mannequin / Main Image Container */}
-        <div className="relative w-full aspect-[4/5] max-w-[280px] lg:max-w-[420px] bg-[#080808] border border-white/10 rounded-sm overflow-hidden shadow-2xl flex items-center justify-center">
+        <div className="relative w-full aspect-[4/5] max-w-[320px] lg:max-w-[380px] bg-transparent overflow-hidden flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeImageIndex}
@@ -54,8 +55,6 @@ export default function ProductImageGallery({
             </motion.div>
           </AnimatePresence>
 
-          {/* Edge vignette */}
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/25" />
         </div>
 
         {/* Right Arrow for mobile/tablet */}
@@ -87,30 +86,38 @@ export default function ProductImageGallery({
         {/* Left Arrow */}
         <button
           onClick={onPrevImage}
-          className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-200"
+          className="w-10 h-10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200"
           aria-label="Previous image"
         >
-          <span className="text-xl leading-none">◀</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15 6l-6 6 6 6z"/>
+          </svg>
         </button>
 
         {/* Thumbnails Row */}
-        <div className="flex items-center justify-between flex-1 relative h-20 px-4">
+        <div className="flex items-center justify-center flex-1 relative h-20 gap-4">
           {product.images.map((img, idx) => {
             const isActive = idx === activeImageIndex;
+            // Calculate arch rotation
+            const mid = (product.images.length - 1) / 2;
+            const offset = idx - mid;
+            const rotation = offset * 15; // 15 degrees per step
+            const yOffset = Math.abs(offset) * 8; // push down edges
 
             return (
               <motion.div
                 key={idx}
                 className="relative cursor-pointer select-none"
-                whileHover={{ scale: 1.15, zIndex: 10, y: -5 }}
+                style={{ rotate: rotation, y: yOffset }}
+                whileHover={{ scale: 1.15, zIndex: 10, y: yOffset - 5 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 onClick={() => setActiveImageIndex(idx)}
               >
                 <div
-                  className={`w-12 h-16 relative bg-neutral-900 border overflow-hidden rounded-[2px] transition-all duration-300 ${
+                  className={`w-10 h-14 relative bg-transparent overflow-hidden rounded-[2px] transition-all duration-300 ${
                     isActive
-                      ? "border-white scale-110 shadow-lg shadow-white/10"
-                      : "border-white/10 opacity-60 hover:opacity-100"
+                      ? "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                      : "opacity-60 hover:opacity-100"
                   }`}
                 >
                   <Image
@@ -118,7 +125,7 @@ export default function ProductImageGallery({
                     alt="thumbnail"
                     fill
                     className="object-cover object-center"
-                    sizes="48px"
+                    sizes="40px"
                   />
                 </div>
               </motion.div>
@@ -129,11 +136,14 @@ export default function ProductImageGallery({
         {/* Right Arrow */}
         <button
           onClick={onNextImage}
-          className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-200"
+          className="w-10 h-10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200"
           aria-label="Next image"
         >
-          <span className="text-xl leading-none">▶</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 6l6 6-6 6z"/>
+          </svg>
         </button>
+      </div>
       </div>
     </div>
   );

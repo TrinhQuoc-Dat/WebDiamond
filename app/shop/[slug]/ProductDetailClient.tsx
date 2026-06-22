@@ -109,22 +109,19 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
       <main
         className="w-full bg-black text-white min-h-screen relative overflow-hidden"
         style={{
-          paddingTop: "95px",
-          backgroundImage: `
-            radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 1px, transparent 1px),
-            radial-gradient(circle at 75% 40%, rgba(255,255,255,0.06) 1px, transparent 1px),
-            radial-gradient(circle at 50% 80%, rgba(255,255,255,0.05) 2px, transparent 2px),
-            radial-gradient(circle at 10% 70%, rgba(255,255,255,0.07) 1px, transparent 1px),
-            radial-gradient(circle at 85% 15%, rgba(255,255,255,0.08) 1px, transparent 1px)
-          `,
-          backgroundSize: "600px 600px",
+          paddingTop: "100px",
+          backgroundImage: "url('/product-detail-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundAttachment: "fixed",
+          paddingBottom: "100px",
         }}
       >
-        <div className="w-full flex flex-col items-center pb-20" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
-          
+        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px]" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+
           {/* ─── 3-Column Product Core ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start mb-24 w-full max-w-[1280px]">
-            
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-24 w-full max-w-[1440px] px-4 md:px-8">
+
             {/* 1. Left Column: Specs & QR */}
             <ProductInfo product={product} />
 
@@ -151,7 +148,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           </div>
 
           {/* ─── 4-Grid Benefits Section ─── */}
-          <div className="w-full max-w-[1280px]">
+          <div className="w-full max-w-[1440px] px-4 md:px-8">
             <ProductBenefits />
           </div>
 
