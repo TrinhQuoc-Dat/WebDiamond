@@ -45,6 +45,21 @@ export default function ProductOrderSelector({
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
             const isNecklace = product.category === "NECKLACE";
+            
+            const idLower = (color.id || "").toLowerCase();
+            const nameLower = (color.name || "").toLowerCase();
+            const hexLower = (color.hex || "").toLowerCase();
+            
+            const isGold = 
+              idLower.includes("gold") || 
+              idLower.includes("yellow") || 
+              idLower.includes("vang") || 
+              idLower.includes("vàng") ||
+              nameLower.includes("gold") || 
+              nameLower.includes("yellow") || 
+              nameLower.includes("vang") || 
+              nameLower.includes("vàng") ||
+              hexLower === "#d4af37";
 
             return (
               <button
@@ -63,14 +78,14 @@ export default function ProductOrderSelector({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={color.id === "gold" ? "/yellow.svg" : "/gray.svg"}
+                  src={isGold ? "/yellow.svg" : "/gray.svg"}
                   alt={color.name}
                   className="w-12 h-12 object-contain mix-blend-screen transition-all duration-300"
                   style={{
                     filter: isNecklace && isSelected
-                      ? color.id === "gold"
-                        ? "drop-shadow(0 0 6px rgba(212,175,55,0.5)) drop-shadow(0 0 12px rgba(212,175,55,0.25))"
-                        : "drop-shadow(0 0 6px rgba(255,255,255,0.5)) drop-shadow(0 0 12px rgba(255,255,255,0.25))"
+                      ? isGold
+                        ? "drop-shadow(0 0 6px rgba(255, 200, 0, 0.6)) drop-shadow(0 0 15px rgba(255, 180, 0, 0.3))"
+                        : "drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.3))"
                       : undefined
                   }}
                 />
