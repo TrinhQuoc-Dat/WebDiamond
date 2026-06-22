@@ -6,7 +6,7 @@ export default function RingGuide() {
   return (
     <section className="bg-black text-white ">
       <div className="max-w-[1440px] px-6 lg:px-10"
-        style={{ margin: "0 auto", paddingTop: "20px", paddingBottom: "50px" }}>
+        style={{ margin: "0 auto", paddingTop: "60px", paddingBottom: "50px" }}>
         {/* TITLE */}
         <h2 className="text-center text-4xl md:text-6xl font-bold tracking-[0.15em] uppercase mb-20" 
           style={{ fontFamily: "var(--font-sans)", marginTop: "50px", textAlign: "center" }}>

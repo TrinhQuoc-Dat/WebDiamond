@@ -110,7 +110,13 @@ export default function Hero() {
   // Video sub-type helpers
   const youtubeId = isVideo ? getYouTubeId(src) : null;
   const driveLink = isVideo && !youtubeId ? getGoogleDriveDirectLink(src) : null;
-
+  console.log({
+  banner,
+  src,
+  isVideo,
+  youtubeId,
+  driveLink,
+});
   return (
     <motion.section
       ref={sectionRef}

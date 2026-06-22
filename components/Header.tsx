@@ -2,8 +2,25 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const [cartCount, setCartCount] = useState(1);
+
+  // Đọc từ localStorage khi component mount
+  useEffect(() => {
+    const savedCount = localStorage.getItem("cartCount");
+
+    if (savedCount) {
+      setCartCount(parseInt(savedCount, 10));
+    }
+  }, []);
+
+  // Tự động lưu khi cartCount thay đổi
+  useEffect(() => {
+    localStorage.setItem("cartCount", cartCount.toString());
+  }, [cartCount]);
+
   return (
     <>
       {/* Gradient backdrop layer — tạo khoảng cách thị giác giữa header và content khi scroll */}
@@ -76,25 +93,57 @@ export default function Header() {
         </div>
 
         {/* ── BAG top-right ── */}
+
+
         <motion.button
-          className="text-white font-black tracking-[0.06em] uppercase leading-none hover:opacity-50 transition-opacity duration-200"
-          style={{ fontFamily: "var(--font-display)", fontSize: "38px", letterSpacing: "0.25em" }}
+          className="text-white font-black tracking-[0.06em] uppercase leading-none hover:opacity-50 transition-opacity duration-200 relative"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "38px",
+            letterSpacing: "0.25em",
+          }}
           whileTap={{ scale: 0.94 }}
           id="bag-button"
           aria-label="Shopping bag"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/bag.svg"
-            alt="Shopping bag"
-            className="
-            h-[38px]
-            sm:h-[48px]
-            lg:h-[60px]
-            w-auto
-            block
-          "
-          />
+          <div className="relative inline-block">
+            <a href="https://www.instagram.com/godg1ft.jrl/">
+              <img
+                src="/bay-cart.jpg"
+                alt="Shopping bag"
+                className="
+                h-[58px]
+                sm:h-[68px]
+                lg:h-[80px]
+                w-auto
+                block
+              "
+                style={{ paddingLeft: "10px" }}
+              />
+
+              {/* Ngôi sao chứa số */}
+              <div className="absolute bottom-0 left-0 -translate-x-1/4 translate-y-1/4">
+                <div className="relative w-7 h-7">
+                  <svg viewBox="0 0 100 100" className="w-full h-full fill-white">
+                    <polygon points="50,0 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" />
+                  </svg>
+
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-black font-bold"
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      transform: "translate(4px, 1px)",
+                      fontSize: "12px",
+                      fontWeight: 800,
+                    }}
+                  >
+                    {cartCount}
+                  </span>
+                </div>
+              </div>
+            </a>
+
+          </div>
         </motion.button>
       </motion.header>
     </>
