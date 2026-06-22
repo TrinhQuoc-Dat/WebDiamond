@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
 import { Product } from "@/data/products";
+import Link from "next/link";
 
 interface ProductOrderSelectorProps {
   product: Product;
@@ -45,21 +44,35 @@ export default function ProductOrderSelector({
         <div className="flex items-center gap-4">
           {product.colors.map((color) => {
             const isSelected = selectedColor === color.id;
+            const isNecklace = product.category === "NECKLACE";
 
             return (
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`transition-all duration-300 flex items-center justify-center overflow-hidden cursor-pointer ${
-                  isSelected ? "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "opacity-70 hover:opacity-100"
+                className={`transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                  isNecklace ? "" : "overflow-hidden"
+                } ${
+                  isSelected
+                    ? isNecklace
+                      ? "scale-110"
+                      : "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                    : "opacity-70 hover:opacity-100"
                 }`}
                 title={color.name}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={color.id === "gold" ? "/yellow.jpeg" : "/gray.jpeg"}
+                  src={color.id === "gold" ? "/yellow.svg" : "/gray.svg"}
                   alt={color.name}
-                  className="w-12 h-12 object-contain mix-blend-screen"
+                  className="w-12 h-12 object-contain mix-blend-screen transition-all duration-300"
+                  style={{
+                    filter: isNecklace && isSelected
+                      ? color.id === "gold"
+                        ? "drop-shadow(0 0 6px rgba(212,175,55,0.5)) drop-shadow(0 0 12px rgba(212,175,55,0.25))"
+                        : "drop-shadow(0 0 6px rgba(255,255,255,0.5)) drop-shadow(0 0 12px rgba(255,255,255,0.25))"
+                      : undefined
+                  }}
                 />
               </button>
             );
@@ -73,7 +86,25 @@ export default function ProductOrderSelector({
           <span className="text-[18px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
             Size:
           </span>
-          {/* We'll just leave this blank for now as per screenshot layout (size selector was hidden or just text) */}
+          <div className="flex items-center gap-2">
+            {product.sizes && product.sizes.map((size) => {
+              const isSizeSelected = selectedSize === size;
+              return (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`w-10 h-8 flex items-center justify-center text-[14px] font-normal tracking-wider border transition-all duration-300 cursor-pointer ${
+                    isSizeSelected
+                      ? "bg-white text-black border-white font-semibold"
+                      : "text-white/60 border-white/20 hover:text-white hover:border-white/50"
+                  }`}
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {size}
+                </button>
+              );
+            })}
+          </div>
         </div>
         
         {/* Size Guide Link */}
