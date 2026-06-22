@@ -26,7 +26,7 @@ export default function ProductBenefits() {
               <line x1="8" y1="9" x2="10" y2="9" />
             </svg>
           </div>
-          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide">
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Fill out the form below to share your ideas and requirements for your custom jewelry piece. We will then look into determining the best solution and providing a quote.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function ProductBenefits() {
               <line x1="12" y1="22.08" x2="12" y2="12" />
             </svg>
           </div>
-          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide">
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             We will provide you with a personalized quote for your custom piece. If you are ready to proceed, we require a 50% deposit to begin work on your custom jewelry.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function ProductBenefits() {
               <path d="M9 10h4" />
             </svg>
           </div>
-          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide">
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             We will create design concepts for your custom piece, and once you are satisfied, we will begin craftsmanship on your custom jewelry piece.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function ProductBenefits() {
               <path d="M9 15l2 2 4-4" />
             </svg>
           </div>
-          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide">
+          <p className="text-[12px] md:text-[14px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Once final payment is received, your completed final piece will be ready for collection or delivery.
           </p>
         </div>
