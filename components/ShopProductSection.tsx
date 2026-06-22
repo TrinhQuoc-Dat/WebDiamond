@@ -7,14 +7,18 @@ import ShopProductCard from "./ShopProductCard";
 
 interface ShopProductSectionProps {
   title?: string;
+  category?: string;
   products: Product[];
   viewportOnce?: boolean;
+  hideMoreButton?: boolean;
 }
 
 export default function ShopProductSection({
   title,
+  category,
   products,
   viewportOnce = false,
+  hideMoreButton = false,
 }: ShopProductSectionProps) {
   const headerAnimation = viewportOnce
     ? {
@@ -62,13 +66,24 @@ export default function ShopProductSection({
       <div className="h-16 w-full" />
 
       {/* MORE.. */}
-      <Link
-        href="#"
-        className="padding-[10px] text-xs md:text-sm tracking-[0.2em] font-normal uppercase text-white hover:opacity-80 mt-5 transition-opacity duration-200 block border-b border-transparent hover:border-white/40 pb-1"
-        style={{ fontFamily: "var(--font-display)", padding: "15px" }}
-      >
-        MORE..
-      </Link>
+      {!hideMoreButton && category && (
+        <Link
+          href={`/shop/${category.toLowerCase()}`}
+          className="padding-[10px] text-xs md:text-sm tracking-[0.2em] font-normal uppercase text-white hover:opacity-80 mt-5 transition-opacity duration-200 block border-b border-transparent hover:border-white/40 pb-1"
+          style={{ fontFamily: "var(--font-display)", padding: "15px" }}
+        >
+          MORE..
+        </Link>
+      )}
+      {!hideMoreButton && !category && (
+        <Link
+          href="#"
+          className="padding-[10px] text-xs md:text-sm tracking-[0.2em] font-normal uppercase text-white hover:opacity-80 mt-5 transition-opacity duration-200 block border-b border-transparent hover:border-white/40 pb-1"
+          style={{ fontFamily: "var(--font-display)", padding: "15px" }}
+        >
+          MORE..
+        </Link>
+      )}
     </section>
   );
 }

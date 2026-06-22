@@ -242,7 +242,6 @@ export default function Hero() {
             {labelText}
           </span>
 
-          {/* Hover underline */}
           <motion.span
             className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white origin-left"
             initial={{ scaleX: 0 }}
