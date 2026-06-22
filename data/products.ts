@@ -32,7 +32,7 @@ const baseNecklace: Omit<Product, "slug"> = {
   image: "/shop.png",
   images: ["/shop.png", "/shop.png", "/shop.png", "/shop.png", "/shop.png"],
   tag: null,
-  description: DESC, spec: SPEC, colors: COLORS, sizes: ["S", "M", "L", "XL"],
+  description: DESC, spec: SPEC, colors: COLORS, sizes: ["40", "45", "50", "55"],
 };
 
 const baseBracelet: Omit<Product, "slug"> = {
@@ -42,7 +42,7 @@ const baseBracelet: Omit<Product, "slug"> = {
   image: "/shop.png",
   images: ["/shop.png", "/shop.png", "/shop.png", "/shop.png", "/shop.png"],
   tag: null,
-  description: DESC, spec: SPEC, colors: COLORS, sizes: ["S", "M", "L", "XL"],
+  description: DESC, spec: SPEC, colors: COLORS, sizes: ["16", "17", "18", "19"],
 };
 
 export const products: Product[] = [
