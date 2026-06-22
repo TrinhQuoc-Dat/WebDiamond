@@ -26,6 +26,8 @@ export default function ShopProductSection({
       initial: { opacity: 0 },
       animate: { opacity: 1 },
     };
+    console.log("Rendering ShopProductSection with products:", products);
+    console.log("Title", title);
 
   return (
     <section className="w-full flex flex-col items-center mt-12 mb-24">

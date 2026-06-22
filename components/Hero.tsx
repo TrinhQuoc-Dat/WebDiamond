@@ -170,6 +170,21 @@ export default function Hero() {
         )}
       </motion.div>
 
+      {/* ── Dark Gradient Overlay ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `
+            linear-gradient(
+              to bottom,
+              rgba(0,0,0,0.55) 0%,
+              rgba(0,0,0,0.30) 40%,
+              rgba(0,0,0,0.45) 100%
+            )
+          `,
+        }}
+      />
+
       {/* ── Vignette ── */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -213,7 +228,13 @@ export default function Hero() {
               fontSize: "clamp(1.6rem, 3.5vw, 3.5rem)",
               letterSpacing: "0.15em",
               WebkitTextStroke: "2px white",
-              textShadow: "0 0 20px rgba(255,255,255,0.15)",
+              textShadow: `
+                0 2px 8px rgba(0,0,0,0.8),
+                0 8px 24px rgba(0,0,0,0.75),
+                0 20px 60px rgba(0,0,0,0.65),
+                0 0 40px rgba(255,255,255,0.12)
+              `,
+              filter: "drop-shadow(0 12px 30px rgba(0,0,0,0.7))",
             }}
           >
             {labelText}

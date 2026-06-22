@@ -5,6 +5,7 @@ import CustomCursor from "@/components/CustomCursor";
 import Header from "@/components/Header";
 import ShopProductSection from "@/components/ShopProductSection";
 import { usePublicProducts } from "@/hooks/usePublicProducts";
+import Footer from "./Footer";
 
 interface CategoryPageProps {
   category: string; // "BRACELETS" | "NECKLACE" | etc.
@@ -19,10 +20,12 @@ export default function CategoryPage({ category, label }: CategoryPageProps) {
     <>
       <CustomCursor />
       <Header />
-
-      <main className="w-full bg-black text-white min-h-screen" style={{ paddingTop: "120px", paddingBottom: "150px" }}>
-        <ShopProductSection products={items} />
+      <main style={{margin:"0 6%"}}>
+        <div className="w-full bg-black text-white min-h-screen" style={{ paddingTop: "120px", paddingBottom: "90px" }}>
+          <ShopProductSection products={items} title={category} />
+        </div>
       </main>
+      <Footer />
     </>
   );
 }

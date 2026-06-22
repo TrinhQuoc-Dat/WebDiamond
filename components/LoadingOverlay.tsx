@@ -42,7 +42,13 @@ export default function LoadingOverlay() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black"
-          style={{ cursor: "none" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            minWidth: "100%",
+            minHeight: "100%",
+            cursor: "none",
+          }}
         >
           <div className="flex flex-col items-center gap-6">
             {/* Wrapper: translateZ(0) forces GPU layer → prevents 3D alias artifact */}
