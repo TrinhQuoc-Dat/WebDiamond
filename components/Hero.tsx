@@ -65,31 +65,55 @@ export default function Hero() {
     if (banner) setIsMuted(banner.muted);
   }, [banner]);
 
-  // Unmute on first user interaction if banner is configured with sound
+  // Unmute on first user interaction
   useEffect(() => {
-    if (!banner || banner.type !== "video" || banner.muted) return;
+    if (!banner || banner.type !== "video") return;
 
     const handleInteraction = () => {
-      setIsMuted(false);
       if (videoRef.current) {
         videoRef.current.muted = false;
         videoRef.current.volume = 1;
-        videoRef.current.play().catch(() => {
-          // Browser blocked unmuted play — keep muted
+        videoRef.current.play().then(() => {
+          // Phát thành công -> Cập nhật UI và gỡ bỏ sự kiện
+          setIsMuted(false);
+          window.removeEventListener("click", handleInteraction);
+          window.removeEventListener("touchstart", handleInteraction);
+          window.removeEventListener("scroll", handleInteraction);
+          window.removeEventListener("keydown", handleInteraction);
+        }).catch(() => {
+          // Trình duyệt chặn (thường do timeout 3s) -> Giữ nguyên trạng thái để chờ click
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            videoRef.current.play().catch(() => {});
+          }
         });
+      } else {
+        setIsMuted(false);
+        window.removeEventListener("click", handleInteraction);
+        window.removeEventListener("touchstart", handleInteraction);
+        window.removeEventListener("scroll", handleInteraction);
+        window.removeEventListener("keydown", handleInteraction);
       }
-      window.removeEventListener("click", handleInteraction);
-      window.removeEventListener("touchstart", handleInteraction);
     };
 
     if (isMuted) {
       window.addEventListener("click", handleInteraction, { passive: true });
       window.addEventListener("touchstart", handleInteraction, { passive: true });
+      window.addEventListener("scroll", handleInteraction, { passive: true });
+      window.addEventListener("keydown", handleInteraction, { passive: true });
+      
+      const timer = setTimeout(() => {
+        handleInteraction();
+      }, 3000);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("click", handleInteraction);
+        window.removeEventListener("touchstart", handleInteraction);
+        window.removeEventListener("scroll", handleInteraction);
+        window.removeEventListener("keydown", handleInteraction);
+      };
     }
-    return () => {
-      window.removeEventListener("click", handleInteraction);
-      window.removeEventListener("touchstart", handleInteraction);
-    };
   }, [banner, isMuted]);
 
   const { scrollYProgress } = useScroll({
@@ -256,6 +280,40 @@ export default function Hero() {
           />
         </motion.a>
       </motion.div>
+
+      {/* ── Audio Control Button ── */}
+      {isVideo && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (isMuted) {
+              if (videoRef.current) {
+                videoRef.current.muted = false;
+                videoRef.current.volume = 1;
+                videoRef.current.play().catch(() => {});
+              }
+              setIsMuted(false);
+            } else {
+              if (videoRef.current) {
+                videoRef.current.muted = true;
+              }
+              setIsMuted(true);
+            }
+          }}
+          className="absolute bottom-6 right-6 z-50 p-3 rounded-full bg-black/40 hover:bg-black/70 border border-white/20 text-white backdrop-blur-md transition-all flex items-center justify-center cursor-pointer group"
+          aria-label={isMuted ? "Unmute video" : "Mute video"}
+        >
+          {isMuted ? (
+            <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 opacity-70 group-hover:opacity-100">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+          ) : (
+            <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 opacity-70 group-hover:opacity-100">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+          )}
+        </button>
+      )}
     </motion.section>
   );
 }

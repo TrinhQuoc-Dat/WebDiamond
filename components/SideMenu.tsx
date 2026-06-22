@@ -74,13 +74,7 @@ export default function SideMenu() {
               >
                 {m.label}
 
-                {/* Underline sweep on hover */}
-                <motion.span
-                  className="absolute -bottom-[1px] left-0 h-[2px] bg-white block origin-left"
-                  animate={{ scaleX: isHovered ? 1 : 0 }}
-                  transition={{ duration: 0.22, ease: "easeOut" }}
-                  style={{ width: "100%" }}
-                />
+
 
                 {/* Active dot */}
                 {isActive && !isHovered && (
