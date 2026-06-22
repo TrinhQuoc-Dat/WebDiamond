@@ -42,6 +42,8 @@ export default function Hero() {
       if (stored) {
         const list = JSON.parse(stored) as Array<Partial<BannerData> & { active?: boolean }>;
         const active = list.find((b) => b.active);
+        console.log("active", active);
+
         if (active) {
           setBanner({
             title: active.title ?? "GODG1FT",
@@ -149,8 +151,8 @@ export default function Hero() {
               ref={videoRef}
               src={driveLink ?? src}
               autoPlay
+              muted={isMuted}
               loop
-              muted
               playsInline
               className="w-full h-full object-cover object-center"
             />
@@ -240,7 +242,6 @@ export default function Hero() {
             {labelText}
           </span>
 
-          {/* Hover underline */}
           <motion.span
             className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white origin-left"
             initial={{ scaleX: 0 }}

@@ -4,14 +4,15 @@ import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ShopProductSection from "@/components/ShopProductSection";
+import ScrollIndicator from "@/components/ScrollIndicator";
 import { usePublicProducts } from "@/hooks/usePublicProducts";
 import { motion } from "framer-motion";
 
 export default function ShopPage() {
   const { products } = usePublicProducts();
 
-  const necklaces = products.filter((p) => p.category === "NECKLACE");
-  const bracelets = products.filter((p) => p.category === "BRACELETS");
+  const necklaces = products.filter((p) => p.category === "NECKLACE").slice(0, 6);
+  const bracelets = products.filter((p) => p.category === "BRACELETS").slice(0, 6);
 
   return (
     <>
@@ -30,14 +31,15 @@ export default function ShopPage() {
             SHOP ALL
           </motion.h1>
 
-          <ShopProductSection title="NECKLACE" products={necklaces} />
+          <ShopProductSection title="NECKLACE" category="NECKLACE" products={necklaces} />
           
           <div className="h-20 w-full" />
           
-          <ShopProductSection title="BRACELETS" products={bracelets} viewportOnce />
+          <ShopProductSection title="BRACELETS" category="BRACELETS" products={bracelets} viewportOnce />
         </div>
       </main>
 
+      <ScrollIndicator />
       <Footer />
     </>
   );
