@@ -50,18 +50,18 @@ export default function ShopProductCard({
         </div>
 
         {/* Product Details (Matching shop.png exactly) */}
-        <div className="mt-4 flex flex-col items-center gap-1.5 w-full">
+        <div className="mt-[1rem] flex flex-col items-center gap-1.5 w-full">
           {/* Name: Gray, thin uppercase */}
           <h3
-            className="text-[10px] md:text-[11px] tracking-[0.1em] text-gray-400 uppercase text-center font-normal"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-[18px] md:text-[16px] tracking-[0.1em] text-gray-400 uppercase text-center font-normal"
+            style={{ fontFamily: "var(--font-display)" , padding: "20px 0px 0px 0px"}}
           >
             {product.name}
           </h3>
           
           {/* Price: White, bold uppercase */}
           <p
-            className="text-[12px] md:text-[14px] tracking-[0.05em] text-white font-bold uppercase text-center"
+            className="text-[18px] md:text-[16px] tracking-[0.05em] text-white font-bold uppercase text-center"
             style={{ fontFamily: "var(--font-display)" }}
           >
             {product.price}

@@ -2,13 +2,13 @@
 
 export default function ProductBenefits() {
   return (
-    <div className="w-full flex flex-col items-center pt-8 md:pt-16 mb-32 md:mb-48">
+    <div className="w-full flex flex-col items-center pt-8 md:pt-16 mb-32 md:mb-48" style={{ marginTop: "50px" }}>
       {/* Title Section */}
       <div className="flex flex-col items-center text-center mb-16 gap-2">
         <h2 className="text-[28px] md:text-[36px] font-black tracking-[0.15em] uppercase text-white" style={{ fontFamily: "var(--font-display)" }}>
           HOW IT WORKS
         </h2>
-        <p className="text-[9px] md:text-[10px] text-white/50 uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-display)" }}>
+        <p className="text-[9px] md:text-[10px] text-white/50 uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-display)", paddingBottom: "15px", margin: "10px 0px" }}>
           THE PROCESS IN CREATING YOUR CUSTOM JEWELERY PIECE
         </p>
       </div>

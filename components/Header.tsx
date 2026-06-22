@@ -20,12 +20,20 @@ export default function Header() {
         <Link href="/" className="flex flex-col items-end leading-none gap-[6px] hover:opacity-80 transition-opacity">
           {/* GODG1FT — wide spacing giữa các ký tự */}
           <span
-            className="text-white/80 font-normal uppercase leading-none block"
+            className="
+                      text-white/80
+                      uppercase
+                      font-normal
+                      leading-none
+                      text-[24px]
+                      sm:text-[22px]
+                      lg:text-[32px]
+                    "
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "28px",
-              letterSpacing: "0.5em",
-              marginRight: "-0.3em",
+              letterSpacing: "0.35em",
+              marginRight: "-0.25em",
+              fontWeight: "500",
             }}
           >
             GODG1FT
@@ -51,7 +59,13 @@ export default function Header() {
           <img
             src="/logo.svg"
             alt="WebDiamond logo"
-            style={{ height: "45px", width: "auto", display: "block" }}
+            className="
+          h-[38px]
+          sm:h-[48px]
+          lg:h-[58px]
+          w-auto
+          block
+        "
           />
         </Link>
       </div>
@@ -68,7 +82,13 @@ export default function Header() {
         <img
           src="/bag.svg"
           alt="Shopping bag"
-          style={{ height: "60px", width: "auto", display: "block" }}
+          className="
+            h-[38px]
+            sm:h-[48px]
+            lg:h-[60px]
+            w-auto
+            block
+          "
         />
       </motion.button>
     </motion.header>

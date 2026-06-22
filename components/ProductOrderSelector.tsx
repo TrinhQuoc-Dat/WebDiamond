@@ -30,8 +30,8 @@ export default function ProductOrderSelector({
       {/* Mobile-only info block */}
       <div className="lg:hidden flex flex-col gap-3 mb-2">
         <h1
-          className="text-[28px] sm:text-[32px] font-black uppercase leading-none tracking-[0.1em] text-white"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="text-[26px] sm:text-[32px] font-black uppercase leading-none tracking-[0.1em] text-white"
+          style={{ fontFamily: "var(--font-display)", lineHeight: "1.5em", padding: "0px 0px 0px 0px" }}
         >
           {product.name}
         </h1>
@@ -39,7 +39,7 @@ export default function ProductOrderSelector({
 
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4 mt-8">
-        <span className="text-[24px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
+        <span className="text-[18px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
           Colour:
         </span>
         <div className="flex items-center gap-4">
@@ -70,7 +70,7 @@ export default function ProductOrderSelector({
       {/* Size Select */}
       <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center gap-4">
-          <span className="text-[24px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
+          <span className="text-[18px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
             Size:
           </span>
           {/* We'll just leave this blank for now as per screenshot layout (size selector was hidden or just text) */}
@@ -78,18 +78,18 @@ export default function ProductOrderSelector({
         
         {/* Size Guide Link */}
         <Link
-          href="#"
-          className="text-[24px] font-normal italic text-white hover:text-white/80 transition-colors duration-200 mt-2"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          Size Guide
+            href={`/size-guide/${product.category.toLocaleLowerCase()}`}
+            className="text-[18px] font-normal italic text-white hover:text-white/80 transition-colors duration-200 mt-2"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            Size Guide
         </Link>
       </div>
 
       {/* Price Tag */}
       <div className="flex flex-col gap-1 mt-8">
         <span
-          className="text-[28px] md:text-[32px] lg:text-[40px] font-black tracking-widest text-white whitespace-nowrap"
+          className="text-[22px] md:text-[26px] lg:text-[20px] font-black tracking-widest text-white whitespace-nowrap"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {product.price}

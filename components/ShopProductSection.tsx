@@ -32,8 +32,8 @@ export default function ShopProductSection({
       {/* Category Title */}
       {title && (
         <motion.h2
-          className="text-xl md:text-[24px] font-black uppercase tracking-[0.3em] mb-12 text-center text-white"
-          style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.2em" }}
+          className="text-[28px] md:text-[48px] font-black uppercase tracking-[0.3em] mb-12 text-center text-white"
+          style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.2em", marginBottom: "3rem" }}
           {...headerAnimation}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
@@ -43,7 +43,7 @@ export default function ShopProductSection({
 
       {/* Product Grid */}
       <div
-        className="grid grid-cols-2 md:grid-cols-3 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-12 w-full px-4 md:px-40"
+        className="grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-12 w-full px-4 md:px-40"
       >
         {products.map((product, idx) => (
           <ShopProductCard
@@ -62,8 +62,8 @@ export default function ShopProductSection({
       {/* MORE.. */}
       <Link
         href="#"
-        className="text-xs md:text-sm tracking-[0.2em] font-normal uppercase text-white hover:opacity-80 mt-5 transition-opacity duration-200 block border-b border-transparent hover:border-white/40 pb-1"
-        style={{ fontFamily: "var(--font-display)" }}
+        className="padding-[10px] text-xs md:text-sm tracking-[0.2em] font-normal uppercase text-white hover:opacity-80 mt-5 transition-opacity duration-200 block border-b border-transparent hover:border-white/40 pb-1"
+        style={{ fontFamily: "var(--font-display)", padding: "15px" }}
       >
         MORE..
       </Link>
