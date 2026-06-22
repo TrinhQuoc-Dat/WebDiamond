@@ -165,7 +165,27 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setIsLoggedIn(localLoggedIn);
         
         if (localProducts) {
-          setProducts(JSON.parse(localProducts));
+          try {
+            const parsed = JSON.parse(localProducts) as AdminProduct[];
+            const migrated = parsed.map((p) => {
+              if (
+                p.category === "NECKLACE" &&
+                JSON.stringify(p.sizes) === JSON.stringify(["S", "M", "L", "XL"])
+              ) {
+                return { ...p, sizes: ["40", "45", "50", "55"] };
+              }
+              if (
+                p.category === "BRACELETS" &&
+                JSON.stringify(p.sizes) === JSON.stringify(["S", "M", "L", "XL"])
+              ) {
+                return { ...p, sizes: ["16", "17", "18", "19"] };
+              }
+              return p;
+            });
+            setProducts(migrated);
+          } catch {
+            setProducts(initialProducts.map((p) => ({ ...p, hidden: false })));
+          }
         } else {
           // Gán mặc định trạng thái hidden: false cho các sản phẩm gốc
           const mapped = initialProducts.map((p) => ({ ...p, hidden: false }));
