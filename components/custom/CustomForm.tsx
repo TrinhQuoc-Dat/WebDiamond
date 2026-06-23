@@ -32,13 +32,26 @@ export default function CustomForm() {
     alert("Thank you! We will get back to you soon.");
   };
 
-  const inputBaseClass =
-    "w-full bg-transparent border-b border-white/20 text-white text-[15px] py-3 px-1 outline-none placeholder:text-white/30 focus:border-white/60 transition-colors duration-300";
+  const inputStyle = {
+    fontFamily: "var(--font-display)",
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(255,255,255,0.2)",
+    color: "white",
+    fontSize: "15px",
+    padding: "12px 4px",
+    outline: "none",
+  } as const;
+
+  const inputFocusStyle = {
+    borderBottom: "1px solid rgba(255,255,255,0.6)",
+  };
 
   return (
-    <section className="w-full bg-black text-white py-24 md:py-32 px-6 md:px-16 lg:px-24">
+    <section className="w-full bg-black text-white" style={{ padding: "96px clamp(24px, 4vw, 96px)" }}>
       <motion.div
-        className="max-w-[800px] mx-auto"
+        style={{ maxWidth: "800px", margin: "0 auto" }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -46,22 +59,36 @@ export default function CustomForm() {
       >
         {/* Heading */}
         <h2
-          className="text-[28px] md:text-[44px] font-black uppercase tracking-[0.15em] text-center mb-4"
-          style={{ fontFamily: "var(--font-display)" }}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(28px, 3.5vw, 44px)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "0.15em",
+            textAlign: "center",
+            marginBottom: "16px",
+          }}
         >
           SHARE YOUR IDEA
         </h2>
         <p
-          className="text-center text-white/50 uppercase tracking-[0.3em] text-[11px] md:text-[13px] mb-16"
-          style={{ fontFamily: "var(--font-display)" }}
+          style={{
+            fontFamily: "var(--font-display)",
+            textAlign: "center",
+            color: "rgba(255,255,255,0.5)",
+            textTransform: "uppercase",
+            letterSpacing: "0.3em",
+            fontSize: "clamp(11px, 1.2vw, 13px)",
+            marginBottom: "clamp(48px, 6vw, 64px)",
+          }}
         >
           TELL US ABOUT YOUR DREAM PIECE
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
           {/* Name & Email row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "32px" }}>
             <input
               type="text"
               name="name"
@@ -69,8 +96,9 @@ export default function CustomForm() {
               value={formData.name}
               onChange={handleChange}
               required
-              className={inputBaseClass}
-              style={{ fontFamily: "var(--font-display)" }}
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.6)"}
+              onBlur={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.2)"}
             />
             <input
               type="email"
@@ -79,34 +107,35 @@ export default function CustomForm() {
               value={formData.email}
               onChange={handleChange}
               required
-              className={inputBaseClass}
-              style={{ fontFamily: "var(--font-display)" }}
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.6)"}
+              onBlur={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.2)"}
             />
           </div>
 
           {/* Phone & Budget row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "32px" }}>
             <input
               type="tel"
               name="phone"
               placeholder="Phone Number"
               value={formData.phone}
               onChange={handleChange}
-              className={inputBaseClass}
-              style={{ fontFamily: "var(--font-display)" }}
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.6)"}
+              onBlur={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.2)"}
             />
             <select
               name="budget"
               value={formData.budget}
               onChange={handleChange}
-              className={`${inputBaseClass} appearance-none cursor-pointer`}
-              style={{ fontFamily: "var(--font-display)" }}
+              style={{ ...inputStyle, cursor: "pointer" }}
             >
-              <option value="" disabled className="bg-black text-white/30">
+              <option value="" disabled style={{ background: "black", color: "rgba(255,255,255,0.3)" }}>
                 Estimated Budget
               </option>
               {budgetOptions.map((opt) => (
-                <option key={opt} value={opt} className="bg-black text-white">
+                <option key={opt} value={opt} style={{ background: "black", color: "white" }}>
                   {opt}
                 </option>
               ))}
@@ -121,17 +150,28 @@ export default function CustomForm() {
             onChange={handleChange}
             required
             rows={4}
-            className={`${inputBaseClass} resize-none`}
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{ ...inputStyle, resize: "none" }}
+            onFocus={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.6)"}
+            onBlur={(e) => e.target.style.borderBottom = "1px solid rgba(255,255,255,0.2)"}
           />
 
           {/* Submit */}
-          <div className="flex justify-center pt-4">
+          <div style={{ display: "flex", justifyContent: "center", paddingTop: "16px" }}>
             <motion.button
               type="submit"
-              className="uppercase tracking-[0.25em] text-[13px] font-bold border border-white/30 px-12 py-4 text-white hover:bg-white hover:text-black transition-all duration-300"
-              style={{ fontFamily: "var(--font-display)" }}
-              whileHover={{ scale: 1.03 }}
+              style={{
+                fontFamily: "var(--font-display)",
+                textTransform: "uppercase",
+                letterSpacing: "0.25em",
+                fontSize: "13px",
+                fontWeight: 700,
+                border: "1px solid rgba(255,255,255,0.3)",
+                padding: "16px 48px",
+                color: "white",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+              whileHover={{ scale: 1.03, background: "white", color: "black" }}
               whileTap={{ scale: 0.97 }}
             >
               Submit Request

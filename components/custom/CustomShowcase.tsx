@@ -59,27 +59,25 @@ export default function CustomShowcase() {
     offset: ["start start", "end end"],
   });
 
-  // Smooth scroll-driven index change
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  // Continuous scroll-driven index (float for smooth wheel effect)
+  const continuousIndex = useTransform(scrollYProgress, [0, 1], [0, projects.length - 1]);
+
+  useMotionValueEvent(continuousIndex, "change", (latest) => {
     if (isScrolling.current) return;
-    const idx = Math.min(
-      Math.floor(latest * projects.length),
-      projects.length - 1
-    );
+    const idx = Math.min(Math.round(latest), projects.length - 1);
     if (idx >= 0 && idx !== active) {
       setActive(idx);
     }
   });
 
   // Timeline indicator
-  const timelineProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const timelineY = useTransform(timelineProgress, [0, 1], [0, 240]);
+  const timelineY = useTransform(scrollYProgress, [0, 1], [0, 240]);
+  const itemHeight = 72;
 
   const handleClick = useCallback((idx: number) => {
     if (idx === active) return;
     isScrolling.current = true;
     setActive(idx);
-
     if (sectionRef.current) {
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionTop = window.scrollY + rect.top;
@@ -87,82 +85,72 @@ export default function CustomShowcase() {
       const targetScroll = sectionTop + (sectionScrollable * idx) / projects.length;
       window.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
-
-    // Release scroll lock after animation completes
-    setTimeout(() => {
-      isScrolling.current = false;
-    }, 800);
+    setTimeout(() => { isScrolling.current = false; }, 800);
   }, [active]);
 
   const project = projects[active];
 
-  // Build the vertical list of all project subtitles with varying opacity/size
+  // Scroll offset so active item sits at center of the container
+  const centerOffset = (420 - itemHeight) / 2;
+
+  // Build text list — all items visible, scroll as a stack, active one is larger
   const renderSubtitleList = () => {
     return projects.map((p, i) => {
-      const distance = Math.abs(i - active);
-      const isActive = i === active;
+      const dist = i - active;
+      const absDist = Math.abs(dist);
 
       let opacity = 0.15;
       let fontSize = "13px";
-      let color = "text-white/30";
+      let color = "rgba(255,255,255,0.3)";
+      let fontWeight = 400;
 
-      if (isActive) {
+      if (absDist === 0) {
         opacity = 1;
-        fontSize = "clamp(36px, 5vw, 76px)";
-        color = "text-white";
-      } else if (distance === 1) {
+        fontSize = "clamp(22px, 2.8vw, 44px)";
+        color = "rgba(255,255,255,1)";
+        fontWeight = 900;
+      } else if (absDist === 1) {
         opacity = 0.5;
-        fontSize = "clamp(16px, 2vw, 24px)";
-        color = "text-white/60";
-      } else if (distance === 2) {
-        opacity = 0.3;
         fontSize = "clamp(14px, 1.5vw, 18px)";
-        color = "text-white/40";
-      }
-
-      if (isActive) {
-        return (
-          <motion.div
-            key={`item-${i}`}
-            className="relative inline-block my-3 cursor-pointer"
-            onClick={() => handleClick(i)}
-            layout
-            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            {/* Left bracket */}
-            <div className="absolute left-[-14px] top-1/2 h-[55%] w-[2.5px] bg-white -translate-y-1/2" />
-            {/* Right bracket */}
-            <div className="absolute right-[-14px] top-1/2 h-[55%] w-[2.5px] bg-white -translate-y-1/2" />
-
-            <h1
-              className="uppercase font-black leading-[0.9]"
-              style={{
-                fontSize,
-                fontFamily: "var(--font-display)",
-              }}
-            >
-              {p.title}
-            </h1>
-          </motion.div>
-        );
+        color = "rgba(255,255,255,0.6)";
+      } else if (absDist === 2) {
+        opacity = 0.25;
+        fontSize = "clamp(12px, 1.2vw, 15px)";
+        color = "rgba(255,255,255,0.35)";
       }
 
       return (
-        <motion.p
-          key={`item-${i}`}
-          className={`uppercase tracking-[6px] cursor-pointer hover:opacity-80 transition-colors ${color}`}
-          style={{
-            opacity,
-            fontSize,
-            fontFamily: "var(--font-display)",
-            lineHeight: 1.4,
-          }}
-          onClick={() => handleClick(i)}
-          layout
-          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {p.subtitle}
-        </motion.p>
+        <div key={`item-${i}`} style={{ display: "flex", alignItems: "center", minHeight: `${itemHeight}px` }}>
+          <motion.div
+            className="cursor-pointer"
+            onClick={() => handleClick(i)}
+            animate={{
+              opacity,
+              fontSize,
+              color,
+              fontWeight,
+            }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              fontFamily: "var(--font-display)",
+              textTransform: "uppercase",
+              letterSpacing: absDist === 0 ? "0.05em" : "6px",
+              lineHeight: 1.2,
+              whiteSpace: "nowrap",
+              padding: "4px 0",
+            }}
+          >
+            {absDist === 0 ? (
+              <>
+                <span style={{ opacity: 0.5 }}>— </span>
+                {p.title}
+                <span style={{ opacity: 0.5 }}> —</span>
+              </>
+            ) : (
+              p.subtitle
+            )}
+          </motion.div>
+        </div>
       );
     });
   };
@@ -189,11 +177,10 @@ export default function CustomShowcase() {
 
         <div className="relative h-full flex">
 
-          {/* ═══ LEFT PANEL ═══ */}
-          <div className="w-full md:w-[62%] relative flex items-center px-8 md:px-20">
+          <div className="w-full md:w-[62%] relative flex items-center pr-8 md:pr-20" style={{ paddingLeft: "clamp(48px, 8vw, 320px)" }}>
 
             {/* Timeline bar */}
-            <div className="hidden md:block absolute left-20 top-1/2 -translate-y-1/2">
+            <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
               <div className="relative w-px h-[300px] bg-white/20">
                 <motion.div
                   style={{ y: timelineY }}
@@ -202,9 +189,15 @@ export default function CustomShowcase() {
               </div>
             </div>
 
-            {/* Vertical subtitle list */}
-            <div className="md:ml-48 w-full flex flex-col gap-2 items-start">
-              {renderSubtitleList()}
+            {/* Scrolling text stack — shows active item at center + faded items above/below */}
+            <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative" }}>
+              <motion.div
+                animate={{ y: -active * itemHeight + centerOffset }}
+                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{ width: "100%" }}
+              >
+                {renderSubtitleList()}
+              </motion.div>
             </div>
 
             {/* YEAR block */}

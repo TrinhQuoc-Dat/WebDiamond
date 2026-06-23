@@ -70,26 +70,39 @@ const itemVariants = {
 
 export default function HowItWorks() {
   return (
-    <section className="w-full bg-black text-white py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6 md:px-12">
+    <section className="w-full bg-black text-white" style={{ padding: "96px 0" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(24px, 4vw, 48px)" }}>
 
         {/* Heading */}
         <motion.div
-          className="text-center mb-16 md:mb-24"
+          style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 96px)" }}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <h2
-            className="text-[32px] md:text-[52px] font-black uppercase tracking-[0.15em]"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(32px, 4vw, 52px)",
+              fontWeight: 900,
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              textAlign: "center",
+            }}
           >
             HOW IT WORKS
           </h2>
           <p
-            className="mt-4 text-white/50 uppercase tracking-[0.3em] text-[11px] md:text-[13px]"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              marginTop: "16px",
+              color: "rgba(255,255,255,0.5)",
+              textTransform: "uppercase",
+              letterSpacing: "0.3em",
+              fontSize: "clamp(11px, 1.2vw, 13px)",
+              textAlign: "center",
+            }}
           >
             THE PROCESS IN CREATING YOUR CUSTOM JEWELRY PIECE
           </p>
@@ -97,7 +110,12 @@ export default function HowItWorks() {
 
         {/* Steps Grid — centered 2x2 */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-16 md:gap-y-14"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "clamp(32px, 4vw, 64px)",
+            justifyItems: "center",
+          }}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -107,17 +125,21 @@ export default function HowItWorks() {
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="flex items-start gap-5"
+              style={{ display: "flex", alignItems: "flex-start", gap: "20px", maxWidth: "480px" }}
             >
               {/* Icon */}
-              <div className="flex-shrink-0 text-white/60 mt-0.5">
+              <div style={{ flexShrink: 0, color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
                 {step.icon}
               </div>
 
               {/* Text */}
               <p
-                className="text-white/55 text-[13px] md:text-[14px] leading-[1.8]"
-                style={{ fontFamily: "var(--font-display)" }}
+                style={{
+                  fontFamily: "var(--font-display)",
+                  color: "rgba(255,255,255,0.55)",
+                  fontSize: "clamp(13px, 1.2vw, 14px)",
+                  lineHeight: 1.8,
+                }}
               >
                 {step.text}
               </p>
