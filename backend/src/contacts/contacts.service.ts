@@ -45,7 +45,7 @@ export class ContactsService {
   }
 
   async updateStatus(id: string, status: string) {
-    const contact = await this.model.findByIdAndUpdate(id, { status }, { new: true });
+    const contact = await this.model.findByIdAndUpdate(id, { status }, { returnDocument: 'after' });
     if (!contact) throw new NotFoundException('Không tìm thấy thông tin liên hệ');
     return contact;
   }

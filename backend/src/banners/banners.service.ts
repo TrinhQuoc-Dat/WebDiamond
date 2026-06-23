@@ -32,14 +32,14 @@ export class BannersService {
     if (dto.active) {
       await this.model.updateMany({ _id: { $ne: id } }, { active: false });
     }
-    const b = await this.model.findByIdAndUpdate(id, dto, { new: true });
+    const b = await this.model.findByIdAndUpdate(id, dto, { returnDocument: 'after' });
     if (!b) throw new NotFoundException('Không tìm thấy banner');
     return b;
   }
 
   async activate(id: string) {
     await this.model.updateMany({ _id: { $ne: id } }, { active: false });
-    const b = await this.model.findByIdAndUpdate(id, { active: true }, { new: true });
+    const b = await this.model.findByIdAndUpdate(id, { active: true }, { returnDocument: 'after' });
     if (!b) throw new NotFoundException('Không tìm thấy banner');
     return b;
   }
@@ -48,10 +48,13 @@ export class BannersService {
     const b = await this.model.findByIdAndDelete(id);
     if (!b) throw new NotFoundException('Không tìm thấy banner');
     if (b.active) {
-      const first = await this.model.findOne().sort('order');
-      if (first) {
-        first.active = true;
-        await first.save();
+      let fallback = await this.model.findOne({ hidden: false }).sort('order');
+      if (!fallback) {
+        fallback = await this.model.findOne().sort('order');
+      }
+      if (fallback) {
+        fallback.active = true;
+        await fallback.save();
       }
     }
     return { deleted: true };

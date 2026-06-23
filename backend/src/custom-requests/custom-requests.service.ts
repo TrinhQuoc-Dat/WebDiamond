@@ -48,7 +48,7 @@ export class CustomRequestsService {
   }
 
   async updateStatus(id: string, status: string) {
-    const request = await this.model.findByIdAndUpdate(id, { status }, { new: true });
+    const request = await this.model.findByIdAndUpdate(id, { status }, { returnDocument: 'after' });
     if (!request) throw new NotFoundException('Không tìm thấy yêu cầu thiết kế');
     return request;
   }

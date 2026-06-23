@@ -13,6 +13,7 @@ const ProductColorSchema = SchemaFactory.createForClass(ProductColor);
 
 @Schema({
   timestamps: true,
+  suppressReservedKeysWarning: true,
   toJSON: {
     virtuals: true,
     transform: (_doc, ret: any) => { ret.id = ret._id; delete ret._id; delete ret.__v; },

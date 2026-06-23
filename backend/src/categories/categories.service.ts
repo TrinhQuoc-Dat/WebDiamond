@@ -23,7 +23,7 @@ export class CategoriesService {
   }
 
   async update(id: string, dto: UpdateCategoryDto) {
-    const c = await this.model.findByIdAndUpdate(id, dto, { new: true });
+    const c = await this.model.findByIdAndUpdate(id, dto, { returnDocument: 'after' });
     if (!c) throw new NotFoundException('Không tìm thấy danh mục');
     return c;
   }

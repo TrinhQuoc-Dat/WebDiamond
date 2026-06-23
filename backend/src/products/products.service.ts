@@ -55,7 +55,7 @@ export class ProductsService {
   }
 
   async update(id: string, dto: UpdateProductDto) {
-    const updated = await this.model.findByIdAndUpdate(id, dto as any, { new: true });
+    const updated = await this.model.findByIdAndUpdate(id, dto as any, { returnDocument: 'after' });
     if (!updated) throw new NotFoundException('Không tìm thấy sản phẩm');
     return updated;
   }
