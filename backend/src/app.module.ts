@@ -10,6 +10,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { CustomRequestsModule } from './custom-requests/custom-requests.module';
 import { DesignSamplesModule } from './design-samples/design-samples.module';
 import { PagesModule } from './pages/pages.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PagesModule } from './pages/pages.module';
     CustomRequestsModule,
     DesignSamplesModule,
     PagesModule,
+    SettingsModule,
   ],
   controllers: [],
   providers: [],
