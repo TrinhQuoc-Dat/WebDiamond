@@ -12,6 +12,7 @@ import { DesignSamplesModule } from './design-samples/design-samples.module';
 import { PagesModule } from './pages/pages.module';
 import { SettingsModule } from './settings/settings.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UploadsModule } from './uploads/uploads.module';
     PagesModule,
     SettingsModule,
     UploadsModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],
