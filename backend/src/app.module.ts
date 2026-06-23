@@ -9,6 +9,7 @@ import { BannersModule } from './banners/banners.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { CustomRequestsModule } from './custom-requests/custom-requests.module';
 import { DesignSamplesModule } from './design-samples/design-samples.module';
+import { PagesModule } from './pages/pages.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DesignSamplesModule } from './design-samples/design-samples.module';
     ContactsModule,
     CustomRequestsModule,
     DesignSamplesModule,
+    PagesModule,
   ],
   controllers: [],
   providers: [],
