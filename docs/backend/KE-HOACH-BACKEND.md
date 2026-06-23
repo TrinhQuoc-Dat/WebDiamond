@@ -1648,13 +1648,13 @@ export class DashboardController {
 
 **Files:** Create `backend/test/app.e2e-spec.ts`, `backend/README.md`.
 
-- [ ] **Bước 15.1: Viết e2e smoke** — boot app với `mongodb-memory-server`, kiểm tra: `GET /api/products` trả 200; `POST /api/contacts` tạo được; route admin không token trả 401; login → có token → `GET /api/admin/products` trả 200.
+- [x] **Bước 15.1: Viết e2e smoke** — boot app với `mongodb-memory-server`, kiểm tra: `GET /api/products` trả 200; `POST /api/contacts` tạo được; route admin không token trả 401; login → có token → `GET /api/admin/products` trả 200.
 
-- [ ] **Bước 15.2: Chạy** `npm run test:e2e` → PASS.
+- [x] **Bước 15.2: Chạy** `npm run test:e2e` → PASS.
 
-- [ ] **Bước 15.3: Viết `backend/README.md`** — hướng dẫn: cài đặt, `.env`, `npm run seed`, `npm run start:dev`, bảng tóm tắt endpoints (copy mục 3).
+- [x] **Bước 15.3: Viết `backend/README.md`** — hướng dẫn: cài đặt, `.env`, `npm run seed`, `npm run start:dev`, bảng tóm tắt endpoints (copy mục 3).
 
-- [ ] **Bước 15.4: Commit** — `test(backend): e2e smoke + README`.
+- [x] **Bước 15.4: Commit** — `test(backend): e2e smoke + README`.
 
 ---
 

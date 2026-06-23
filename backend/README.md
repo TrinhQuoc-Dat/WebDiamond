@@ -1,98 +1,100 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# WebDiamond Backend (NestJS + MongoDB)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Hệ thống quản lý nội dung (CMS) và dịch vụ API cho cửa hàng trang sức cao cấp WebDiamond.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 1. Cài đặt Dự án
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Yêu cầu hệ thống:
+* **Node.js**: Phiên bản 18+ hoặc 20+
+* **MongoDB**: Chạy cục bộ ở cổng mặc định `27017`
 
-## Project setup
-
+### Cài đặt thư viện:
 ```bash
-$ npm install
+cd backend
+npm install
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+## 2. Cấu hình Môi trường (`.env`)
+Tạo tệp `.env` trong thư mục `backend/` dựa trên mẫu của `.env.example`:
+```ini
+PORT=4000
+MONGO_URI=mongodb://127.0.0.1:27017/webdiamond
+JWT_SECRET=db86b8eaec34df9dfc29eb24a9a0890bf2bb8579ad46174a72d38ffb6cfcd84b
+JWT_EXPIRES=7d
+ADMIN_EMAIL=admin@webdiamond.com
+ADMIN_PASSWORD=admin123
+CORS_ORIGIN=http://localhost:3000
+UPLOAD_DIR=uploads
+PUBLIC_URL=http://localhost:4000
 ```
 
-## Run tests
+---
 
+## 3. Khởi tạo Dữ liệu (Seed Data)
+Hệ thống đi kèm script tự động tạo tài khoản quản trị viên và nạp dữ liệu mẫu ban đầu (danh mục, banner, sản phẩm, liên hệ mẫu).
+Để chạy seed dữ liệu (Idempotent - không bị trùng lặp dữ liệu khi chạy lại nhiều lần):
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run seed
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+## 4. Chạy Máy chủ Phát triển (Dev Server)
+Để khởi chạy máy chủ NestJS ở chế độ phát triển (watch mode):
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
+```
+Máy chủ sẽ lắng nghe tại địa chỉ: `http://localhost:4000/api`
+
+---
+
+## 5. Chạy Kiểm thử (Tests)
+
+### Kiểm thử đơn vị (Unit Tests):
+Các bài kiểm thử đơn vị cho service và controller chạy trên cơ sở dữ liệu in-memory tự dựng (`mongodb-memory-server`):
+```bash
+# Chạy toàn bộ unit tests
+npm run test
+
+# Chạy riêng cho từng module cụ thể (ví dụ: products.service)
+npm test -- products.service
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Kiểm thử tích hợp tổng thể (E2E Smoke Tests):
+Kịch bản kiểm thử giả lập toàn bộ quy trình: Đăng nhập → Tạo danh mục → Tạo sản phẩm → Xem sản phẩm công khai → Gửi liên hệ → Xem thống kê Dashboard:
+```bash
+npm run test:e2e
+```
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 6. Danh sách API Endpoints rút gọn
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Tài liệu hướng dẫn gọi API đầy đủ kèm tham số và payload mẫu chi tiết tại: [api-endpoints.md](api-endpoints.md).
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Phương thức | Đường dẫn API | Xác thực | Mô tả chức năng |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/auth/login` | Công khai | Đăng nhập tài khoản Admin |
+| **GET** | `/api/auth/me` | Admin | Lấy thông tin tài khoản hiện tại |
+| **GET** | `/api/categories` | Công khai | Lấy danh mục hiển thị (Sắp xếp theo thứ tự) |
+| **GET** | `/api/admin/categories` | Admin | Lấy toàn bộ danh mục cho CMS |
+| **POST** | `/api/admin/categories` | Admin | Tạo danh mục mới |
+| **PATCH**| `/api/admin/categories/reorder` | Admin | Đổi thứ tự hiển thị danh mục |
+| **GET** | `/api/products` | Công khai | Lấy danh sách sản phẩm phân trang & bộ lọc |
+| **GET** | `/api/products/:slug` | Công khai | Chi tiết sản phẩm theo slug |
+| **POST** | `/api/admin/products` | Admin | Thêm sản phẩm mới |
+| **GET** | `/api/banners` | Công khai | Lấy banner hiển thị |
+| **GET** | `/api/banners/active` | Công khai | Lấy banner kích hoạt chạy chính |
+| **PATCH**| `/api/admin/banners/:id/activate`| Admin | Kích hoạt banner duy nhất |
+| **POST** | `/api/contacts` | Công khai | Khách hàng gửi liên hệ tư vấn |
+| **PATCH**| `/api/admin/contacts/:id/status` | Admin | Cập nhật trạng thái xử lý liên hệ |
+| **POST** | `/api/custom-requests` | Công khai | Gửi yêu cầu thiết kế riêng |
+| **GET** | `/api/pages/:key` | Công khai | Lấy trang tĩnh CMS (`about`, `size-guide`, `warranty`) |
+| **GET** | `/api/settings` | Công khai | Lấy cấu hình hệ thống (GTM, hotline, email...) |
+| **POST** | `/api/admin/uploads` | Admin | Tải ảnh/video lên đĩa (Multer) |
+| **GET** | `/api/admin/dashboard/stats` | Admin | Xem số liệu thống kê tổng hợp CMS |
+| **GET** | `/api/admin/dashboard/contacts-chart` | Admin | Dữ liệu vẽ biểu đồ liên hệ theo thời gian |
