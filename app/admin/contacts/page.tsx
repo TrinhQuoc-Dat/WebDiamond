@@ -278,7 +278,7 @@ export default function ContactsPage() {
             <div className="flex justify-end pt-4 border-t border-[#1C1C1E]">
               <button
                 onClick={() => setSelectedContact(null)}
-                className="px-6 py-2.5 bg-[#1C1C1E] border border-[#2A2A30] rounded-xl text-xs font-bold text-white hover:bg-white/[0.03] transition-all"
+                className="px-16 py-4 bg-[#1C1C1E] border border-[#2A2A30] rounded-md text-base font-bold text-white hover:bg-white/[0.08] transition-all cursor-pointer whitespace-nowrap"
               >
                 Đóng hộp thoại
               </button>
