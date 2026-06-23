@@ -1558,7 +1558,7 @@ Expected: `{ "urls": ["http://localhost:4000/uploads/....jpg"] }`, và mở URL 
 
 **Files:** Create `src/modules/dashboard/*`.
 
-- [ ] **Bước 13.1: Tạo `src/modules/dashboard/dashboard.service.ts`**
+- [x] **Bước 13.1: Tạo `src/modules/dashboard/dashboard.service.ts`**
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -1600,7 +1600,7 @@ export class DashboardService {
 }
 ```
 
-- [ ] **Bước 13.2: Tạo `src/modules/dashboard/dashboard.controller.ts`**
+- [x] **Bước 13.2: Tạo `src/modules/dashboard/dashboard.controller.ts`**
 
 ```typescript
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
@@ -1624,11 +1624,11 @@ export class DashboardController {
 }
 ```
 
-- [ ] **Bước 13.3: Tạo `src/modules/dashboard/dashboard.module.ts`** — import `MongooseModule.forFeature` cho Product, Banner, Contact schema; khai báo controller + service.
+- [x] **Bước 13.3: Tạo `src/modules/dashboard/dashboard.module.ts`** — import `MongooseModule.forFeature` cho Product, Banner, Contact schema; khai báo controller + service.
 
-- [ ] **Bước 13.4: Test `dashboard.service.spec.ts`** — seed vài product/contact, kiểm tra `stats()` và `contactsChart('day')` gom đúng theo ngày.
+- [x] **Bước 13.4: Test `dashboard.service.spec.ts`** — seed vài product/contact, kiểm tra `stats()` và `contactsChart('day')` gom đúng theo ngày.
 
-- [ ] **Bước 13.5: Chạy test → PASS. Đăng ký module. Commit.**
+- [x] **Bước 13.5: Chạy test → PASS. Đăng ký module. Commit.**
 
 ---
 
