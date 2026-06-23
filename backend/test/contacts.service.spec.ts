@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
-import { ContactsService } from './contacts.service';
-import { Contact, ContactSchema } from './schemas/contact.schema';
+import { ContactsService } from '../src/contacts/contacts.service';
+import { Contact, ContactSchema } from '../src/contacts/schemas/contact.schema';
 
 describe('ContactsService', () => {
   let service: ContactsService;

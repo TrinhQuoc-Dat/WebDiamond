@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
-import { CategoriesService } from './categories.service';
-import { Category, CategorySchema } from './schemas/category.schema';
+import { CategoriesService } from '../src/categories/categories.service';
+import { Category, CategorySchema } from '../src/categories/schemas/category.schema';
 
 describe('CategoriesService', () => {
   let service: CategoriesService;

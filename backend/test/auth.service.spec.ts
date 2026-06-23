@@ -3,8 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as bcrypt from 'bcrypt';
-import { AuthService } from './auth.service';
-import { User, UserSchema } from './schemas/user.schema';
+import { AuthService } from '../src/auth/auth.service';
+import { User, UserSchema } from '../src/auth/schemas/user.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 

@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
-import { BannersService } from './banners.service';
-import { Banner, BannerSchema } from './schemas/banner.schema';
+import { BannersService } from '../src/banners/banners.service';
+import { Banner, BannerSchema } from '../src/banners/schemas/banner.schema';
 
 describe('BannersService', () => {
   let service: BannersService;

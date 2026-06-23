@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
-import { ProductsService } from './products.service';
-import { Product, ProductSchema } from './schemas/product.schema';
+import { ProductsService } from '../src/products/products.service';
+import { Product, ProductSchema } from '../src/products/schemas/product.schema';
 
 describe('ProductsService', () => {
   let service: ProductsService;

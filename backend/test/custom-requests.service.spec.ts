@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
-import { CustomRequestsService } from './custom-requests.service';
-import { CustomRequest, CustomRequestSchema } from './schemas/custom-request.schema';
+import { CustomRequestsService } from '../src/custom-requests/custom-requests.service';
+import { CustomRequest, CustomRequestSchema } from '../src/custom-requests/schemas/custom-request.schema';
 
 describe('CustomRequestsService', () => {
   let service: CustomRequestsService;
