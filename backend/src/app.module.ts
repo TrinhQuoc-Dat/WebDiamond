@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { BannersModule } from './modules/banners/banners.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { BannersModule } from './modules/banners/banners.module';
     ProductsModule,
     CategoriesModule,
     BannersModule,
+    ContactsModule,
   ],
   controllers: [],
   providers: [],
