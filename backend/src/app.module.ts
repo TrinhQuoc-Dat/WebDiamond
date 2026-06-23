@@ -11,6 +11,7 @@ import { CustomRequestsModule } from './custom-requests/custom-requests.module';
 import { DesignSamplesModule } from './design-samples/design-samples.module';
 import { PagesModule } from './pages/pages.module';
 import { SettingsModule } from './settings/settings.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SettingsModule } from './settings/settings.module';
     DesignSamplesModule,
     PagesModule,
     SettingsModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],
