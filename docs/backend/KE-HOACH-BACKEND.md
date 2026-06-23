@@ -372,7 +372,7 @@ backend/
 
 **Files:** tạo toàn bộ scaffold trong `backend/`.
 
-- [ ] **Bước 1.1: Tạo project Nest**
+- [x] **Bước 1.1: Tạo project Nest**
 
 ```bash
 cd g:/DTTeck/WebDiamond
@@ -380,21 +380,21 @@ npx -y @nestjs/cli new backend --package-manager npm --skip-git
 ```
 Khi hỏi package manager chọn `npm`. Kết quả: có `backend/src/main.ts`, `app.module.ts`, `app.controller.ts`, `app.service.ts`.
 
-- [ ] **Bước 1.2: Xóa file mẫu thừa**
+- [x] **Bước 1.2: Xóa file mẫu thừa**
 
 ```bash
 cd g:/DTTeck/WebDiamond/backend
 rm src/app.controller.ts src/app.controller.spec.ts src/app.service.ts
 ```
 
-- [ ] **Bước 1.3: Cài dependencies**
+- [x] **Bước 1.3: Cài dependencies**
 
 ```bash
 npm install @nestjs/config @nestjs/mongoose mongoose @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt class-validator class-transformer
 npm install -D @types/passport-jwt @types/bcrypt @types/multer mongodb-memory-server
 ```
 
-- [ ] **Bước 1.4: Tạo `backend/.env.example`**
+- [x] **Bước 1.4: Tạo `backend/.env.example`**
 
 ```
 PORT=4000
@@ -408,9 +408,9 @@ UPLOAD_DIR=uploads
 PUBLIC_URL=http://localhost:4000
 ```
 
-- [ ] **Bước 1.5: Tạo `backend/.env`** (copy từ `.env.example`, đổi `JWT_SECRET`).
+- [x] **Bước 1.5: Tạo `backend/.env`** (copy từ `.env.example`, đổi `JWT_SECRET`).
 
-- [ ] **Bước 1.6: Cập nhật `backend/.gitignore`** thêm dòng:
+- [x] **Bước 1.6: Cập nhật `backend/.gitignore`** thêm dòng:
 
 ```
 .env
@@ -418,9 +418,9 @@ PUBLIC_URL=http://localhost:4000
 !/uploads/.gitkeep
 ```
 
-- [ ] **Bước 1.7: Tạo `backend/uploads/.gitkeep`** (file rỗng).
+- [x] **Bước 1.7: Tạo `backend/uploads/.gitkeep`** (file rỗng).
 
-- [ ] **Bước 1.8: Commit**
+- [x] **Bước 1.8: Commit**
 
 ```bash
 git add backend
@@ -433,7 +433,7 @@ git commit -m "chore(backend): khởi tạo NestJS + cấu hình env"
 
 **Files:** Create `src/config/configuration.ts`, Modify `src/main.ts`, `src/app.module.ts`.
 
-- [ ] **Bước 2.1: Tạo `src/config/configuration.ts`**
+- [x] **Bước 2.1: Tạo `src/config/configuration.ts`**
 
 ```typescript
 export default () => ({
@@ -449,7 +449,7 @@ export default () => ({
 });
 ```
 
-- [ ] **Bước 2.2: Ghi `src/app.module.ts`** (router gốc — sẽ thêm dần các feature module ở các task sau)
+- [x] **Bước 2.2: Ghi `src/app.module.ts`** (router gốc — sẽ thêm dần các feature module ở các task sau)
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -472,7 +472,7 @@ import configuration from './config/configuration';
 export class AppModule {}
 ```
 
-- [ ] **Bước 2.3: Ghi `src/main.ts`** (CORS, ValidationPipe, static /uploads, prefix /api)
+- [x] **Bước 2.3: Ghi `src/main.ts`** (CORS, ValidationPipe, static /uploads, prefix /api)
 
 ```typescript
 import { NestFactory } from '@nestjs/core';
@@ -499,7 +499,7 @@ async function bootstrap() {
 bootstrap();
 ```
 
-- [ ] **Bước 2.4: Tạo `src/common/filters/http-exception.filter.ts`**
+- [x] **Bước 2.4: Tạo `src/common/filters/http-exception.filter.ts`**
 
 ```typescript
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
@@ -526,12 +526,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 }
 ```
 
-- [ ] **Bước 2.5: Chạy thử server**
+- [x] **Bước 2.5: Chạy thử server**
 
 Run: `npm run start:dev`
 Expected: Log "Backend chạy tại http://localhost:4000/api", không lỗi (cần MongoDB đang chạy local hoặc Atlas URI hợp lệ).
 
-- [ ] **Bước 2.6: Commit**
+- [x] **Bước 2.6: Commit**
 
 ```bash
 git add backend/src
@@ -544,7 +544,7 @@ git commit -m "feat(backend): bootstrap app, config, CORS, static uploads, excep
 
 **Files:** Create `src/modules/auth/*`, `src/common/guards/jwt-auth.guard.ts`, `src/common/decorators/public.decorator.ts`, `src/database/seed.ts`.
 
-- [ ] **Bước 3.1: Tạo `src/modules/auth/schemas/user.schema.ts`**
+- [x] **Bước 3.1: Tạo `src/modules/auth/schemas/user.schema.ts`**
 
 ```typescript
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -570,7 +570,7 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User);
 ```
 
-- [ ] **Bước 3.2: Tạo `src/modules/auth/dto/login.dto.ts`**
+- [x] **Bước 3.2: Tạo `src/modules/auth/dto/login.dto.ts`**
 
 ```typescript
 import { IsEmail, IsString, MinLength } from 'class-validator';
@@ -585,7 +585,7 @@ export class LoginDto {
 }
 ```
 
-- [ ] **Bước 3.3: Tạo `src/common/decorators/public.decorator.ts`**
+- [x] **Bước 3.3: Tạo `src/common/decorators/public.decorator.ts`**
 
 ```typescript
 import { SetMetadata } from '@nestjs/common';
@@ -593,7 +593,7 @@ export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 ```
 
-- [ ] **Bước 3.4: Tạo `src/modules/auth/strategies/jwt.strategy.ts`**
+- [x] **Bước 3.4: Tạo `src/modules/auth/strategies/jwt.strategy.ts`**
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -616,7 +616,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 ```
 
-- [ ] **Bước 3.5: Tạo `src/common/guards/jwt-auth.guard.ts`** (tôn trọng `@Public()`)
+- [x] **Bước 3.5: Tạo `src/common/guards/jwt-auth.guard.ts`** (tôn trọng `@Public()`)
 
 ```typescript
 import { ExecutionContext, Injectable } from '@nestjs/common';
@@ -640,7 +640,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 }
 ```
 
-- [ ] **Bước 3.6: Tạo `src/modules/auth/auth.service.ts`**
+- [x] **Bước 3.6: Tạo `src/modules/auth/auth.service.ts`**
 
 ```typescript
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -674,7 +674,7 @@ export class AuthService {
 }
 ```
 
-- [ ] **Bước 3.7: Tạo `src/modules/auth/auth.controller.ts`**
+- [x] **Bước 3.7: Tạo `src/modules/auth/auth.controller.ts`**
 
 ```typescript
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
@@ -701,7 +701,7 @@ export class AuthController {
 }
 ```
 
-- [ ] **Bước 3.8: Tạo `src/modules/auth/auth.module.ts`**
+- [x] **Bước 3.8: Tạo `src/modules/auth/auth.module.ts`**
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -731,7 +731,7 @@ import { User, UserSchema } from './schemas/user.schema';
 export class AuthModule {}
 ```
 
-- [ ] **Bước 3.9: Tạo test `src/modules/auth/auth.service.spec.ts`** (viết test TRƯỚC khi tin tưởng logic)
+- [x] **Bước 3.9: Tạo test `src/modules/auth/auth.service.spec.ts`** (viết test TRƯỚC khi tin tưởng logic)
 
 ```typescript
 import { Test } from '@nestjs/testing';
@@ -780,12 +780,12 @@ describe('AuthService', () => {
 });
 ```
 
-- [ ] **Bước 3.10: Chạy test**
+- [x] **Bước 3.10: Chạy test**
 
 Run: `npm test -- auth.service`
 Expected: 2 test PASS.
 
-- [ ] **Bước 3.11: Tạo `src/database/seed.ts`** (tạo admin mặc định nếu chưa có)
+- [x] **Bước 3.11: Tạo `src/database/seed.ts`** (tạo admin mặc định nếu chưa có)
 
 ```typescript
 import { NestFactory } from '@nestjs/core';
@@ -817,15 +817,15 @@ async function seed() {
 seed();
 ```
 
-- [ ] **Bước 3.12: Thêm script seed vào `backend/package.json`** mục `scripts`:
+- [x] **Bước 3.12: Thêm script seed vào `backend/package.json`** mục `scripts`:
 
 ```json
 "seed": "ts-node src/database/seed.ts"
 ```
 
-- [ ] **Bước 3.13: Đăng ký `AuthModule` vào `app.module.ts`** — thêm `import { AuthModule } from './modules/auth/auth.module';` và đưa `AuthModule` vào mảng `imports`.
+- [x] **Bước 3.13: Đăng ký `AuthModule` vào `app.module.ts`** — thêm `import { AuthModule } from './modules/auth/auth.module';` và đưa `AuthModule` vào mảng `imports`.
 
-- [ ] **Bước 3.14: Seed + test thủ công**
+- [x] **Bước 3.14: Seed + test thủ công**
 
 ```bash
 npm run seed
@@ -835,7 +835,7 @@ curl -X POST http://localhost:4000/api/auth/login -H "Content-Type: application/
 ```
 Expected: JSON có `accessToken`.
 
-- [ ] **Bước 3.15: Commit**
+- [x] **Bước 3.15: Commit**
 
 ```bash
 git add backend/src backend/package.json
@@ -848,7 +848,7 @@ git commit -m "feat(backend): module auth JWT + guard + seed admin"
 
 **Files:** Create `src/modules/products/*`.
 
-- [ ] **Bước 4.1: Tạo `src/modules/products/schemas/product.schema.ts`**
+- [x] **Bước 4.1: Tạo `src/modules/products/schemas/product.schema.ts`**
 
 ```typescript
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -894,7 +894,7 @@ export class Product {
 export const ProductSchema = SchemaFactory.createForClass(Product);
 ```
 
-- [ ] **Bước 4.2: Tạo `src/modules/products/dto/create-product.dto.ts`**
+- [x] **Bước 4.2: Tạo `src/modules/products/dto/create-product.dto.ts`**
 
 ```typescript
 import { Type } from 'class-transformer';
@@ -929,7 +929,7 @@ export class CreateProductDto {
 }
 ```
 
-- [ ] **Bước 4.3: Tạo `src/modules/products/dto/update-product.dto.ts`**
+- [x] **Bước 4.3: Tạo `src/modules/products/dto/update-product.dto.ts`**
 
 ```typescript
 import { PartialType } from '@nestjs/mapped-types';
@@ -938,7 +938,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {}
 ```
 > Lưu ý: cần `npm install @nestjs/mapped-types` (thường đã có sẵn theo Nest).
 
-- [ ] **Bước 4.4: Tạo `src/modules/products/dto/query-product.dto.ts`**
+- [x] **Bước 4.4: Tạo `src/modules/products/dto/query-product.dto.ts`**
 
 ```typescript
 import { Type } from 'class-transformer';
@@ -955,7 +955,7 @@ export class QueryProductDto {
 }
 ```
 
-- [ ] **Bước 4.5: Tạo `src/modules/products/products.service.ts`**
+- [x] **Bước 4.5: Tạo `src/modules/products/products.service.ts`**
 
 ```typescript
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -1042,7 +1042,7 @@ export class ProductsService {
 }
 ```
 
-- [ ] **Bước 4.6: Tạo `src/modules/products/products.controller.ts`**
+- [x] **Bước 4.6: Tạo `src/modules/products/products.controller.ts`**
 
 ```typescript
 import {
@@ -1114,7 +1114,7 @@ export class ProductsAdminController {
 }
 ```
 
-- [ ] **Bước 4.7: Tạo `src/modules/products/products.module.ts`**
+- [x] **Bước 4.7: Tạo `src/modules/products/products.module.ts`**
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -1131,7 +1131,7 @@ import { ProductsPublicController, ProductsAdminController } from './products.co
 export class ProductsModule {}
 ```
 
-- [ ] **Bước 4.8: Viết test `src/modules/products/products.service.spec.ts`** (TDD)
+- [x] **Bước 4.8: Viết test `src/modules/products/products.service.spec.ts`** (TDD)
 
 ```typescript
 import { Test } from '@nestjs/testing';
@@ -1194,14 +1194,14 @@ describe('ProductsService', () => {
 });
 ```
 
-- [ ] **Bước 4.9: Chạy test**
+- [x] **Bước 4.9: Chạy test**
 
 Run: `npm test -- products.service`
 Expected: 4 test PASS.
 
-- [ ] **Bước 4.10: Đăng ký `ProductsModule` vào `app.module.ts`** (thêm import + vào mảng `imports`).
+- [x] **Bước 4.10: Đăng ký `ProductsModule` vào `app.module.ts`** (thêm import + vào mảng `imports`).
 
-- [ ] **Bước 4.11: Test thủ công qua curl**
+- [x] **Bước 4.11: Test thủ công qua curl**
 
 ```bash
 npm run start:dev
@@ -1209,7 +1209,7 @@ curl http://localhost:4000/api/products
 ```
 Expected: `{ "data": [], "total": 0, ... }`.
 
-- [ ] **Bước 4.12: Commit**
+- [x] **Bước 4.12: Commit**
 
 ```bash
 git add backend/src
@@ -1222,7 +1222,7 @@ git commit -m "feat(backend): module products (public + admin) với test"
 
 **Files:** Create `src/modules/categories/*`. Lặp đúng pattern Task 4.
 
-- [ ] **Bước 5.1: Schema `category.schema.ts`** — trường theo mục 2.3:
+- [x] **Bước 5.1: Schema `category.schema.ts`** — trường theo mục 2.3:
 
 ```typescript
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -1239,7 +1239,7 @@ export class Category {
 export const CategorySchema = SchemaFactory.createForClass(Category);
 ```
 
-- [ ] **Bước 5.2: DTOs**
+- [x] **Bước 5.2: DTOs**
 
 `dto/create-category.dto.ts`:
 ```typescript
@@ -1267,7 +1267,7 @@ export class ReorderDto {
 }
 ```
 
-- [ ] **Bước 5.3: Service `categories.service.ts`**
+- [x] **Bước 5.3: Service `categories.service.ts`**
 
 ```typescript
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -1301,17 +1301,17 @@ export class CategoriesService {
 }
 ```
 
-- [ ] **Bước 5.4: Controller `categories.controller.ts`** — 1 public controller (`@Controller('categories')` với `findPublic`) + 1 admin controller (`@Controller('admin/categories')` gắn `@UseGuards(JwtAuthGuard)`) có `GET / POST / PUT :id / DELETE :id / PATCH reorder`. (Lặp khung Task 4.6.)
+- [x] **Bước 5.4: Controller `categories.controller.ts`** — 1 public controller (`@Controller('categories')` với `findPublic`) + 1 admin controller (`@Controller('admin/categories')` gắn `@UseGuards(JwtAuthGuard)`) có `GET / POST / PUT :id / DELETE :id / PATCH reorder`. (Lặp khung Task 4.6.)
 
-- [ ] **Bước 5.5: Module `categories.module.ts`** — `MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])`, khai báo 2 controller + service.
+- [x] **Bước 5.5: Module `categories.module.ts`** — `MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])`, khai báo 2 controller + service.
 
-- [ ] **Bước 5.6: Test `categories.service.spec.ts`** — test: tạo, `findPublic` bỏ hidden, `reorder` đổi order. (Lặp khung Task 4.8.)
+- [x] **Bước 5.6: Test `categories.service.spec.ts`** — test: tạo, `findPublic` bỏ hidden, `reorder` đổi order. (Lặp khung Task 4.8.)
 
-- [ ] **Bước 5.7: Chạy test** — `npm test -- categories.service` → PASS.
+- [x] **Bước 5.7: Chạy test** — `npm test -- categories.service` → PASS.
 
-- [ ] **Bước 5.8: Đăng ký `CategoriesModule` vào `app.module.ts`.**
+- [x] **Bước 5.8: Đăng ký `CategoriesModule` vào `app.module.ts`.**
 
-- [ ] **Bước 5.9: Commit** — `feat(backend): module categories + reorder`.
+- [x] **Bước 5.9: Commit** — `feat(backend): module categories + reorder`.
 
 ---
 
@@ -1319,11 +1319,11 @@ export class CategoriesService {
 
 **Files:** Create `src/modules/banners/*`.
 
-- [ ] **Bước 6.1: Schema** theo mục 2.4 (đủ trường: title, subtitle, image, type, link, active, muted, hidden, order).
+- [x] **Bước 6.1: Schema** theo mục 2.4 (đủ trường: title, subtitle, image, type, link, active, muted, hidden, order).
 
-- [ ] **Bước 6.2: DTOs** `create-banner.dto.ts` (subtitle & image required; type enum image/video; còn lại optional) + `update-banner.dto.ts` (PartialType).
+- [x] **Bước 6.2: DTOs** `create-banner.dto.ts` (subtitle & image required; type enum image/video; còn lại optional) + `update-banner.dto.ts` (PartialType).
 
-- [ ] **Bước 6.3: Service `banners.service.ts`** với business rule "chỉ 1 banner active":
+- [x] **Bước 6.3: Service `banners.service.ts`** với business rule "chỉ 1 banner active":
 
 ```typescript
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -1368,13 +1368,13 @@ export class BannersService {
 }
 ```
 
-- [ ] **Bước 6.4: Controller** — public `@Controller('banners')` có `GET /` (findPublic) + `GET /active`; admin `@Controller('admin/banners')` có `GET / POST / PUT :id / DELETE :id / PATCH :id/activate`.
+- [x] **Bước 6.4: Controller** — public `@Controller('banners')` có `GET /` (findPublic) + `GET /active`; admin `@Controller('admin/banners')` có `GET / POST / PUT :id / DELETE :id / PATCH :id/activate`.
 
-- [ ] **Bước 6.5: Module** đăng ký schema + controllers + service.
+- [x] **Bước 6.5: Module** đăng ký schema + controllers + service.
 
-- [ ] **Bước 6.6: Test `banners.service.spec.ts`** — quan trọng: test "tạo banner active=true thì các banner cũ thành active=false", "activate đảm bảo duy nhất 1 active".
+- [x] **Bước 6.6: Test `banners.service.spec.ts`** — quan trọng: test "tạo banner active=true thì các banner cũ thành active=false", "activate đảm bảo duy nhất 1 active".
 
-- [ ] **Bước 6.7: Chạy test** → PASS. **Đăng ký module. Commit** — `feat(backend): module banners + single-active rule`.
+- [x] **Bước 6.7: Chạy test** → PASS. **Đăng ký module. Commit** — `feat(backend): module banners + single-active rule`.
 
 ---
 
@@ -1382,9 +1382,9 @@ export class BannersService {
 
 **Files:** Create `src/modules/contacts/*`.
 
-- [ ] **Bước 7.1: Schema** theo mục 2.5.
+- [x] **Bước 7.1: Schema** theo mục 2.5.
 
-- [ ] **Bước 7.2: DTOs**
+- [x] **Bước 7.2: DTOs**
 
 `create-contact.dto.ts`:
 ```typescript
@@ -1405,11 +1405,11 @@ export class UpdateContactStatusDto {
 ```
 `query-contact.dto.ts`: `status?`, `search?`, `page?`, `limit?` (lặp khung Task 4.4).
 
-- [ ] **Bước 7.3: Service** — `create(dto)` (public), `findPaged(query)` (filter status + search theo name/email/phone), `findOne(id)`, `updateStatus(id, status)`, `remove(id)`.
+- [x] **Bước 7.3: Service** — `create(dto)` (public), `findPaged(query)` (filter status + search theo name/email/phone), `findOne(id)`, `updateStatus(id, status)`, `remove(id)`.
 
-- [ ] **Bước 7.4: Controller** — public `@Controller('contacts')` chỉ `POST /`; admin `@Controller('admin/contacts')` có `GET / GET :id / PATCH :id/status / DELETE :id`.
+- [x] **Bước 7.4: Controller** — public `@Controller('contacts')` chỉ `POST /`; admin `@Controller('admin/contacts')` có `GET / GET :id / PATCH :id/status / DELETE :id`.
 
-- [ ] **Bước 7.5: Module + Test** — test: tạo từ form public; `findPaged` lọc theo status; `updateStatus` đổi đúng. **Đăng ký module. Commit.**
+- [x] **Bước 7.5: Module + Test** — test: tạo từ form public; `findPaged` lọc theo status; `updateStatus` đổi đúng. **Đăng ký module. Commit.**
 
 ---
 
@@ -1417,13 +1417,13 @@ export class UpdateContactStatusDto {
 
 **Files:** Create `src/modules/custom-requests/*`. Giống Task 7 nhưng schema theo mục 2.6.
 
-- [ ] **Bước 8.1: Schema** mục 2.6 (name, email, phone, idea, budget, status enum `Mới/Đang xử lý/Hoàn thành`).
+- [x] **Bước 8.1: Schema** mục 2.6 (name, email, phone, idea, budget, status enum `Mới/Đang xử lý/Hoàn thành`).
 
-- [ ] **Bước 8.2: DTO `create-custom-request.dto.ts`** — `name`(req), `email`(IsEmail), `idea`(req), `phone?`, `budget?`. `update-status.dto.ts` với `@IsIn(['Mới','Đang xử lý','Hoàn thành'])`.
+- [x] **Bước 8.2: DTO `create-custom-request.dto.ts`** — `name`(req), `email`(IsEmail), `idea`(req), `phone?`, `budget?`. `update-status.dto.ts` với `@IsIn(['Mới','Đang xử lý','Hoàn thành'])`.
 
-- [ ] **Bước 8.3: Service + Controller + Module** — public `POST /custom-requests`; admin `GET/GET :id/PATCH :id/status/DELETE :id` dưới `admin/custom-requests`.
+- [x] **Bước 8.3: Service + Controller + Module** — public `POST /custom-requests`; admin `GET/GET :id/PATCH :id/status/DELETE :id` dưới `admin/custom-requests`.
 
-- [ ] **Bước 8.4: Test + đăng ký module + Commit.**
+- [x] **Bước 8.4: Test + đăng ký module + Commit.**
 
 ---
 
@@ -1431,11 +1431,11 @@ export class UpdateContactStatusDto {
 
 **Files:** Create `src/modules/design-samples/*`.
 
-- [ ] **Bước 9.1: Schema** mục 2.7 (title, image, description, order, hidden).
-- [ ] **Bước 9.2: DTO** create (title & image required) + update (PartialType).
-- [ ] **Bước 9.3: Service** — `findPublic()` (`hidden:false` sort order), `findAll()`, `create/update/remove`.
-- [ ] **Bước 9.4: Controller** — public `GET /design-samples`; admin CRUD `admin/design-samples`.
-- [ ] **Bước 9.5: Module + Test + đăng ký + Commit.**
+- [x] **Bước 9.1: Schema** mục 2.7 (title, image, description, order, hidden).
+- [x] **Bước 9.2: DTO** create (title & image required) + update (PartialType).
+- [x] **Bước 9.3: Service** — `findPublic()` (`hidden:false` sort order), `findAll()`, `create/update/remove`.
+- [x] **Bước 9.4: Controller** — public `GET /design-samples`; admin CRUD `admin/design-samples`.
+- [x] **Bước 9.5: Module + Test + đăng ký + Commit.**
 
 ---
 
@@ -1443,9 +1443,9 @@ export class UpdateContactStatusDto {
 
 **Files:** Create `src/modules/pages/*`.
 
-- [ ] **Bước 10.1: Schema** mục 2.8 (key enum, title, content, images).
+- [x] **Bước 10.1: Schema** mục 2.8 (key enum, title, content, images).
 
-- [ ] **Bước 10.2: DTO `update-page.dto.ts`**
+- [x] **Bước 10.2: DTO `update-page.dto.ts`**
 
 ```typescript
 import { IsArray, IsOptional, IsString } from 'class-validator';
@@ -1456,7 +1456,7 @@ export class UpdatePageDto {
 }
 ```
 
-- [ ] **Bước 10.3: Service** — dùng upsert theo `key`:
+- [x] **Bước 10.3: Service** — dùng upsert theo `key`:
 
 ```typescript
 async getByKey(key: string) {
@@ -1467,9 +1467,9 @@ async updateByKey(key: string, dto: UpdatePageDto) {
 }
 ```
 
-- [ ] **Bước 10.4: Controller** — public `GET /pages/:key`; admin `PUT /admin/pages/:key`. Validate `key ∈ ['about','size-guide','warranty']` (ném `BadRequestException` nếu sai).
+- [x] **Bước 10.4: Controller** — public `GET /pages/:key`; admin `PUT /admin/pages/:key`. Validate `key ∈ ['about','size-guide','warranty']` (ném `BadRequestException` nếu sai).
 
-- [ ] **Bước 10.5: Module + Test (upsert tạo mới khi chưa có) + đăng ký + Commit.**
+- [x] **Bước 10.5: Module + Test (upsert tạo mới khi chưa có) + đăng ký + Commit.**
 
 ---
 
@@ -1477,11 +1477,11 @@ async updateByKey(key: string, dto: UpdatePageDto) {
 
 **Files:** Create `src/modules/settings/*`.
 
-- [ ] **Bước 11.1: Schema** mục 2.9.
+- [x] **Bước 11.1: Schema** mục 2.9.
 
-- [ ] **Bước 11.2: DTO `update-setting.dto.ts`** — tất cả optional: `gtmId?`, `trackingEnabled?(boolean)`, `contactAddress?`, `contactHotline?`, `contactEmail?`, `googleMapUrl?`.
+- [x] **Bước 11.2: DTO `update-setting.dto.ts`** — tất cả optional: `gtmId?`, `trackingEnabled?(boolean)`, `contactAddress?`, `contactHotline?`, `contactEmail?`, `googleMapUrl?`.
 
-- [ ] **Bước 11.3: Service singleton** — luôn thao tác trên 1 document:
+- [x] **Bước 11.3: Service singleton** — luôn thao tác trên 1 document:
 
 ```typescript
 async get() {
@@ -1492,9 +1492,9 @@ async update(dto: UpdateSettingDto) {
 }
 ```
 
-- [ ] **Bước 11.4: Controller** — public `GET /settings`; admin `PUT /admin/settings`.
+- [x] **Bước 11.4: Controller** — public `GET /settings`; admin `PUT /admin/settings`.
 
-- [ ] **Bước 11.5: Module + Test + đăng ký + Commit.**
+- [x] **Bước 11.5: Module + Test + đăng ký + Commit.**
 
 ---
 
@@ -1502,7 +1502,7 @@ async update(dto: UpdateSettingDto) {
 
 **Files:** Create `src/modules/uploads/*`.
 
-- [ ] **Bước 12.1: Tạo `src/modules/uploads/uploads.controller.ts`**
+- [x] **Bước 12.1: Tạo `src/modules/uploads/uploads.controller.ts`**
 
 ```typescript
 import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
@@ -1536,11 +1536,11 @@ export class UploadsController {
 ```
 > Lưu ý: `Math.random()` ở đây chạy trong code thực thi của backend (không phải trong môi trường harness) nên hợp lệ.
 
-- [ ] **Bước 12.2: Tạo `src/modules/uploads/uploads.module.ts`** — chỉ khai báo `controllers: [UploadsController]`.
+- [x] **Bước 12.2: Tạo `src/modules/uploads/uploads.module.ts`** — chỉ khai báo `controllers: [UploadsController]`.
 
-- [ ] **Bước 12.3: Đăng ký `UploadsModule` vào `app.module.ts`.**
+- [x] **Bước 12.3: Đăng ký `UploadsModule` vào `app.module.ts`.**
 
-- [ ] **Bước 12.4: Test thủ công**
+- [x] **Bước 12.4: Test thủ công**
 
 ```bash
 # Lấy token trước (đăng nhập), rồi:
@@ -1550,7 +1550,7 @@ curl -X POST http://localhost:4000/api/admin/uploads \
 ```
 Expected: `{ "urls": ["http://localhost:4000/uploads/....jpg"] }`, và mở URL đó thấy ảnh.
 
-- [ ] **Bước 12.5: Commit** — `feat(backend): module uploads (multer disk)`.
+- [x] **Bước 12.5: Commit** — `feat(backend): module uploads (multer disk)`.
 
 ---
 
