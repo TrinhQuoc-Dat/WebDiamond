@@ -8,6 +8,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { BannersModule } from './banners/banners.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { CustomRequestsModule } from './custom-requests/custom-requests.module';
+import { DesignSamplesModule } from './design-samples/design-samples.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CustomRequestsModule } from './custom-requests/custom-requests.module';
     BannersModule,
     ContactsModule,
     CustomRequestsModule,
+    DesignSamplesModule,
   ],
   controllers: [],
   providers: [],
