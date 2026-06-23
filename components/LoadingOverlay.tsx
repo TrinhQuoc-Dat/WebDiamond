@@ -40,45 +40,21 @@ export default function LoadingOverlay() {
           key="loader"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black"
-          style={{
-            width: "100%",
-            height: "100%",
-            minWidth: "100%",
-            minHeight: "100%",
-            cursor: "none",
-          }}
+          transition={{ duration: 0.4 }}
+          className="fixed inset-0 z-[99999] overflow-hidden bg-black"
         >
-          <div className="flex flex-col items-center gap-6">
-            {/* Wrapper: translateZ(0) forces GPU layer → prevents 3D alias artifact */}
-            <div
-              style={{
-                transform: "translateZ(0)",
-                willChange: "transform",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.gif"
-                alt="GODG1FT JEWELRY"
-                className="select-none pointer-events-none"
-                style={{
-                  width: 192,
-                  maxWidth: "80vw",
-                  height: "auto",
-                  display: "block",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              />
-            </div>
+          <img
+            src="/logo.gif"
+            alt="GODG1FT JEWELRY"
+            className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+          />
+
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
             <motion.span
               className="text-[10px] tracking-[0.4em] text-white/50 uppercase"
               initial={{ opacity: 0.3 }}
               animate={{ opacity: [0.3, 0.8, 0.3] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-              style={{ fontFamily: "var(--font-sans)", fontWeight: 500 }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
             >
               Loading Atelier
             </motion.span>
