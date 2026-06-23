@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from '../app.module';
-import { User } from '../modules/auth/schemas/user.schema';
+import { User } from '../auth/schemas/user.schema';
 
 async function seed() {
   const app = await NestFactory.createApplicationContext(AppModule);

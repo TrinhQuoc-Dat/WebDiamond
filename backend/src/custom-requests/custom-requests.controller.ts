@@ -5,8 +5,8 @@ import { CustomRequestsService } from './custom-requests.service';
 import { CreateCustomRequestDto } from './dto/create-custom-request.dto';
 import { UpdateCustomRequestStatusDto } from './dto/update-status.dto';
 import { QueryCustomRequestDto } from './dto/query-custom-request.dto';
-import { Public } from '../../common/decorators/public.decorator';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Public } from '../common/decorators/public.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('custom-requests')
 export class CustomRequestsPublicController {
