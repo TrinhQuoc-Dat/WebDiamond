@@ -161,7 +161,7 @@ export default function CustomShowcase() {
       className="relative bg-black text-white"
       style={{ height: `${(projects.length + 1) * 100}vh` }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden">
+      <div className="sticky top-0 h-screen overflow-hidden" style={{ paddingTop: "80px" }}>
 
         {/* Background Glow */}
         <div className="absolute inset-0 pointer-events-none">
@@ -175,11 +175,12 @@ export default function CustomShowcase() {
         {/* Noise */}
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
 
-        <div className="relative h-full flex">
+        <div className="h-full flex flex-col md:flex-row">
 
-          <div className="w-full md:w-[62%] relative flex items-center pr-8 md:pr-20" style={{ paddingLeft: "clamp(48px, 8vw, 320px)" }}>
+          {/* ═══ LEFT / TOP — Text + Year ═══ */}
+          <div className="w-full md:w-[62%] h-[20%] md:h-full relative flex items-center justify-center md:justify-start px-6 md:px-0" style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}>
 
-            {/* Timeline bar */}
+            {/* Timeline bar — desktop only */}
             <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
               <div className="relative w-px h-[300px] bg-white/20">
                 <motion.div
@@ -189,18 +190,40 @@ export default function CustomShowcase() {
               </div>
             </div>
 
-            {/* Scrolling text stack — shows active item at center + faded items above/below */}
-            <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative" }}>
-              <motion.div
-                animate={{ y: -active * itemHeight + centerOffset }}
-                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                style={{ width: "100%" }}
-              >
-                {renderSubtitleList()}
-              </motion.div>
+            {/* Active title — mobile: centered large text */}
+            <div className="md:hidden text-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`mobile-title-${active}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 5vw, 32px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em", color: "white" }}>
+                    {project.title}
+                  </h1>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "4px", letterSpacing: "0.15em" }}>
+                    YEAR {project.year}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* YEAR block */}
+            {/* Text wheel — desktop only */}
+            <div className="hidden md:block" style={{ width: "100%" }}>
+              <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative" }}>
+                <motion.div
+                  animate={{ y: -active * itemHeight + centerOffset }}
+                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  style={{ width: "100%" }}
+                >
+                  {renderSubtitleList()}
+                </motion.div>
+              </div>
+            </div>
+
+            {/* YEAR block — desktop only */}
             <div className="hidden md:block absolute right-[60px] top-1/2 -translate-y-1/2">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -210,29 +233,16 @@ export default function CustomShowcase() {
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <div
-                    className="italic text-[36px] md:text-[44px] font-light text-white/60"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)" }}>
                     YEAR
                   </div>
-                  <div
-                    className="font-black text-[52px] md:text-[64px]"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
                     {project.year}
                   </div>
-
-                  <div
-                    className="italic text-[36px] md:text-[44px] font-light text-white/60 mt-12"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)", marginTop: "48px" }}>
                     YEAR
                   </div>
-                  <div
-                    className="font-black text-[52px] md:text-[64px]"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
                     {project.year}
                   </div>
                 </motion.div>
@@ -240,8 +250,8 @@ export default function CustomShowcase() {
             </div>
           </div>
 
-          {/* ═══ RIGHT PANEL — Product Image ═══ */}
-          <div className="hidden md:flex w-[38%] items-center justify-center relative">
+          {/* ═══ RIGHT / BOTTOM — Product Image ═══ */}
+          <div className="w-full md:w-[38%] h-[80%] md:h-full flex items-center justify-center relative">
             {/* Glow */}
             <div className="absolute w-[500px] h-[500px] rounded-full bg-white/5 blur-[150px] pointer-events-none" />
 
@@ -252,7 +262,7 @@ export default function CustomShowcase() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative"
+                className="relative w-full h-full flex items-center justify-center"
               >
                 <Image
                   src={project.image}
@@ -261,25 +271,15 @@ export default function CustomShowcase() {
                   height={800}
                   priority
                   className="object-contain drop-shadow-[0_0_80px_rgba(255,255,255,0.06)] select-none"
+                  style={{ maxWidth: "90%", maxHeight: "90%" }}
                 />
               </motion.div>
             </AnimatePresence>
 
             {/* Lens flare */}
             <div className="absolute bottom-[100px] w-[160px] h-[160px] bg-white/15 blur-[80px] rounded-full pointer-events-none" />
-          </div>
 
-          {/* ═══ Dot Navigation ═══ */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
-            {projects.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => handleClick(i)}
-                className={`w-2 h-2 rounded-full border border-white/40 transition-all duration-300 ${i === active ? "bg-white scale-[1.4]" : "bg-transparent hover:bg-white/30"
-                  }`}
-                aria-label={`Go to project ${i + 1}`}
-              />
-            ))}
+
           </div>
         </div>
       </div>
