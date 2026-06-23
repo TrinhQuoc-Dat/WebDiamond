@@ -7,6 +7,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
+import { CustomRequestsModule } from './modules/custom-requests/custom-requests.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ContactsModule } from './modules/contacts/contacts.module';
     CategoriesModule,
     BannersModule,
     ContactsModule,
+    CustomRequestsModule,
   ],
   controllers: [],
   providers: [],
