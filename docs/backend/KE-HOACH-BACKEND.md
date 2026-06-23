@@ -1636,11 +1636,11 @@ export class DashboardController {
 
 **Files:** Modify `src/database/seed.ts`.
 
-- [ ] **Bước 14.1: Bổ sung seed** — sau khi tạo admin, thêm: tạo 4 Category (`ring`/Nhẫn, `bracelet`/Vòng tay, `necklace`/Dây chuyền, `earring`/Bông tai), 2 Banner mặc định (lấy từ `defaultBanners` trong `AdminDataContext.tsx`), vài Product mẫu (lấy từ `data/products.ts`), 4 Contact mẫu (từ `defaultContacts`). Chỉ seed khi collection rỗng (idempotent).
+- [x] **Bước 14.1: Bổ sung seed** — sau khi tạo admin, thêm: tạo 4 Category (`ring`/Nhẫn, `bracelet`/Vòng tay, `necklace`/Dây chuyền, `earring`/Bông tai), 2 Banner mặc định (lấy từ `defaultBanners` trong `AdminDataContext.tsx`), vài Product mẫu (lấy từ `data/products.ts`), 4 Contact mẫu (từ `defaultContacts`). Chỉ seed khi collection rỗng (idempotent).
 
-- [ ] **Bước 14.2: Chạy `npm run seed`** → log số bản ghi đã tạo.
+- [x] **Bước 14.2: Chạy `npm run seed`** → log số bản ghi đã tạo.
 
-- [ ] **Bước 14.3: Commit** — `chore(backend): seed dữ liệu mẫu ban đầu`.
+- [x] **Bước 14.3: Commit** — `chore(backend): seed dữ liệu mẫu ban đầu`.
 
 ---
 
