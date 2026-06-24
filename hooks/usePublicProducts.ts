@@ -15,7 +15,21 @@ export function usePublicProducts() {
     async function loadProducts() {
       try {
         const response = await apiFetch<{ data: PublicProduct[]; total: number }>("/products?limit=100");
-        setProducts(response.data || []);
+        const categoryMap: Record<string, string> = {
+          "necklace": "NECKLACE",
+          "bracelet": "BRACELETS",
+          "ring": "RINGS",
+          "earring": "EARINGS"
+        };
+        const rawList = response.data || [];
+        const mappedList = rawList.map((p) => {
+          const rawCat = p.category ? p.category.toLowerCase() : "";
+          return {
+            ...p,
+            category: categoryMap[rawCat] || p.category
+          };
+        });
+        setProducts(mappedList);
       } catch (err: any) {
         console.error("Lỗi khi tải sản phẩm công khai:", err);
         setError(err.message || "Không thể tải danh sách sản phẩm");

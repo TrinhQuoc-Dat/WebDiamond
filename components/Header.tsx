@@ -5,21 +5,29 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Header() {
-  const [cartCount, setCartCount] = useState(1);
+  const [cartCount, setCartCount] = useState(0);
 
-  // Đọc từ localStorage khi component mount
+  // Đọc từ localStorage khi component mount và lắng nghe sự kiện
   useEffect(() => {
-    const savedCount = localStorage.getItem("cartCount");
+    const updateCartCount = () => {
+      const savedCount = localStorage.getItem("cartCount");
+      if (savedCount) {
+        setCartCount(parseInt(savedCount, 10));
+      } else {
+        setCartCount(0);
+      }
+    };
 
-    if (savedCount) {
-      setCartCount(parseInt(savedCount, 10));
-    }
+    updateCartCount();
+
+    window.addEventListener("cart-updated", updateCartCount);
+    window.addEventListener("storage", updateCartCount);
+
+    return () => {
+      window.removeEventListener("cart-updated", updateCartCount);
+      window.removeEventListener("storage", updateCartCount);
+    };
   }, []);
-
-  // Tự động lưu khi cartCount thay đổi
-  useEffect(() => {
-    localStorage.setItem("cartCount", cartCount.toString());
-  }, [cartCount]);
 
   return (
     <>

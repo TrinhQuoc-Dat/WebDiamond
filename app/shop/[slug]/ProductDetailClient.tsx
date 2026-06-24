@@ -62,6 +62,9 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
 
   const handleAddToBag = () => {
     setIsAdded(true);
+    const currentCount = parseInt(localStorage.getItem("cartCount") || "0", 10);
+    localStorage.setItem("cartCount", (currentCount + 1).toString());
+    window.dispatchEvent(new Event("cart-updated"));
     setTimeout(() => setIsAdded(false), 2000);
   };
 
