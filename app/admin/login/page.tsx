@@ -15,13 +15,13 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      const success = login(email, password);
+    try {
+      const success = await login(email, password);
       setLoading(false);
       
       if (success) {
@@ -29,7 +29,10 @@ export default function LoginPage() {
       } else {
         setError("ACCESS DENIED: INVALID CREDENTIALS");
       }
-    }, 1000);
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.message || "ACCESS DENIED: INVALID CREDENTIALS");
+    }
   };
 
   return (

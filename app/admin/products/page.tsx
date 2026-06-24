@@ -28,24 +28,32 @@ export default function ProductsPage() {
     setModalOpen(true);
   };
 
-  const handleFormSubmit = (data: AdminProduct) => {
-    if (editingProduct) {
-      // Chế độ sửa
-      updateProduct(editingProduct.slug, data);
-    } else {
-      // Chế độ thêm
-      // Kiểm tra trùng lặp slug
-      if (products.some((p) => p.slug === data.slug)) {
-        return alert("Slug sản phẩm đã tồn tại trong hệ thống. Vui lòng nhập slug khác!");
+  const handleFormSubmit = async (data: AdminProduct) => {
+    try {
+      if (editingProduct) {
+        // Chế độ sửa
+        await updateProduct(editingProduct.slug, data);
+      } else {
+        // Chế độ thêm
+        // Kiểm tra trùng lặp slug
+        if (products.some((p) => p.slug === data.slug)) {
+          return alert("Slug sản phẩm đã tồn tại trong hệ thống. Vui lòng nhập slug khác!");
+        }
+        await addProduct(data);
       }
-      addProduct(data);
+      setModalOpen(false);
+    } catch (err: any) {
+      alert(err.message || "Thao tác sản phẩm thất bại");
     }
-    setModalOpen(false);
   };
 
-  const handleDelete = (slug: string, name: string) => {
+  const handleDelete = async (slug: string, name: string) => {
     if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}"? Thao tác này không thể khôi phục.`)) {
-      deleteProduct(slug);
+      try {
+        await deleteProduct(slug);
+      } catch (err: any) {
+        alert(err.message || "Xóa sản phẩm thất bại");
+      }
     }
   };
 

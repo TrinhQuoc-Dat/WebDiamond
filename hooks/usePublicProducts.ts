@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { products as staticProducts, Product } from "@/data/products";
+import { Product } from "@/data/products";
+import { apiFetch } from "@/utils/api";
 
 export interface PublicProduct extends Product {
   hidden?: boolean;
@@ -8,22 +9,24 @@ export interface PublicProduct extends Product {
 export function usePublicProducts() {
   const [products, setProducts] = useState<PublicProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("wd_products");
-      const parsed: PublicProduct[] = stored
-        ? JSON.parse(stored)
-        : staticProducts.map((p) => ({ ...p, hidden: false }));
-      setProducts(parsed);
-    } catch {
-      setProducts(staticProducts.map((p) => ({ ...p, hidden: false })));
-    } finally {
-      setLoading(false);
+    async function loadProducts() {
+      try {
+        const response = await apiFetch<{ data: PublicProduct[]; total: number }>("/products?limit=100");
+        setProducts(response.data || []);
+      } catch (err: any) {
+        console.error("Lỗi khi tải sản phẩm công khai:", err);
+        setError(err.message || "Không thể tải danh sách sản phẩm");
+      } finally {
+        setLoading(false);
+      }
     }
+    loadProducts();
   }, []);
 
   const activeProducts = products.filter((p) => !p.hidden);
 
-  return { products: activeProducts, loading };
+  return { products: activeProducts, loading, error };
 }

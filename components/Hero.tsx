@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { apiFetch } from "@/utils/api";
 
 // Parse Google Drive share link → direct download URL
 const getGoogleDriveDirectLink = (url: string): string | null => {
@@ -35,16 +36,12 @@ export default function Hero() {
   const [banner, setBanner] = useState<BannerData | null>(null);
   const [isMuted, setIsMuted] = useState(true);
 
-  // Read active banner from localStorage (client-only)
+  // Read active banner from API Backend (client-only)
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("wd_banners");
-      if (stored) {
-        const list = JSON.parse(stored) as Array<Partial<BannerData> & { active?: boolean }>;
-        const active = list.find((b) => b.active);
-        console.log("active", active);
-
-        if (active) {
+    async function loadActiveBanner() {
+      try {
+        const active = await apiFetch<any>("/banners/active");
+        if (active && active.id) {
           setBanner({
             title: active.title ?? "GODG1FT",
             subtitle: active.subtitle ?? "Shop All",
@@ -54,10 +51,11 @@ export default function Hero() {
             muted: active.muted !== false,
           });
         }
+      } catch (err) {
+        console.error("Lỗi tải active banner từ API:", err);
       }
-    } catch {
-      // localStorage unavailable — defaults will be used
     }
+    loadActiveBanner();
   }, []);
 
   // Sync mute state with banner config
