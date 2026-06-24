@@ -60,6 +60,7 @@ describe('AppController (e2e)', () => {
     if (createdContactId) {
       await contactModel.findByIdAndDelete(createdContactId);
     }
+    await userModel.deleteMany({ email: 'member@webdiamond.com' });
     await app.close();
   });
 
@@ -80,6 +81,74 @@ describe('AppController (e2e)', () => {
       .expect(200);
 
     expect(res.body.email).toBe('admin@webdiamond.com');
+    expect(res.body.name).toBe('Administrator');
+    expect(res.body.role).toBe('admin');
+  });
+
+  let memberToken: string;
+
+  it('/api/auth/register (POST) - Đăng ký tài khoản mới', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/auth/register')
+      .send({
+        email: 'member@webdiamond.com',
+        password: 'password123',
+        name: 'Member User',
+        phone: '0981112223',
+      })
+      .expect(201);
+
+    expect(res.body).toHaveProperty('accessToken');
+    expect(res.body.user.email).toBe('member@webdiamond.com');
+    expect(res.body.user.name).toBe('Member User');
+    expect(res.body.user.phone).toBe('0981112223');
+    expect(res.body.user.role).toBe('user');
+    memberToken = res.body.accessToken;
+  });
+
+  it('/api/auth/register (POST) - Đăng ký trùng email báo lỗi 400', async () => {
+    await request(app.getHttpServer())
+      .post('/api/auth/register')
+      .send({
+        email: 'member@webdiamond.com',
+        password: 'password123',
+      })
+      .expect(400);
+  });
+
+  it('/api/auth/me (GET) - Lấy thông tin user vừa đăng ký', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${memberToken}`)
+      .expect(200);
+
+    expect(res.body.email).toBe('member@webdiamond.com');
+    expect(res.body.name).toBe('Member User');
+    expect(res.body.phone).toBe('0981112223');
+    expect(res.body.role).toBe('user');
+  });
+
+  it('/api/auth/me (PUT) - Chỉnh sửa thông tin user', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/api/auth/me')
+      .set('Authorization', `Bearer ${memberToken}`)
+      .send({
+        name: 'Member Updated',
+        phone: '0999888777',
+      })
+      .expect(200);
+
+    expect(res.body.name).toBe('Member Updated');
+    expect(res.body.phone).toBe('0999888777');
+
+    // Kiểm tra lại bằng GET
+    const getRes = await request(app.getHttpServer())
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${memberToken}`)
+      .expect(200);
+
+    expect(getRes.body.name).toBe('Member Updated');
+    expect(getRes.body.phone).toBe('0999888777');
   });
 
   it('/api/admin/categories (POST) - Tạo danh mục sản phẩm mới', async () => {

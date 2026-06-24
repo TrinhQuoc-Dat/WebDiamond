@@ -157,6 +157,7 @@ async function seed() {
       email,
       passwordHash: await bcrypt.hash(config.get<string>('adminPassword')!, 10),
       name: 'Administrator',
+      role: 'admin',
     });
     console.log(`✓ Đã tạo admin: ${email}`);
   } else {

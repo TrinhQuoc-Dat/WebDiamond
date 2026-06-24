@@ -39,19 +39,80 @@ Tài liệu này liệt kê chi tiết danh sách tất cả các điểm cuối
 * **Phản hồi thành công (201 Created)**:
   ```json
   {
-    "accessToken": "eyJhbGciOi..."
+    "accessToken": "eyJhbGciOi...",
+    "user": {
+      "id": "6a3ab1...",
+      "email": "admin@webdiamond.com",
+      "name": "Administrator",
+      "phone": "",
+      "role": "admin"
+    }
+  }
+  ```
+
+#### Đăng ký tài khoản mới
+* **Endpoint**: `POST /auth/register`
+* **Quyền truy cập**: Public (Công khai)
+* **Payload yêu cầu**:
+  ```json
+  {
+    "email": "user@webdiamond.com",
+    "password": "password123",
+    "name": "Nguyen Van A",
+    "phone": "0987654321"
+  }
+  ```
+* **Phản hồi thành công (201 Created)**:
+  ```json
+  {
+    "accessToken": "eyJhbGciOi...",
+    "user": {
+      "id": "6a3ab2...",
+      "email": "user@webdiamond.com",
+      "name": "Nguyen Van A",
+      "phone": "0987654321",
+      "role": "user"
+    }
   }
   ```
 
 #### Lấy thông tin tài khoản hiện tại
 * **Endpoint**: `GET /auth/me`
-* **Quyền truy cập**: Yêu cầu Token Admin
+* **Quyền truy cập**: Đăng nhập (Yêu cầu JWT Token trong Header Authorization)
 * **Phản hồi thành công (200 OK)**:
   ```json
   {
-    "email": "admin@webdiamond.com",
-    "name": "Administrator",
-    "id": "6a3ab1..."
+    "id": "6a3ab2...",
+    "email": "user@webdiamond.com",
+    "name": "Nguyen Van A",
+    "phone": "0987654321",
+    "role": "user",
+    "createdAt": "2026-06-24T15:00:00.000Z",
+    "updatedAt": "2026-06-24T15:00:00.000Z"
+  }
+  ```
+
+#### Chỉnh sửa thông tin cá nhân
+* **Endpoint**: `PUT /auth/me`
+* **Quyền truy cập**: Đăng nhập (Yêu cầu JWT Token trong Header Authorization)
+* **Payload yêu cầu (Tùy chọn)**:
+  ```json
+  {
+    "name": "Nguyen Van B",
+    "phone": "0912345678",
+    "password": "newpassword123"
+  }
+  ```
+* **Phản hồi thành công (200 OK)**:
+  ```json
+  {
+    "id": "6a3ab2...",
+    "email": "user@webdiamond.com",
+    "name": "Nguyen Van B",
+    "phone": "0912345678",
+    "role": "user",
+    "createdAt": "2026-06-24T15:00:00.000Z",
+    "updatedAt": "2026-06-24T15:30:00.000Z"
   }
   ```
 

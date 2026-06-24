@@ -1,6 +1,6 @@
 # Hướng dẫn Kiểm thử Toàn bộ API bằng Postman - WebDiamond
 
-Tài liệu này chứa hướng dẫn chi tiết cách thiết lập và kiểm thử **tất cả 39 API** của hệ thống WebDiamond Backend bằng Postman.
+Tài liệu này chứa hướng dẫn chi tiết cách thiết lập và kiểm thử **tất cả 41 API** của hệ thống WebDiamond Backend bằng Postman.
 
 ---
 
@@ -11,7 +11,7 @@ Tài liệu này chứa hướng dẫn chi tiết cách thiết lập và kiểm
 | Tên biến (Variable) | Giá trị mặc định | Mô tả |
 | :--- | :--- | :--- |
 | `baseUrl` | `http://localhost:4000/api` | Đường dẫn gốc của API |
-| `token` | *(Để trống)* | Mã JWT token của Admin (sẽ tự động cập nhật khi đăng nhập) |
+| `token` | *(Để trống)* | Mã JWT token của Admin hoặc User (sẽ tự động cập nhật khi đăng nhập hoặc đăng ký) |
 | `categoryId` | *(Để trống)* | ID của danh mục test |
 | `productId` | *(Để trống)* | ID của sản phẩm test |
 | `productSlug` | `test-ring` | Slug của sản phẩm test |
@@ -21,7 +21,7 @@ Tài liệu này chứa hướng dẫn chi tiết cách thiết lập và kiểm
 | `sampleId` | *(Để trống)* | ID của mẫu thiết kế test |
 
 ### Tự động thiết lập Token (Script tự động hóa)
-Khi gọi API đăng nhập (`POST /auth/login`), bạn hãy dán đoạn mã sau vào tab **Tests** của Postman để tự động lưu token vào biến môi trường:
+Khi gọi API đăng nhập (`POST /auth/login`) hoặc đăng ký (`POST /auth/register`), bạn hãy dán đoạn mã sau vào tab **Tests** của Postman để tự động lưu token vào biến môi trường:
 ```javascript
 const response = pm.response.json();
 if (response.accessToken) {
@@ -31,25 +31,48 @@ if (response.accessToken) {
 ```
 
 ### Cách đính kèm Token vào các request Admin
-Đối với tất cả các request bắt đầu bằng `/admin/` (yêu cầu quyền Admin), chọn tab **Authorization**:
+Đối với tất cả các request bắt đầu bằng `/admin/` (yêu cầu quyền Admin) hoặc các request /me cần xác thực, chọn tab **Authorization**:
 * **Type**: `Bearer Token`
 * **Token**: `{{token}}`
 
 ---
 
-## 2. Hướng dẫn chi tiết 39 API Endpoints
+## 2. Hướng dẫn chi tiết 41 API Endpoints
 
-### 2.1. Module Auth (Xác thực - 2 API)
+### 2.1. Module Auth (Xác thực - 4 API)
 1. **Đăng nhập lấy Token (POST)**:
    * **URL**: `{{baseUrl}}/auth/login` (Public)
    * **Body** (raw - JSON):
      ```json
      { "email": "admin@webdiamond.com", "password": "admin123" }
      ```
-   * **Kỳ vọng**: `201 Created` trả về `accessToken`.
-2. **Lấy thông tin tài khoản hiện tại (GET)**:
-   * **URL**: `{{baseUrl}}/auth/me` (Admin)
-   * **Kỳ vọng**: `200 OK` chứa email và name của Admin.
+   * **Kỳ vọng**: `201 Created` trả về `accessToken` và thông tin `user`.
+2. **Đăng ký tài khoản mới (POST)**:
+   * **URL**: `{{baseUrl}}/auth/register` (Public)
+   * **Body** (raw - JSON):
+     ```json
+     {
+       "email": "user@webdiamond.com",
+       "password": "password123",
+       "name": "Nguyen Van A",
+       "phone": "0987654321"
+     }
+     ```
+   * **Kỳ vọng**: `201 Created` trả về `accessToken` và thông tin `user` mới tạo.
+3. **Lấy thông tin tài khoản hiện tại (GET)**:
+   * **URL**: `{{baseUrl}}/auth/me` (Yêu cầu Token)
+   * **Kỳ vọng**: `200 OK` chứa thông tin cá nhân đầy đủ (`id`, `email`, `name`, `phone`, `role`, `createdAt`, `updatedAt`).
+4. **Chỉnh sửa thông tin cá nhân (PUT)**:
+   * **URL**: `{{baseUrl}}/auth/me` (Yêu cầu Token)
+   * **Body** (raw - JSON):
+     ```json
+     {
+       "name": "Nguyen Van B",
+       "phone": "0912345678",
+       "password": "newSecurePassword123"
+     }
+     ```
+   * **Kỳ vọng**: `200 OK` chứa thông tin sau khi cập nhật.
 
 ### 2.2. Module Categories (Danh mục sản phẩm - 6 API)
 3. **Lấy danh mục hiển thị (GET)**:
