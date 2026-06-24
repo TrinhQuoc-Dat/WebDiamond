@@ -79,7 +79,11 @@ if (response.accessToken) {
    * **URL**: `{{baseUrl}}/admin/categories/reorder` (Admin)
    * **Body** (raw - JSON):
      ```json
-     { "ids": ["{{categoryId}}"] }
+     {
+       "items": [
+         { "id": "{{categoryId}}", "order": 1 }
+       ]
+     }
      ```
    * **Kỳ vọng**: `200 OK`.
 9. **Xóa danh mục (DELETE)**:
@@ -547,7 +551,7 @@ if (response.accessToken) {
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"ids\": [\"{{categoryId}}\"]\n}",
+							"raw": "{\n    \"items\": [\n        {\n            \"id\": \"{{categoryId}}\",\n            \"order\": 1\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
