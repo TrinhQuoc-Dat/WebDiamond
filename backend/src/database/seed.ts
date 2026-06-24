@@ -126,6 +126,48 @@ const baseBracelet = {
   hidden: false,
 };
 
+const baseRing = {
+  name: "ROYAL DIAMOND RING",
+  category: "ring",
+  price: "65.000.000 VND",
+  priceValue: 65000000,
+  image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=900&q=80&auto=format&fit=crop",
+  images: [
+    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=900&q=80&auto=format&fit=crop"
+  ],
+  tag: "New",
+  description: DESC,
+  spec: SPEC,
+  colors: COLORS,
+  sizes: ["10", "11", "12", "13", "14"],
+  style: "",
+  collection: "",
+  featured: false,
+  hidden: false,
+};
+
+const baseEarring = {
+  name: "SPARKLE DIAMOND EARRING",
+  category: "earring",
+  price: "45.000.000 VND",
+  priceValue: 45000000,
+  image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=900&q=80&auto=format&fit=crop",
+  images: [
+    "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=900&q=80&auto=format&fit=crop"
+  ],
+  tag: "Limited",
+  description: DESC,
+  spec: SPEC,
+  colors: COLORS,
+  sizes: ["Standard"],
+  style: "",
+  collection: "",
+  featured: false,
+  hidden: false,
+};
+
 const defaultProducts: any[] = [];
 for (let i = 1; i <= 15; i++) {
   defaultProducts.push({
@@ -141,6 +183,22 @@ for (let i = 1; i <= 15; i++) {
     slug: `bracelets-shining-${i}`,
     name: `BRACELETS SHINING ${i}`,
     order: i + 15,
+  });
+}
+for (let i = 1; i <= 10; i++) {
+  defaultProducts.push({
+    ...baseRing,
+    slug: `ring-royal-${i}`,
+    name: `ROYAL DIAMOND RING ${i}`,
+    order: i + 30,
+  });
+}
+for (let i = 1; i <= 10; i++) {
+  defaultProducts.push({
+    ...baseEarring,
+    slug: `earring-sparkle-${i}`,
+    name: `SPARKLE DIAMOND EARRING ${i}`,
+    order: i + 40,
   });
 }
 
@@ -196,13 +254,14 @@ async function seed() {
 
   // Seed Products
   const productModel = app.get<Model<any>>(getModelToken(Product.name));
-  const productCount = await productModel.countDocuments();
-  if (productCount === 0) {
-    await productModel.create(defaultProducts);
-    console.log('✓ Seeded products');
-  } else {
-    console.log('Products đã tồn tại, bỏ qua.');
-  }
+  // Clean up existing mock products to ensure updated seed runs
+  await productModel.deleteMany({
+    slug: {
+      $in: defaultProducts.map((p) => p.slug),
+    },
+  });
+  await productModel.create(defaultProducts);
+  console.log('✓ Seeded/Updated products (Necklaces, Bracelets, Rings, Earrings)');
 
   await app.close();
 }
