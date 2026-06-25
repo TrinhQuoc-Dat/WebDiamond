@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+import { apiFetch } from "@/utils/api";
+
 const budgetOptions = [
   "Under $5,000",
   "$5,000 – $10,000",
@@ -26,10 +28,24 @@ export default function CustomForm() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: hook up to backend / email service
-    alert("Thank you! We will get back to you soon.");
+    try {
+      await apiFetch("/custom-requests", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+      alert("Cảm ơn bạn! Chúng tôi đã nhận được yêu cầu thiết kế riêng và sẽ liên hệ lại sớm nhất.");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        idea: "",
+        budget: "",
+      });
+    } catch (err: any) {
+      alert(err.message || "Gửi yêu cầu thất bại. Vui lòng kiểm tra lại thông tin.");
+    }
   };
 
   const inputStyle = {

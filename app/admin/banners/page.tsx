@@ -119,7 +119,7 @@ export default function BannersPage() {
     e.target.value = "";
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!image.trim()) return alert("Vui lòng nhập/chọn liên kết hình ảnh hoặc video");
     if (!subtitle.trim()) return alert("Vui lòng nhập chữ hiển thị nút bấm");
@@ -135,21 +135,38 @@ export default function BannersPage() {
     };
 
     if (editingBanner) {
-      updateBanner(editingBanner.id, data);
+      try {
+        await updateBanner(editingBanner.id, data);
+        setModalOpen(false);
+      } catch (err: any) {
+        alert(err.message || "Cập nhật banner thất bại");
+      }
     } else {
-      addBanner(data);
+      try {
+        await addBanner(data);
+        setModalOpen(false);
+      } catch (err: any) {
+        alert(err.message || "Tạo banner thất bại");
+      }
     }
-    setModalOpen(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa banner này không?")) {
-      deleteBanner(id);
+      try {
+        await deleteBanner(id);
+      } catch (err: any) {
+        alert(err.message || "Xóa banner thất bại");
+      }
     }
   };
 
-  const handleToggleActive = (id: string) => {
-    updateBanner(id, { active: true }); // Tự động de-activate các cái khác nhờ Context logic
+  const handleToggleActive = async (id: string) => {
+    try {
+      await updateBanner(id, { active: true });
+    } catch (err: any) {
+      alert(err.message || "Kích hoạt banner thất bại");
+    }
   };
 
   return (

@@ -4,19 +4,39 @@ Dự án website cửa hàng bán lẻ trang sức cao cấp **WebDiamond** tíc
 
 ---
 
-## 1. Hướng dẫn khởi chạy dự án
+## 1. Hướng dẫn khởi chạy dự án (Dual-Terminal Setup)
 
-Cài đặt các gói thư viện (nếu chạy lần đầu):
-```bash
-npm install
-```
+Dự án gồm 2 phần độc lập: **Frontend (Next.js)** ở thư mục gốc và **Backend (NestJS)** ở thư mục con `backend/`. Bạn cần mở **2 Terminal** riêng biệt để khởi chạy dự án:
 
-Khởi chạy ứng dụng ở chế độ phát triển (Development Mode):
-```bash
-npm run dev
-```
+### Terminal 1: Khởi chạy NestJS Backend (Cơ sở dữ liệu & API)
+1. Di chuyển vào thư mục backend:
+   ```bash
+   cd backend
+   ```
+2. Cài đặt các gói thư viện (nếu chạy lần đầu):
+   ```bash
+   npm install
+   ```
+3. Tạo dữ liệu mẫu (Seeding Admin, Categories, Banners, Products cho Rings, Earrings, Necklaces, Bracelets):
+   ```bash
+   npm run seed
+   ```
+4. Khởi chạy server backend ở chế độ phát triển:
+   ```bash
+   npm run start:dev
+   ```
+   *Backend sẽ chạy tại địa chỉ:* [http://localhost:4000](http://localhost:4000) (API URL: `http://localhost:4000/api`)
 
-Truy cập ứng dụng tại địa chỉ mặc định của Next.js: [http://localhost:3000](http://localhost:3000)
+### Terminal 2: Khởi chạy Next.js Frontend (Giao diện người dùng & Admin)
+1. Ở thư mục gốc của dự án, cài đặt thư viện (nếu chạy lần đầu):
+   ```bash
+   npm install
+   ```
+2. Khởi chạy frontend ở chế độ phát triển:
+   ```bash
+   npm run dev
+   ```
+   *Frontend sẽ chạy tại địa chỉ:* [http://localhost:3000](http://localhost:3000)
 
 ---
 

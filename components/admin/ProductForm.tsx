@@ -9,7 +9,7 @@ interface ProductFormProps {
   onCancel: () => void;
 }
 
-const CATEGORIES = ["NECKLACE", "BRACELETS"];
+const CATEGORIES = ["NECKLACE", "BRACELETS", "RINGS", "EARINGS"];
 const TAGS = ["Bestseller", "New", "Limited"];
 
 // Gợi ý một số ảnh Unsplash trang sức chất lượng cao để test

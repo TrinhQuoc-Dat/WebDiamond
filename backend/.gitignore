@@ -1,0 +1,17 @@
+# compiled output
+/dist
+/node_modules
+
+# IDEs and editors
+/.idea
+/.vscode
+/*.suo
+/*.ntvs*
+/*.njsproj
+/*.sln
+/*.sw?
+
+# env and uploads
+.env
+/uploads/*
+!/uploads/.gitkeep

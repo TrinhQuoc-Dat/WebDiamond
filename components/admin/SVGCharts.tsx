@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useAdminData } from "@/context/AdminDataContext";
+import { apiFetch } from "@/utils/api";
 
 interface ChartDataPoint {
   label: string;
@@ -11,8 +13,27 @@ interface ChartDataPoint {
 export default function SVGCharts() {
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [timeFilter, setTimeFilter] = useState<"7days" | "30days" | "month">("7days");
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const { contacts } = useAdminData();
 
-  // Mock dữ liệu theo các khoảng thời gian lọc
+  useEffect(() => {
+    async function loadChartData() {
+      try {
+        const range = timeFilter === "7days" ? "day" : (timeFilter === "30days" ? "month" : "year");
+        const res = await apiFetch<Array<{ label: string; count: number }>>(`/admin/dashboard/contacts-chart?range=${range}`);
+        const mapped = res.map((item) => ({
+          label: item.label,
+          value: item.count,
+        }));
+        setChartData(mapped);
+      } catch (err) {
+        console.error("Lỗi khi tải biểu đồ:", err);
+      }
+    }
+    loadChartData();
+  }, [timeFilter]);
+
+  // Mock dữ liệu dự phòng nếu backend trả về rỗng
   const getChartData = (): ChartDataPoint[] => {
     switch (timeFilter) {
       case "30days":
@@ -44,7 +65,7 @@ export default function SVGCharts() {
     }
   };
 
-  const contactData = getChartData();
+  const contactData = chartData.length > 0 ? chartData : getChartData();
 
   // Tính toán tọa độ cho Area Chart
   const width = 550;
@@ -79,10 +100,14 @@ export default function SVGCharts() {
   }
 
   // Thống kê vòng tròn hiệu quả (Donut Chart)
-  // Tổng các liên hệ chia theo trạng thái: Đã xử lý (75%), Đang xử lý (15%), Mới (10%)
-  const resolvedPct = 75;
-  const inProgressPct = 15;
-  const newPct = 10;
+  // Tính toán động tỷ lệ trạng thái liên hệ từ dữ liệu thực tế
+  const totalContacts = contacts.length;
+  const resolvedCount = contacts.filter((c) => c.status === "Đã xử lý").length;
+  const inProgressCount = contacts.filter((c) => c.status === "Đang xử lý").length;
+
+  const resolvedPct = totalContacts ? Math.round((resolvedCount / totalContacts) * 100) : 0;
+  const inProgressPct = totalContacts ? Math.round((inProgressCount / totalContacts) * 100) : 0;
+  const newPct = totalContacts ? Math.max(0, 100 - resolvedPct - inProgressPct) : 0;
 
   // Tính dashoffset cho SVG circle (R=50, Chu vi = 2 * PI * R ≈ 314.16)
   const radius = 50;

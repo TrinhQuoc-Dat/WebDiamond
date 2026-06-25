@@ -9,6 +9,7 @@ import ProductImageGallery from "@/components/ProductImageGallery";
 import ProductOrderSelector from "@/components/ProductOrderSelector";
 import ProductBenefits from "@/components/ProductBenefits";
 import { Product } from "@/data/products";
+import { apiFetch } from "@/utils/api";
 
 interface Props {
   slug: string;
@@ -19,24 +20,21 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
   const [product, setProduct] = useState<any | null>(initialProduct);
   const [loading, setLoading] = useState(true);
 
-  // Đồng bộ sản phẩm từ LocalStorage phía client
+  // Đồng bộ sản phẩm từ API Backend phía client
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("wd_products");
-      if (stored) {
-        const list = JSON.parse(stored);
-        const resolved = list.find((p: any) => p.slug === slug);
-        if (resolved) {
-          setProduct(resolved);
-        } else if (!initialProduct) {
-          setProduct(null);
-        }
+    async function loadProduct() {
+      try {
+        const data = await apiFetch<any>(`/products/${slug}`);
+        setProduct(data);
+      } catch (e) {
+        console.error("Lỗi đồng bộ sản phẩm chi tiết", e);
+        // Fallback về initialProduct nếu có lỗi
+        setProduct(initialProduct);
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      console.error("Lỗi đồng bộ sản phẩm chi tiết", e);
-    } finally {
-      setLoading(false);
     }
+    loadProduct();
   }, [slug, initialProduct]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -64,6 +62,9 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
 
   const handleAddToBag = () => {
     setIsAdded(true);
+    const currentCount = parseInt(localStorage.getItem("cartCount") || "0", 10);
+    localStorage.setItem("cartCount", (currentCount + 1).toString());
+    window.dispatchEvent(new Event("cart-updated"));
     setTimeout(() => setIsAdded(false), 2000);
   };
 

@@ -142,6 +142,17 @@ export default function ProductOrderSelector({
         </span>
       </div>
 
+      {/* Add to Bag Button */}
+      <div className="flex flex-col gap-4 mt-6">
+        <button
+          onClick={onAddToBag}
+          className="w-full py-4 text-center text-[16px] tracking-[0.2em] font-black text-black bg-white hover:bg-gray-200 uppercase transition-all duration-300 cursor-pointer rounded-xl shadow-lg hover:shadow-white/5"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {isAdded ? "ADDED TO BAG" : "ADD TO BAG"}
+        </button>
+      </div>
+
       {/* BACK BUTTON */}
       <div className="absolute bottom-0 right-0 lg:flex justify-end hidden">
         <Link
