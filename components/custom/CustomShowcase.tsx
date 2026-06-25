@@ -141,11 +141,11 @@ export default function CustomShowcase() {
             }}
           >
             {absDist === 0 ? (
-              <>
-                <span style={{ opacity: 0.5 }}>— </span>
+              <span style={{ position: "relative", display: "inline-block", padding: "8px 0" }}>
+                <span style={{ position: "absolute", bottom: 0, left: "-14px", opacity: 0.5, fontSize: "0.6em", lineHeight: 1 }}>└</span>
                 {p.title}
-                <span style={{ opacity: 0.5 }}> —</span>
-              </>
+                <span style={{ position: "absolute", bottom: 0, right: "-14px", opacity: 0.5, fontSize: "0.6em", lineHeight: 1 }}>┘</span>
+              </span>
             ) : (
               p.subtitle
             )}
@@ -211,8 +211,8 @@ export default function CustomShowcase() {
             </div>
 
             {/* Text wheel — desktop only */}
-            <div className="hidden md:block" style={{ width: "100%" }}>
-              <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative" }}>
+            <div className="hidden md:block" style={{ width: "100%", paddingLeft: "100px" }}>
+              <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative", paddingLeft: "20px" }}>
                 <motion.div
                   animate={{ y: -active * itemHeight + centerOffset }}
                   transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}

@@ -29,7 +29,7 @@ export default function ProductOrderSelector({
       {/* Mobile-only info block */}
       <div className="lg:hidden flex flex-col gap-3 mb-2">
         <h1
-          className="text-[26px] sm:text-[32px] font-black uppercase leading-none tracking-[0.1em] text-white"
+          className="text-[13px] sm:text-[16px] font-black uppercase leading-none tracking-[0.1em] text-white"
           style={{ fontFamily: "var(--font-display)", lineHeight: "1.5em", padding: "0px 0px 0px 0px" }}
         >
           {product.name}
@@ -142,15 +142,22 @@ export default function ProductOrderSelector({
         </span>
       </div>
 
-      {/* Add to Bag Button */}
+      {/* Add to Bag Button — links to Instagram DM */}
       <div className="flex flex-col gap-4 mt-6">
-        <button
-          onClick={onAddToBag}
-          className="w-full py-4 text-center text-[16px] tracking-[0.2em] font-black text-black bg-white hover:bg-gray-200 uppercase transition-all duration-300 cursor-pointer rounded-xl shadow-lg hover:shadow-white/5"
-          style={{ fontFamily: "var(--font-display)" }}
+        <a
+          href="https://www.instagram.com/godg1ft.jrl/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full py-4 flex items-center justify-center gap-3 text-[16px] tracking-[0.2em] font-black text-black bg-white hover:bg-gray-200 uppercase transition-all duration-300 rounded-xl shadow-lg hover:shadow-white/5"
+          style={{ fontFamily: "var(--font-display)", textDecoration: "none" }}
         >
-          {isAdded ? "ADDED TO BAG" : "ADD TO BAG"}
-        </button>
+          <img
+            src="/bay-cart.jpg"
+            alt=""
+            className="h-[28px] w-auto block"
+          />
+          ADD TO BAG
+        </a>
       </div>
 
       {/* BACK BUTTON */}

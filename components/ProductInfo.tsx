@@ -13,7 +13,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[120px] w-full shrink-0" />
       <motion.h1
-        className="hidden lg:block text-[28px] md:text-[32px] font-black uppercase leading-tight tracking-[0.1em]"
+        className="hidden lg:block text-[14px] md:text-[16px] font-black uppercase leading-tight tracking-[0.1em]"
         style={{ fontFamily: "var(--font-display)" }}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}

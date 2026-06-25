@@ -1,33 +1,21 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+const menuItems = [
+  { label: "Bracelets", href: "/shop/bracelets" },
+  { label: "Necklace", href: "/shop/necklace" },
+  { label: "Rings", href: "/shop/rings" },
+  { label: "Earings", href: "/shop/earings" },
+  { label: "Custom", href: "/custom" },
+  { label: "Contact", href: "/contact" },
+  { label: "Warrenty", href: "/warrenty" },
+];
 
 export default function Header() {
-  const [cartCount, setCartCount] = useState(0);
-
-  // Đọc từ localStorage khi component mount và lắng nghe sự kiện
-  useEffect(() => {
-    const updateCartCount = () => {
-      const savedCount = localStorage.getItem("cartCount");
-      if (savedCount) {
-        setCartCount(parseInt(savedCount, 10));
-      } else {
-        setCartCount(0);
-      }
-    };
-
-    updateCartCount();
-
-    window.addEventListener("cart-updated", updateCartCount);
-    window.addEventListener("storage", updateCartCount);
-
-    return () => {
-      window.removeEventListener("cart-updated", updateCartCount);
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
@@ -100,59 +88,54 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* ── BAG top-right ── */}
+        {/* ── Hamburger Menu (3 dashes) top-right ── */}
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex flex-col items-center justify-center gap-[5px] p-2 hover:opacity-60 transition-opacity cursor-pointer"
+            style={{ background: "none", border: "none" }}
+            aria-label="Menu"
+          >
+            <span className="block w-[28px] h-[2px] bg-white" />
+            <span className="block w-[28px] h-[2px] bg-white" />
+            <span className="block w-[28px] h-[2px] bg-white" />
+          </button>
 
-
-        <motion.button
-          className="text-white font-black tracking-[0.06em] uppercase leading-none hover:opacity-50 transition-opacity duration-200 relative"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "38px",
-            letterSpacing: "0.25em",
-          }}
-          whileTap={{ scale: 0.94 }}
-          id="bag-button"
-          aria-label="Shopping bag"
-        >
-          <div className="relative inline-block">
-            <a href="https://www.instagram.com/godg1ft.jrl/">
-              <img
-                src="/bay-cart.jpg"
-                alt="Shopping bag"
-                className="
-                h-[58px]
-                sm:h-[68px]
-                lg:h-[80px]
-                w-auto
-                block
-              "
-                style={{ paddingLeft: "10px" }}
-              />
-
-              {/* Ngôi sao chứa số */}
-              <div className="absolute bottom-0 left-0 -translate-x-1/4 translate-y-1/4">
-                <div className="relative w-7 h-7">
-                  <svg viewBox="0 0 100 100" className="w-full h-full fill-white">
-                    <polygon points="50,0 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" />
-                  </svg>
-
-                  <span
-                    className="absolute inset-0 flex items-center justify-center text-black font-bold"
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="absolute right-0 top-full mt-2 w-48 bg-black/90 backdrop-blur-md border border-white/10 rounded-sm overflow-hidden z-50"
+              >
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
                     style={{
-                      fontFamily: "var(--font-sans)",
-                      transform: "translate(4px, 1px)",
+                      fontFamily: "var(--font-display)",
+                      display: "block",
+                      padding: "12px 20px",
                       fontSize: "12px",
-                      fontWeight: 800,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.7)",
+                      borderBottom: "1px solid rgba(255,255,255,0.05)",
+                      transition: "all 0.2s",
                     }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "white"; e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.background = "transparent"; }}
                   >
-                    {cartCount}
-                  </span>
-                </div>
-              </div>
-            </a>
-
-          </div>
-        </motion.button>
+                    {item.label}
+                  </Link>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.header>
     </>
   );
