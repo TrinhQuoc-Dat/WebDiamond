@@ -63,7 +63,7 @@ export default function Header() {
                 fontFamily: "var(--font-display)",
                 letterSpacing: "0.35em",
                 marginRight: "-0.25em",
-                fontWeight: "500",
+                fontWeight: "700",
               }}
             >
               GODG1FT
@@ -90,9 +90,9 @@ export default function Header() {
               src="/logo.svg"
               alt="WebDiamond logo"
               className="
-          h-[38px]
-          sm:h-[48px]
-          lg:h-[58px]
+          h-[24px]
+          sm:h-[30px]
+          lg:h-[36px]
           w-auto
           block
         "
