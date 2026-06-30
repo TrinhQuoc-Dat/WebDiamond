@@ -95,8 +95,13 @@ const baseNecklace = {
   category: "necklace",
   price: "50.000.000 VND",
   priceValue: 50000000,
-  image: "/shop.png",
-  images: ["/shop.png", "/shop.png", "/shop.png", "/shop.png", "/shop.png"],
+  image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=900&q=80&auto=format&fit=crop",
+  images: [
+    "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1515562141589-67f0d9de0e06?w=900&q=80&auto=format&fit=crop",
+  ],
   tag: null,
   description: DESC,
   spec: SPEC,
@@ -109,12 +114,17 @@ const baseNecklace = {
 };
 
 const baseBracelet = {
-  name: "BRACELETS LIGHTNING",
+  name: "BRACELETS SHINING",
   category: "bracelet",
   price: "50.000.000 VND",
   priceValue: 50000000,
-  image: "/shop.png",
-  images: ["/shop.png", "/shop.png", "/shop.png", "/shop.png", "/shop.png"],
+  image: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=900&q=80&auto=format&fit=crop",
+  images: [
+    "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600721391689-2564bb8055de?w=900&q=80&auto=format&fit=crop",
+  ],
   tag: null,
   description: DESC,
   spec: SPEC,
@@ -134,7 +144,9 @@ const baseRing = {
   image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=900&q=80&auto=format&fit=crop",
   images: [
     "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=900&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=900&q=80&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1608042314453-ae338d80c427?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?w=900&q=80&auto=format&fit=crop",
   ],
   tag: "New",
   description: DESC,
@@ -155,7 +167,9 @@ const baseEarring = {
   image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=900&q=80&auto=format&fit=crop",
   images: [
     "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=900&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=900&q=80&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=900&q=80&auto=format&fit=crop",
   ],
   tag: "Limited",
   description: DESC,

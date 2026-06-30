@@ -42,7 +42,7 @@ export default function ProductOrderSelector({
           Colour:
         </span>
         <div className="flex items-center gap-4">
-          {product.colors.map((color) => {
+          {(product.colors || []).map((color) => {
             const isSelected = selectedColor === color.id;
             const isNecklace = product.category === "NECKLACE";
             
@@ -102,7 +102,7 @@ export default function ProductOrderSelector({
             Size:
           </span>
           <div className="flex items-center gap-2">
-            {product.sizes && product.sizes.map((size) => {
+            {(product.sizes || []).map((size) => {
               const isSizeSelected = selectedSize === size;
               return (
                 <button

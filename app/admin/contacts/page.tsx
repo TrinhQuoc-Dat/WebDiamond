@@ -44,7 +44,7 @@ export default function ContactsPage() {
           <h1 className="text-3xl font-bold tracking-wider text-white uppercase">
             Quản lý Liên hệ khách hàng
           </h1>
-          <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+          <p className="text-sm text-gray-400 mt-2 leading-relaxed">
             Xem danh sách khách hàng gửi thông tin liên hệ, phản hồi và cập nhật trạng thái xử lý.
           </p>
         </div>
@@ -80,13 +80,13 @@ export default function ContactsPage() {
                     : "bg-white/[0.01] border-[#1C1C1E] text-gray-400 hover:text-white hover:bg-white/[0.02]"
                 }`}
                 style={{
-                  padding: "7px 14px",
-                  fontSize: "12.5px",
+                  padding: "8px 16px",
+                  fontSize: "14px",
                   lineHeight: "1.2",
                   cursor: "pointer"
                 }}
               >
-                {status} <span className={`ml-1 text-[10px] ${isActive ? "text-black/70" : "text-gray-500"}`}>({count})</span>
+                {status} <span className={`ml-1 text-xs ${isActive ? "text-black/70" : "text-gray-500"}`}>({count})</span>
               </button>
             );
           })}
@@ -106,7 +106,7 @@ export default function ContactsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm theo tên, email, sđt..."
             className="bg-transparent text-gray-200 outline-none w-full placeholder-gray-500"
-            style={{ fontSize: "12.5px", lineHeight: "1.2" }}
+            style={{ fontSize: "14px", lineHeight: "1.2" }}
           />
         </div>
       </div>
@@ -125,11 +125,11 @@ export default function ContactsPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-[#1C1C1E] bg-white/[0.01]">
-                  <th className="px-8 py-6 text-xs font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Khách hàng</th>
-                  <th className="px-8 py-6 text-xs font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Nội dung tin nhắn</th>
-                  <th className="px-8 py-6 text-xs font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Thời gian gửi</th>
-                  <th className="px-8 py-6 text-xs font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Trạng thái</th>
-                  <th className="px-8 py-6 text-xs font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Thao tác</th>
+                  <th className="px-8 py-6 text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Khách hàng</th>
+                  <th className="px-8 py-6 text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Nội dung tin nhắn</th>
+                  <th className="px-8 py-6 text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Thời gian gửi</th>
+                  <th className="px-8 py-6 text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em]">Trạng thái</th>
+                  <th className="px-8 py-6 text-sm font-bold text-[#D4AF37] uppercase tracking-[0.2em] text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#1C1C1E]/50">
@@ -140,15 +140,15 @@ export default function ContactsPage() {
                     onClick={() => handleOpenDetail(c)}
                   >
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="font-semibold text-white group-hover:text-[#D4AF37] transition-colors text-sm">
+                      <div className="font-semibold text-white group-hover:text-[#D4AF37] transition-colors text-base">
                         {c.name}
                       </div>
-                      <div className="text-xs text-gray-500 font-mono mt-1">{c.phone}</div>
+                      <div className="text-sm text-gray-500 font-mono mt-1">{c.phone}</div>
                     </td>
-                    <td className="px-8 py-6 max-w-xs truncate text-gray-400 text-xs leading-relaxed">
+                    <td className="px-8 py-6 max-w-xs truncate text-gray-400 text-sm leading-relaxed">
                       {c.message}
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap text-xs text-gray-500 font-mono">
+                    <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-500 font-mono">
                       {new Date(c.createdAt).toLocaleDateString("vi-VN", {
                         year: "numeric",
                         month: "2-digit",
@@ -158,26 +158,30 @@ export default function ContactsPage() {
                       })}
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      <div
+                        className={`inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all duration-300 border ${
                           c.status === "Mới"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            ? "bg-[#00E676]/5 text-[#00E676] border-[#00E676]/30"
                             : c.status === "Đang xử lý"
-                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                            : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                            ? "bg-amber-500/5 text-amber-500 border-amber-500/30"
+                            : "bg-blue-500/5 text-blue-500 border-blue-500/30"
                         }`}
+                        style={{ width: '105px', letterSpacing: '0.05em' }}
                       >
-                        {c.status}
-                      </span>
+                        {c.status === "Mới" && <i className="pi pi-envelope" style={{ fontSize: '10px' }} />}
+                        {c.status === "Đang xử lý" && <i className="pi pi-clock" style={{ fontSize: '10px' }} />}
+                        {c.status === "Đã xử lý" && <i className="pi pi-check-circle" style={{ fontSize: '10px' }} />}
+                        <span>{c.status}</span>
+                      </div>
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap text-right text-xs" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-8 py-6 whitespace-nowrap text-right text-sm" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => handleOpenDetail(c)}
                         className="bg-white/[0.02] hover:bg-[#D4AF37] hover:text-black border border-[#1C1C1E] font-bold text-gray-300 transition-all duration-300 uppercase tracking-widest"
                         style={{
-                          padding: "6px 12px",
+                          padding: "8px 16px",
                           borderRadius: "6px",
-                          fontSize: "11px",
+                          fontSize: "12px",
                           lineHeight: "1.2",
                           cursor: "pointer"
                         }}
@@ -243,7 +247,7 @@ export default function ContactsPage() {
               <div className="flex flex-wrap gap-2.5">
                 <button
                   onClick={() => handleUpdateStatus(selectedContact.id, "Mới")}
-                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider ${
+                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider cursor-pointer ${
                     selectedContact.status === "Mới"
                       ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-400"
                       : "bg-white/[0.01] border-[#2A2A30] text-gray-400 hover:text-white"
@@ -253,7 +257,7 @@ export default function ContactsPage() {
                 </button>
                 <button
                   onClick={() => handleUpdateStatus(selectedContact.id, "Đang xử lý")}
-                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider ${
+                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider cursor-pointer ${
                     selectedContact.status === "Đang xử lý"
                       ? "bg-amber-500/10 border-amber-500/50 text-amber-400"
                       : "bg-white/[0.01] border-[#2A2A30] text-gray-400 hover:text-white"
@@ -263,7 +267,7 @@ export default function ContactsPage() {
                 </button>
                 <button
                   onClick={() => handleUpdateStatus(selectedContact.id, "Đã xử lý")}
-                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider ${
+                  className={`flex-1 min-w-[100px] py-2.5 rounded-xl text-xs font-bold border transition-all uppercase tracking-wider cursor-pointer ${
                     selectedContact.status === "Đã xử lý"
                       ? "bg-blue-500/10 border-blue-500/50 text-blue-400"
                       : "bg-white/[0.01] border-[#2A2A30] text-gray-400 hover:text-white"

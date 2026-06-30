@@ -46,6 +46,7 @@ export default function ShopProductCard({
             className="object-contain object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             priority={priority}
+            unoptimized={product.image.startsWith("http")}
           />
         </div>
 

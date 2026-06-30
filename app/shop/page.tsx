@@ -13,6 +13,8 @@ export default function ShopPage() {
 
   const necklaces = products.filter((p) => p.category === "NECKLACE").slice(0, 6);
   const bracelets = products.filter((p) => p.category === "BRACELETS").slice(0, 6);
+  const rings = products.filter((p) => p.category === "RINGS").slice(0, 6);
+  const earrings = products.filter((p) => p.category === "EARINGS").slice(0, 6);
 
   return (
     <>
@@ -36,6 +38,14 @@ export default function ShopPage() {
           <div className="h-20 w-full" />
           
           <ShopProductSection title="BRACELETS" category="BRACELETS" products={bracelets} viewportOnce />
+
+          <div className="h-20 w-full" />
+
+          <ShopProductSection title="RINGS" category="RINGS" products={rings} viewportOnce />
+
+          <div className="h-20 w-full" />
+
+          <ShopProductSection title="EARINGS" category="EARINGS" products={earrings} viewportOnce />
         </div>
       </main>
 

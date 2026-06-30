@@ -6,6 +6,7 @@ import { Product } from "@/data/products";
 
 interface ProductImageGalleryProps {
   product: Product;
+  galleryImages: string[];
   activeImageIndex: number;
   setActiveImageIndex: (index: number) => void;
   onPrevImage: () => void;
@@ -14,11 +15,14 @@ interface ProductImageGalleryProps {
 
 export default function ProductImageGallery({
   product,
+  galleryImages,
   activeImageIndex,
   setActiveImageIndex,
   onPrevImage,
   onNextImage,
 }: ProductImageGalleryProps) {
+  const currentImage = galleryImages[activeImageIndex] || product.image;
+
   return (
     <div className="lg:col-span-5 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
       <div className="w-full flex flex-col items-center lg:-translate-y-[48px]">
@@ -34,7 +38,7 @@ export default function ProductImageGallery({
         </button>
 
         {/* Mannequin / Main Image Container */}
-        <div className="relative w-full aspect-[4/5] max-w-[320px] lg:max-w-[380px] bg-transparent overflow-hidden flex items-center justify-center">
+        <div className="relative w-full aspect-[4/5] max-w-[400px] lg:max-w-[480px] bg-transparent overflow-hidden flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeImageIndex}
@@ -45,12 +49,13 @@ export default function ProductImageGallery({
               className="relative w-full h-full"
             >
               <Image
-                src={product.images[activeImageIndex]}
+                src={currentImage}
                 alt={`${product.name} display`}
                 fill
                 priority
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain object-center"
+                sizes="(max-width: 768px) 90vw, 480px"
+                unoptimized={currentImage?.startsWith("http")}
               />
             </motion.div>
           </AnimatePresence>
@@ -69,7 +74,7 @@ export default function ProductImageGallery({
 
       {/* Dots Indicator on Mobile */}
       <div className="flex items-center justify-center gap-2 lg:hidden">
-        {product.images.map((_, idx) => (
+        {galleryImages.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setActiveImageIndex(idx)}
@@ -96,10 +101,10 @@ export default function ProductImageGallery({
 
         {/* Thumbnails Row */}
         <div className="flex items-center justify-center flex-1 relative h-20 gap-4">
-          {product.images.map((img, idx) => {
+          {galleryImages.map((img, idx) => {
             const isActive = idx === activeImageIndex;
             // Calculate arch rotation
-            const mid = (product.images.length - 1) / 2;
+            const mid = (galleryImages.length - 1) / 2;
             const offset = idx - mid;
             const rotation = offset * 15; // 15 degrees per step
             const yOffset = Math.abs(offset) * 8; // push down edges
@@ -122,10 +127,11 @@ export default function ProductImageGallery({
                 >
                   <Image
                     src={img}
-                    alt="thumbnail"
+                    alt={idx === 0 ? "thumbnail" : `detail ${idx}`}
                     fill
                     className="object-cover object-center"
                     sizes="40px"
+                    unoptimized={img.startsWith("http")}
                   />
                 </div>
               </motion.div>

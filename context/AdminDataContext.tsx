@@ -127,12 +127,31 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   // Quản lý Sản phẩm
+  // Loại bỏ các giá trị null/undefined khỏi payload trước khi gửi
+  const cleanPayload = (obj: any) => {
+    const cleaned: any = {};
+    for (const key of Object.keys(obj)) {
+      if (obj[key] !== null && obj[key] !== undefined) {
+        cleaned[key] = obj[key];
+      }
+    }
+    // Chuyển category sang chữ thường cho backend
+    if (cleaned.category) {
+      cleaned.category = cleaned.category.toLowerCase()
+        .replace('bracelets', 'bracelet')
+        .replace('earings', 'earring')
+        .replace('rings', 'ring')
+        .replace('necklace', 'necklace');
+    }
+    return cleaned;
+  };
+
   const addProduct = async (newP: AdminProduct) => {
     const priceValue = parseInt(newP.price.replace(/\./g, "").replace(" VND", "")) || 0;
-    const payload = {
+    const payload = cleanPayload({
       ...newP,
       priceValue,
-    };
+    });
     await apiFetch("/admin/products", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -149,10 +168,10 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       ? (parseInt(updated.price.replace(/\./g, "").replace(" VND", "")) || 0)
       : undefined;
 
-    const payload = {
+    const payload = cleanPayload({
       ...updated,
       ...(priceValue !== undefined ? { priceValue } : {}),
-    };
+    });
 
     await apiFetch(`/admin/products/${(existing as any).id}`, {
       method: "PUT",

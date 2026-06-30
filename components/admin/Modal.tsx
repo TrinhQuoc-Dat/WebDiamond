@@ -73,7 +73,7 @@ export default function Modal({ isOpen, onClose, title, children, size = "md" }:
             {/* Content Body */}
             <div 
               className="flex-1 overflow-y-auto max-h-[70vh]"
-              style={{ padding: '20px 24px' }}
+              style={{ padding: '28px 32px' }}
             >
               {children}
             </div>

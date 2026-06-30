@@ -50,14 +50,22 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
     }
   }, [product]);
 
+  // Gộp ảnh: thumbnail (image) đứng đầu + danh sách ảnh chi tiết (images), loại trùng
+  const galleryImages = product
+    ? [
+        product.image,
+        ...(product.images || []).filter((img: string) => img !== product.image),
+      ]
+    : [];
+
   const handlePrevImage = () => {
     if (!product) return;
-    setActiveImageIndex((prev) => (prev === 0 ? product.images.length - 1 : prev - 1));
+    setActiveImageIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1));
   };
 
   const handleNextImage = () => {
     if (!product) return;
-    setActiveImageIndex((prev) => (prev === product.images.length - 1 ? 0 : prev + 1));
+    setActiveImageIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
   };
 
   const handleAddToBag = () => {
@@ -129,6 +137,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
             {/* 2. Center Column: Large Display & Curved Thumbnails */}
             <ProductImageGallery
               product={product}
+              galleryImages={galleryImages}
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={setActiveImageIndex}
               onPrevImage={handlePrevImage}

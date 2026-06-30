@@ -2,6 +2,10 @@
 import React, { useState } from "react";
 import { useAdminData, Banner } from "@/context/AdminDataContext";
 import Modal from "@/components/admin/Modal";
+import { InputText } from "primereact/inputtext";
+import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
+import { Button } from "primereact/button";
 
 // Helper functions for external video link parsing (YouTube & Google Drive)
 export const getYouTubeId = (url: string) => {
@@ -79,14 +83,14 @@ export default function BannersPage() {
     setLink(banner.link);
     setActive(banner.active);
     setMuted(banner.muted !== false);
-    
+
     // Kiểm tra xem hình ảnh/video của banner có phải là tệp tin đã tải lên từ máy tính trước đó
     if (banner.image.startsWith("data:") || banner.image.startsWith("blob:")) {
       setUploadedFileName("Tệp tin cục bộ đã lưu");
     } else {
       setUploadedFileName("");
     }
-    
+
     setModalOpen(true);
   };
 
@@ -114,7 +118,7 @@ export default function BannersPage() {
       };
       reader.readAsDataURL(file);
     }
-    
+
     // Reset file input value để có thể chọn lại cùng một file
     e.target.value = "";
   };
@@ -183,18 +187,16 @@ export default function BannersPage() {
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C5A02E] text-black font-bold text-xs uppercase tracking-widest transition-all duration-300 self-start sm:self-auto shadow-lg"
+          className="flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C5A02E] text-black font-bold uppercase transition-all duration-300 shadow-lg hover:shadow-[#D4AF37]/20 hover:-translate-y-0.5 active:translate-y-0"
           style={{
-            padding: "12px 24px",
+            padding: "10px 18px",
             borderRadius: "8px",
-            lineHeight: "1.2",
-            cursor: "pointer"
+            fontSize: "11px",
+            letterSpacing: "0.05em",
           }}
         >
-          <svg fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Thêm Banner mới
+          <i className="pi pi-plus" style={{ fontSize: '10px', fontWeight: 'bold' }}></i>
+          <span>Thêm Banner mới</span>
         </button>
       </div>
 
@@ -203,9 +205,8 @@ export default function BannersPage() {
         {banners.map((b) => (
           <div
             key={b.id}
-            className={`bg-[#121214] border rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${
-              b.active ? "border-[#D4AF37]" : "border-[#1C1C1E] hover:border-[#1C1C1E]/80"
-            }`}
+            className={`bg-[#121214] border rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${b.active ? "border-[#D4AF37]" : "border-[#1C1C1E] hover:border-[#1C1C1E]/80"
+              }`}
           >
             {/* Image/Video Preview Area */}
             <div className="relative h-56 bg-black flex items-center justify-center overflow-hidden group">
@@ -213,7 +214,7 @@ export default function BannersPage() {
                 (() => {
                   const youtubeId = getYouTubeId(b.image);
                   const driveDirectLink = getGoogleDriveDirectLink(b.image);
-                  
+
                   if (youtubeId) {
                     return (
                       <div className="w-full h-full relative overflow-hidden pointer-events-none">
@@ -226,7 +227,7 @@ export default function BannersPage() {
                       </div>
                     );
                   }
-                  
+
                   return (
                     <video
                       src={driveDirectLink || b.image}
@@ -273,7 +274,7 @@ export default function BannersPage() {
             </div>
 
             {/* Actions Footer */}
-            <div 
+            <div
               className="border-t border-[#1C1C1E]/50 flex items-center justify-between bg-white/[0.01]"
               style={{ padding: '24px' }}
             >
@@ -326,68 +327,67 @@ export default function BannersPage() {
         onClose={() => setModalOpen(false)}
         title={editingBanner ? "Chỉnh sửa cấu hình Banner" : "Thêm mới Banner"}
       >
-        <form onSubmit={handleSave} className="space-y-5 text-sm text-gray-300">
+        <form onSubmit={handleSave} className="flex flex-col gap-6 text-sm text-gray-300">
           <div>
             <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Tiêu đề chính (Title)</label>
-            <input
-              type="text"
+            <InputText
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="WebDiamond"
-              className="w-full bg-[#1A1A1E] border border-[#2A2A30] rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#D4AF37] transition-all"
+              style={{
+                width: "100%", height: 48, backgroundColor: "#1A1A1E", border: "1px solid #2A2A30", borderRadius: 12, color: "white", fontSize: 13, padding: "0 16px"
+              }}
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Chữ nút bấm hiển thị (Button Text) *</label>
-            <input
-              type="text"
+            <InputText
               required
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
               placeholder="Shop All"
-              className="w-full bg-[#1A1A1E] border border-[#2A2A30] rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#D4AF37] transition-all"
+              style={{
+                width: "100%", height: 48, backgroundColor: "#1A1A1E", border: "1px solid #2A2A30", borderRadius: 12, color: "white", fontSize: 13, padding: "0 16px"
+              }}
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Đường dẫn liên kết nút bấm</label>
-            <input
-              type="text"
+            <InputText
               value={link}
               onChange={(e) => setLink(e.target.value)}
               placeholder="/shop"
-              className="w-full bg-[#1A1A1E] border border-[#2A2A30] rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#D4AF37] transition-all font-mono text-xs"
+              style={{
+                width: "100%", height: 48, backgroundColor: "#1A1A1E", border: "1px solid #2A2A30", borderRadius: 12, color: "white", fontSize: 13, padding: "0 16px", fontFamily: "monospace"
+              }}
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">Loại Banner</label>
             <div className="flex gap-6 mt-1">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-white">
-                <input
-                  type="radio"
+              <div className="flex items-center gap-2">
+                <RadioButton
+                  inputId="type-image"
                   name="banner-type"
+                  value="image"
+                  onChange={() => setType("image")}
                   checked={type === "image"}
-                  onChange={() => {
-                    setType("image");
-                  }}
-                  className="w-4 h-4 accent-[#D4AF37]"
                 />
-                Hình ảnh (Image)
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-white">
-                <input
-                  type="radio"
+                <label htmlFor="type-image" className="cursor-pointer text-xs font-semibold text-white">Hình ảnh (Image)</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioButton
+                  inputId="type-video"
                   name="banner-type"
+                  value="video"
+                  onChange={() => setType("video")}
                   checked={type === "video"}
-                  onChange={() => {
-                    setType("video");
-                  }}
-                  className="w-4 h-4 accent-[#D4AF37]"
                 />
-                Video
-              </label>
+                <label htmlFor="type-video" className="cursor-pointer text-xs font-semibold text-white">Video</label>
+              </div>
             </div>
           </div>
 
@@ -395,21 +395,12 @@ export default function BannersPage() {
             <label className="block text-xs font-semibold text-gray-400 uppercase mb-2">
               {type === "video" ? "Đường dẫn liên kết Video (URL / MP4) *" : "Đường dẫn liên kết hình ảnh (URL) *"}
             </label>
-            
+
             {uploadedFileName ? (
               <div className="flex items-center justify-between bg-[#1A1A1E] border border-[#D4AF37]/40 rounded-xl px-4 py-2.5 text-white animate-fade-in">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="p-2.5 bg-[#D4AF37]/10 text-[#D4AF37] rounded-xl shrink-0">
-                    {type === "video" ? (
-                      <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5-6 3.75v-7.5l6 3.75Z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12c0 5.385 4.365 9.75 9.75 9.75s9.75-4.365 9.75-9.75S17.385 2.25 12 2.25 2.25 6.615 2.25 12Z" />
-                      </svg>
-                    ) : (
-                      <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                      </svg>
-                    )}
+                    <i className={`pi ${type === "video" ? "pi-video" : "pi-image"}`} style={{ fontSize: '1.25rem' }}></i>
                   </div>
                   <div className="min-w-0">
                     <span className="block text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Đã tải lên tệp tin từ máy:</span>
@@ -430,28 +421,27 @@ export default function BannersPage() {
               </div>
             ) : (
               <div className="flex gap-2">
-                <input
-                  type="text"
+                <InputText
                   required
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   placeholder={type === "video" ? "https://example.com/video.mp4" : "https://images.unsplash.com/..."}
-                  className="flex-1 bg-[#1A1A1E] border border-[#2A2A30] rounded-xl px-4 py-2.5 text-white outline-none focus:border-[#D4AF37] transition-all font-mono text-xs animate-fade-in"
+                  style={{
+                    flex: 1, height: 48, backgroundColor: "#1A1A1E", border: "1px solid #2A2A30", borderRadius: 12, color: "white", fontSize: 13, padding: "0 16px", fontFamily: "monospace"
+                  }}
                 />
                 <button
                   type="button"
                   onClick={() => document.getElementById("banner-file-input")?.click()}
-                  className="p-2.5 bg-white/[0.03] hover:bg-white/[0.08] text-gray-400 hover:text-white border border-[#2A2A30] hover:border-[#D4AF37]/50 rounded-xl transition-all flex items-center justify-center shrink-0 w-11 h-11"
+                  className="p-2.5 bg-white/[0.03] hover:bg-white/[0.08] text-gray-400 hover:text-white border border-[#2A2A30] hover:border-[#D4AF37]/50 rounded-xl transition-all flex items-center justify-center shrink-0 w-12 h-12"
                   style={{ cursor: "pointer" }}
                   title="Chọn tệp từ máy tính"
                 >
-                  <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-                  </svg>
+                  <i className="pi pi-upload" style={{ fontSize: '1.25rem' }}></i>
                 </button>
               </div>
             )}
-            
+
             <input
               type="file"
               id="banner-file-input"
@@ -459,77 +449,75 @@ export default function BannersPage() {
               onChange={handleFileChange}
               className="hidden"
             />
-            
-            {/* Live Preview Area inside Modal */}
-            {(image.trim() || uploadedFileName) && (
-              <div className="mt-4 border border-[#2A2A30] rounded-xl overflow-hidden bg-black/50 p-3">
-                <span className="block text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-2">
-                  Xem thử trực tiếp (Live Preview):
-                </span>
-                <div className="relative h-44 bg-black rounded-lg overflow-hidden flex items-center justify-center border border-[#1A1A1E]">
-                  {previewError ? (
-                    <div className="absolute inset-0 bg-red-950/20 flex flex-col items-center justify-center p-4 text-center">
-                      <svg fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-red-500 mb-2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
-                      </svg>
-                      <span className="text-xs text-red-400 font-semibold leading-relaxed">
-                        Lỗi: Không thể tải hình ảnh hoặc video từ liên kết này.
-                      </span>
-                      <span className="text-[10px] text-gray-500 mt-1 max-w-[280px]">
-                        Vui lòng kiểm tra quyền chia sẻ công khai (Anyone with link) của Drive hoặc tính hợp lệ của link YouTube/URL.
-                      </span>
-                    </div>
-                  ) : type === "video" ? (
-                    (() => {
-                      const youtubeId = getYouTubeId(image);
-                      const driveDirectLink = getGoogleDriveDirectLink(image);
-                      
-                      if (youtubeId) {
-                        return (
-                          <iframe
-                            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
-                            className="w-full h-full object-cover pointer-events-none"
-                            allow="autoplay; encrypted-media"
-                            frameBorder="0"
-                          />
-                        );
-                      }
-                      
-                      return (
-                        <video
-                          ref={previewVideoRef}
-                          key={driveDirectLink || image}
-                          src={driveDirectLink || image}
-                          autoPlay
-                          loop
-                          muted={muted}
-                          playsInline
-                          className="w-full h-full object-cover"
-                          onError={() => setPreviewError(true)}
-                        />
-                      );
-                    })()
-                  ) : (
-                    <img
-                      src={image}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                      onError={() => setPreviewError(true)}
-                    />
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
+          {/* Live Preview Area inside Modal */}
+          {(image.trim() || uploadedFileName) && (
+            <div>
+              <span className="block text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-2">
+                Xem thử trực tiếp (Live Preview):
+              </span>
+              <div className="relative h-44 bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                {previewError ? (
+                  <div className="absolute inset-0 bg-red-950/20 flex flex-col items-center justify-center p-4 text-center">
+                    <svg fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-red-500 mb-2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                    </svg>
+                    <span className="text-xs text-red-400 font-semibold leading-relaxed">
+                      Lỗi: Không thể tải hình ảnh hoặc video từ liên kết này.
+                    </span>
+                    <span className="text-[10px] text-gray-500 mt-1 max-w-[280px]">
+                      Vui lòng kiểm tra quyền chia sẻ công khai (Anyone with link) của Drive hoặc tính hợp lệ của link YouTube/URL.
+                    </span>
+                  </div>
+                ) : type === "video" ? (
+                  (() => {
+                    const youtubeId = getYouTubeId(image);
+                    const driveDirectLink = getGoogleDriveDirectLink(image);
+
+                    if (youtubeId) {
+                      return (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=${muted ? 1 : 0}&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+                          className="w-full h-full object-cover pointer-events-none"
+                          allow="autoplay; encrypted-media"
+                          frameBorder="0"
+                        />
+                      );
+                    }
+
+                    return (
+                      <video
+                        ref={previewVideoRef}
+                        key={driveDirectLink || image}
+                        src={driveDirectLink || image}
+                        autoPlay
+                        loop
+                        muted={muted}
+                        playsInline
+                        className="w-full h-full object-cover"
+                        onError={() => setPreviewError(true)}
+                      />
+                    );
+                  })()
+                ) : (
+                  <img
+                    src={image}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={() => setPreviewError(true)}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Active Checkbox */}
-          <div className="flex items-center gap-2 p-3 bg-white/[0.01] border border-[#2A2A30] rounded-xl">
-            <input
-              type="checkbox"
-              id="banner-active-checkbox"
+          <div className="flex items-center gap-3">
+            <Checkbox
+              inputId="banner-active-checkbox"
               checked={active}
-              onChange={(e) => setActive(e.target.checked)}
-              className="w-4 h-4 accent-[#D4AF37]"
+              onChange={(e) => setActive(e.checked ?? false)}
             />
             <label htmlFor="banner-active-checkbox" className="text-xs text-gray-300 font-semibold cursor-pointer select-none">
               Đặt làm banner hoạt động chính của website
@@ -538,52 +526,56 @@ export default function BannersPage() {
 
           {/* Muted Checkbox (Only for Video type) */}
           {type === "video" && (
-            <div className="flex flex-col gap-1 p-3 bg-white/[0.01] border border-[#2A2A30] rounded-xl animate-fade-in">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="banner-muted-checkbox"
+            <div className="flex flex-col gap-1 animate-fade-in">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="banner-muted-checkbox"
                   checked={muted}
-                  onChange={(e) => setMuted(e.target.checked)}
-                  className="w-4 h-4 accent-[#D4AF37]"
+                  onChange={(e) => setMuted(e.checked ?? false)}
                 />
                 <label htmlFor="banner-muted-checkbox" className="text-xs text-gray-300 font-semibold cursor-pointer select-none">
                   Tắt âm thanh video (Mute)
                 </label>
               </div>
-              <span className="text-[10px] text-gray-500 pl-6 leading-relaxed">
+              <span className="text-[10px] text-gray-500 pl-8 leading-relaxed">
                 Bật tùy chọn này để tắt âm thanh của video khi khách hàng xem trang chủ; tắt đi để cho phép phát âm thanh.
               </span>
             </div>
           )}
 
           {/* Action Footer */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1C1C1E]">
-            <button
+          <div className="flex items-center justify-end gap-3 pt-6 mt-2">
+            <Button
               type="button"
+              label="Hủy bỏ"
+              text
+              className="justify-center"
               onClick={() => setModalOpen(false)}
-              className="border border-[#2A2A30] text-gray-400 hover:text-white hover:bg-white/[0.02] font-semibold text-xs transition-all"
               style={{
+                width: "140px",
+                color: "#9CA3AF",
                 padding: "12px 24px",
                 borderRadius: "8px",
-                lineHeight: "1.2",
-                cursor: "pointer"
+                fontSize: "12px",
+                fontWeight: "600",
               }}
-            >
-              Hủy bỏ
-            </button>
-            <button
+            />
+            <Button
               type="submit"
-              className="bg-[#D4AF37] hover:bg-[#C5A02E] text-black font-bold text-xs transition-all shadow-lg"
+              label="Lưu cấu hình"
+              className="justify-center"
               style={{
+                width: "140px",
+                backgroundColor: "#D4AF37",
+                color: "black",
+                border: "none",
                 padding: "12px 24px",
                 borderRadius: "8px",
-                lineHeight: "1.2",
-                cursor: "pointer"
+                fontSize: "12px",
+                fontWeight: "bold",
+                boxShadow: "0 4px 14px rgba(212, 175, 55, 0.2)",
               }}
-            >
-              Lưu cấu hình
-            </button>
+            />
           </div>
         </form>
       </Modal>
