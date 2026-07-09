@@ -4,7 +4,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import ScrollToTop from "@/components/ScrollToTop";
 
 export const metadata: Metadata = {
-  title: "GODG1FT — Luxury Jewelry",
+  title: "GODG1FT - Jewelry & Grillz",
   description:
     "Discover our curated collection of handcrafted luxury jewelry. Bracelets, necklaces, rings, and earrings crafted for the discerning few.",
   keywords: [
@@ -17,12 +17,29 @@ export const metadata: Metadata = {
     "custom jewelry",
   ],
   openGraph: {
-    title: "GODG1FT — Luxury Jewelry",
+    title: "GODG1FT - Jewelry & Grillz",
     description: "Handcrafted luxury jewelry for the discerning few.",
     type: "website",
+    url: "https://godg1ftjewels.com",
+    images: [
+      {
+        url: "https://godg1ftjewels.com/hero.png",
+        width: 1200,
+        height: 630,
+        alt: "GODG1FT - Jewelry & Grillz",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GODG1FT - Jewelry & Grillz",
+    description: "Handcrafted luxury jewelry for the discerning few.",
+    images: ["https://godg1ftjewels.com/hero.png"],
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 
