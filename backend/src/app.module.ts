@@ -10,6 +10,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { CustomRequestsModule } from './custom-requests/custom-requests.module';
 import { DesignSamplesModule } from './design-samples/design-samples.module';
 import { PagesModule } from './pages/pages.module';
+import { CustomPageModule } from './custom-page/custom-page.module';
 import { SettingsModule } from './settings/settings.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -31,6 +32,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CustomRequestsModule,
     DesignSamplesModule,
     PagesModule,
+    CustomPageModule,
     SettingsModule,
     UploadsModule,
     DashboardModule,
