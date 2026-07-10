@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
+import TransitionLink from "./TransitionLink";
 import { Product } from "@/data/products";
 
 interface ShopProductCardProps {
@@ -36,7 +36,7 @@ export default function ShopProductCard({
       whileHover={{ y: -4 }}
       className="flex flex-col items-center group cursor-pointer"
     >
-      <Link href={`/shop/${product.slug}`} className="w-full flex flex-col items-center">
+      <TransitionLink href={`/shop/${product.slug}`} className="w-full flex flex-col items-center">
         {/* Transparent Image Container */}
         <div className="relative w-full aspect-[5/4] overflow-hidden flex items-center justify-center bg-black">
           <Image
@@ -68,7 +68,7 @@ export default function ShopProductCard({
             {product.price}
           </p>
         </div>
-      </Link>
+      </TransitionLink>
     </motion.div>
   );
 }

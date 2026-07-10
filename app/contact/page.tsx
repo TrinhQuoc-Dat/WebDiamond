@@ -4,10 +4,9 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
-import ScrollIndicator from "@/components/ScrollIndicator";
 import { apiFetch } from "@/utils/api";
 import { motion } from "framer-motion";
-import SideMenu from "@/components/SideMenu";
+
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -58,7 +57,7 @@ export default function ContactPage() {
     <>
       <CustomCursor />
       <Header />
-      <SideMenu />
+
 
       <main
         className="w-full bg-black text-white min-h-screen relative overflow-hidden flex flex-col items-center justify-center"
@@ -80,12 +79,12 @@ export default function ContactPage() {
             {/* Heading */}
             <h1
               className="text-[clamp(28px,4vw,48px)] font-black uppercase tracking-[0.2em] text-center mb-4"
-              style={{ fontFamily: "var(--font-display)", marginRight: "-0.2em" }}
+              style={{ fontFamily: "var(--font-display)" }}
             >
               CONTACT US
             </h1>
             <p
-              className="text-[clamp(11px,1.2vw,13px)] text-center text-gray-500 uppercase tracking-[0.3em] mb-12 md:mb-16"
+              className="text-[clamp(11px,1.2vw,13px)] text-center text-gray-500 uppercase tracking-[0.3em] mb-40 md:mb-52"
               style={{ fontFamily: "var(--font-display)" }}
             >
               GET IN TOUCH WITH WEBDIAMOND
@@ -174,14 +173,13 @@ export default function ContactPage() {
                     disabled={submitting}
                     className="
                       px-12 py-4
-                      border border-white/20
                       text-white/80
                       font-bold
                       text-[13px]
                       tracking-[0.3em]
                       uppercase
                       rounded-none
-                      hover:bg-white hover:text-black hover:border-white
+                      hover:text-white
                       transition-all duration-300
                       disabled:opacity-50
                       cursor-pointer
@@ -197,7 +195,6 @@ export default function ContactPage() {
         </div>
       </main>
 
-      <ScrollIndicator />
       <Footer />
     </>
   );

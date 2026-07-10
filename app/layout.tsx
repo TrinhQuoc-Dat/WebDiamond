@@ -52,7 +52,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <body suppressHydrationWarning>
         <LoadingOverlay />
-        {children}
+        <div id="main-content-wrapper">
+          {children}
+        </div>
         <ScrollToTop />
       </body>
     </html>

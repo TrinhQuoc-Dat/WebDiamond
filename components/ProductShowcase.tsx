@@ -183,7 +183,7 @@ export default function ProductShowcase() {
         >
           {Array.from({ length: 10 }).map((_, i) => (
             <span key={i} className="text-[10px] tracking-[0.5em] text-white/15 uppercase">
-              Bracelets · Necklace · Rings · Earings · Custom · Warrenty ·
+              Bracelets · Necklace · Rings · Earings · Custom · Warranty ·
             </span>
           ))}
         </motion.div>

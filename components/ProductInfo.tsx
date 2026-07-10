@@ -13,7 +13,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[120px] w-full shrink-0" />
       <motion.h1
-        className="hidden lg:block text-[14px] md:text-[16px] font-black uppercase leading-tight tracking-[0.1em]"
+        className="hidden lg:block text-[20px] md:text-[24px] font-black uppercase leading-tight tracking-[0.1em]"
         style={{ fontFamily: "var(--font-display)" }}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -22,15 +22,17 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         {product.name}
       </motion.h1>
 
-      {/* Description Bullet Points */}
-      <ul className="flex flex-col gap-2 text-[9px] md:text-[10px] text-white/70 font-normal uppercase list-disc pl-4 tracking-widest leading-relaxed" style={{ fontFamily: "var(--font-sans)" }}>
+      <ul className="flex flex-col gap-2 list-none pl-0 ml-0" style={{ fontFamily: "var(--font-display)" }}>
         {product.description.map((point, index) => (
-          <li key={index}>{point}</li>
+          <li key={index} className="flex items-start gap-2 text-[9px] md:text-[10px] text-white/70 font-normal uppercase tracking-widest leading-relaxed">
+            <span className="shrink-0 text-white/50 mt-[1px]">•</span>
+            <span>{point}</span>
+          </li>
         ))}
       </ul>
 
       {/* Micro Disclaimer Text */}
-      <p className="text-[7px] md:text-[8px] text-white/40 leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-sans)" }}>
+      <p className="text-[9px] md:text-[10px] text-white/40 leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
         {product.spec}
       </p>
     </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   { label: "Bracelets", href: "/shop/bracelets" },
@@ -10,7 +11,7 @@ const menuItems = [
   { label: "Earings", href: "/shop/earings" },
   { label: "Custom", href: "/custom" },
   { label: "Contact", href: "/contact" },
-  { label: "Warrenty", href: "/warrenty" },
+  { label: "Warranty", href: "/warrenty" },
 ];
 
 const container = {
@@ -32,6 +33,7 @@ const itemVariant = {
 export default function SideMenu() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const router = useRouter();
 
   return (
     <>
@@ -56,7 +58,11 @@ export default function SideMenu() {
               variants={itemVariant}
               id={`sidemenu-${m.label.toLowerCase().replace(" ", "-")}`}
               onMouseEnter={() => setHoveredIndex(i)}
-              onClick={() => setActiveIndex(i)}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveIndex(i);
+                router.push(m.href);
+              }}
               animate={{
                 opacity: anyHovered ? (isHovered ? 1 : 0.25) : 1,
                 x: isHovered ? 10 : 0,
@@ -68,8 +74,8 @@ export default function SideMenu() {
                 className="text-white font-bold uppercase leading-tight relative"
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "18px",
-                  letterSpacing: "0.05em",
+                  fontSize: "20px",
+                  letterSpacing: "0.1em",
                 }}
               >
                 {m.label}
@@ -91,19 +97,7 @@ export default function SideMenu() {
         })}
       </motion.nav>
 
-      {/* EST 2024 bottom right */}
-      <div className="fixed bottom-[24px] right-[24px] z-40 pointer-events-none">
-        <span
-          className="text-white/50 uppercase font-normal"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "20px",
-            letterSpacing: "0.05em",
-          }}
-        >
-          EST 2024
-        </span>
-      </div>
+
     </>
   );
 }

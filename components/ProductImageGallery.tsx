@@ -39,26 +39,17 @@ export default function ProductImageGallery({
 
         {/* Mannequin / Main Image Container */}
         <div className="relative w-full aspect-[4/5] max-w-[400px] lg:max-w-[480px] bg-transparent overflow-hidden flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeImageIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              className="relative w-full h-full"
-            >
-              <Image
-                src={currentImage}
-                alt={`${product.name} display`}
-                fill
-                priority
-                className="object-contain object-center"
-                sizes="(max-width: 768px) 90vw, 480px"
-                unoptimized={currentImage?.startsWith("http")}
-              />
-            </motion.div>
-          </AnimatePresence>
+          <div key={activeImageIndex} className="relative w-full h-full">
+            <Image
+              src={currentImage}
+              alt={`${product.name} display`}
+              fill
+              priority
+              className="object-contain object-center"
+              sizes="(max-width: 768px) 90vw, 480px"
+              unoptimized={currentImage?.startsWith("http")}
+            />
+          </div>
 
         </div>
 

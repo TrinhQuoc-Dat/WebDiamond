@@ -23,7 +23,7 @@ export default function ProductOrderSelector({
   onAddToBag,
 }: ProductOrderSelectorProps) {
   return (
-    <div className="lg:col-span-3 flex flex-col gap-6 lg:pl-8 order-2 lg:order-none w-full relative h-full">
+    <div className="lg:col-span-3 flex flex-col gap-6 lg:pl-2 order-2 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[120px] w-full shrink-0" />
       {/* Mobile-only info block */}
@@ -37,8 +37,8 @@ export default function ProductOrderSelector({
       </div>
 
       {/* Colour Select */}
-      <div className="flex flex-row items-center gap-4 mt-8">
-        <span className="text-[18px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
+      <div className="flex flex-row items-center gap-4">
+        <span className="text-[22px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-montserrat)" }}>
           Colour:
         </span>
         <div className="flex items-center gap-4">
@@ -96,9 +96,9 @@ export default function ProductOrderSelector({
       </div>
 
       {/* Size Select */}
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center gap-4">
-          <span className="text-[18px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-sans)" }}>
+          <span className="text-[22px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-montserrat)" }}>
             Size:
           </span>
           <div className="flex items-center gap-2">
@@ -113,7 +113,7 @@ export default function ProductOrderSelector({
                       ? "bg-white text-black border-white font-semibold"
                       : "text-white/60 border-white/20 hover:text-white hover:border-white/50"
                   }`}
-                  style={{ fontFamily: "var(--font-sans)" }}
+                  style={{ fontFamily: "var(--font-montserrat)" }}
                 >
                   {size}
                 </button>
@@ -121,41 +121,38 @@ export default function ProductOrderSelector({
             })}
           </div>
         </div>
-        
-        {/* Size Guide Link */}
+      </div>
+
+      {/* Size Guide — standalone để hưởng gap-8 từ parent */}
+      <div>
         <Link
             href={`/size-guide/${product.category.toLocaleLowerCase()}`}
-            className="text-[18px] font-normal italic text-white hover:text-white/80 transition-colors duration-200 mt-2"
-            style={{ fontFamily: "var(--font-sans)" }}
+            className="text-[22px] font-normal italic text-white hover:text-white/80 transition-colors duration-200"
+            style={{ fontFamily: "var(--font-montserrat)" }}
           >
             Size Guide
         </Link>
       </div>
 
       {/* Price Tag */}
-      <div className="flex flex-col gap-1 mt-8">
+      <div className="flex flex-col gap-1">
         <span
-          className="text-[22px] md:text-[26px] lg:text-[20px] font-black tracking-widest text-white whitespace-nowrap"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="text-[30px] md:text-[34px] lg:text-[30px] font-black tracking-widest text-white whitespace-nowrap"
+          style={{ fontFamily: "var(--font-montserrat)" }}
         >
           {product.price}
         </span>
       </div>
 
       {/* Add to Bag Button — links to Instagram DM */}
-      <div className="flex flex-col gap-4 mt-6">
+      <div className="flex flex-col gap-4">
         <a
           href="https://www.instagram.com/godg1ft.jrl/"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full py-4 flex items-center justify-center gap-3 text-[16px] tracking-[0.2em] font-black text-black bg-white hover:bg-gray-200 uppercase transition-all duration-300 rounded-xl shadow-lg hover:shadow-white/5"
-          style={{ fontFamily: "var(--font-display)", textDecoration: "none" }}
+          className="w-full py-2 flex items-center justify-start gap-3 text-[40px] tracking-[0.05em] font-bold italic text-white hover:text-white/70 uppercase transition-all duration-300"
+          style={{ fontFamily: "var(--font-tomorrow)", textDecoration: "none", background: "none" }}
         >
-          <img
-            src="/bay-cart.jpg"
-            alt=""
-            className="h-[28px] w-auto block"
-          />
           ADD TO BAG
         </a>
       </div>
