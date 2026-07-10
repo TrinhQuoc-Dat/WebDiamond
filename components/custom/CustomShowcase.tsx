@@ -3,53 +3,16 @@
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { Slide, DEFAULT_SHOWCASE } from "@/utils/customPage";
 
-const projects = [
-  {
-    title: "YOUNG THUG",
-    subtitle: "NECKLACE LIGHTNING",
-    year: "2026",
-    image: "/shop.png",
-  },
-  {
-    title: "TRAVIS SCOTT",
-    subtitle: "DIAMOND CHAIN",
-    year: "2025",
-    image: "/hero.png",
-  },
-  {
-    title: "DRAKE",
-    subtitle: "LUXURY PENDANT",
-    year: "2024",
-    image: "/shop.png",
-  },
-  {
-    title: "LIL BABY",
-    subtitle: "ICE CHOKER",
-    year: "2024",
-    image: "/hero.png",
-  },
-  {
-    title: "21 SAVAGE",
-    subtitle: "SKULL RING",
-    year: "2023",
-    image: "/shop.png",
-  },
-  {
-    title: "FUTURE",
-    subtitle: "CUBAN LINK",
-    year: "2023",
-    image: "/hero.png",
-  },
-  {
-    title: "GUNNA",
-    subtitle: "EMERALD BRACELET",
-    year: "2022",
-    image: "/shop.png",
-  },
-];
+interface CustomShowcaseProps {
+  slides?: Slide[];
+}
 
-export default function CustomShowcase() {
+export default function CustomShowcase({ slides }: CustomShowcaseProps) {
+  // Dữ liệu đến từ API; fallback về data mặc định nếu rỗng để không vỡ slider.
+  const projects = slides && slides.length > 0 ? slides : DEFAULT_SHOWCASE;
+
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const isScrolling = useRef(false);
@@ -88,7 +51,9 @@ export default function CustomShowcase() {
     setTimeout(() => { isScrolling.current = false; }, 800);
   }, [active]);
 
-  const project = projects[active];
+  // Guard: nếu mảng slide đổi (ngắn hơn) sau khi mount, active có thể vượt phạm vi.
+  const safeActive = Math.min(active, projects.length - 1);
+  const project = projects[safeActive];
 
   // Scroll offset so active item sits at center of the container
   const centerOffset = (420 - itemHeight) / 2;
