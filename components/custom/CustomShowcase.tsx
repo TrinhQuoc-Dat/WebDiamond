@@ -3,15 +3,17 @@
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { useRef, useState, useCallback, useEffect } from "react";
-import { Slide, DEFAULT_SHOWCASE } from "@/utils/customPage";
+import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage";
 
 interface CustomShowcaseProps {
   slides?: Slide[];
+  yearLabel?: string;
 }
 
-export default function CustomShowcase({ slides }: CustomShowcaseProps) {
+export default function CustomShowcase({ slides, yearLabel }: CustomShowcaseProps) {
   // Dữ liệu đến từ API; fallback về data mặc định nếu rỗng để không vỡ slider.
   const projects = slides && slides.length > 0 ? slides : DEFAULT_SHOWCASE;
+  const yearText = yearLabel || DEFAULT_YEAR_LABEL;
 
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
@@ -169,7 +171,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                     {project.title}
                   </h1>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "4px", letterSpacing: "0.15em" }}>
-                    YEAR {project.year}
+                    {yearText} {project.year}
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -199,13 +201,13 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)" }}>
-                    YEAR
+                    {yearText}
                   </div>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
                     {project.year}
                   </div>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)", marginTop: "48px" }}>
-                    YEAR
+                    {yearText}
                   </div>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
                     {project.year}

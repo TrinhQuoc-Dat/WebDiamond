@@ -33,6 +33,10 @@ const DEFAULT_SHOWCASE = [
 export class CustomPage {
   @Prop({ type: [SlideSchema], default: () => DEFAULT_SHOWCASE })
   showcase: Slide[];
+
+  // Nhãn chữ hiển thị phía trên năm (mặc định "YEAR"), dùng chung cho mọi slide.
+  @Prop({ default: 'YEAR' })
+  yearLabel: string;
 }
 
 export const CustomPageSchema = SchemaFactory.createForClass(CustomPage);

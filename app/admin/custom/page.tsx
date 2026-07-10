@@ -24,6 +24,7 @@ const emptySlide: Slide = { title: "", subtitle: "", year: "", image: "" };
 
 export default function AdminCustomPage() {
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [yearLabel, setYearLabel] = useState("YEAR");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
@@ -32,9 +33,10 @@ export default function AdminCustomPage() {
 
   // Tải dữ liệu showcase hiện tại từ backend.
   useEffect(() => {
-    apiFetch<{ showcase?: Slide[] }>("/custom-page")
+    apiFetch<{ showcase?: Slide[]; yearLabel?: string }>("/custom-page")
       .then((res) => {
         setSlides(Array.isArray(res?.showcase) && res.showcase.length > 0 ? res.showcase : DEFAULT_SHOWCASE);
+        setYearLabel(res?.yearLabel ?? "YEAR");
       })
       .catch(() => setSlides(DEFAULT_SHOWCASE))
       .finally(() => setLoading(false));
@@ -89,7 +91,7 @@ export default function AdminCustomPage() {
     try {
       await apiFetch("/admin/custom-page", {
         method: "PUT",
-        body: JSON.stringify({ showcase: slides }),
+        body: JSON.stringify({ showcase: slides, yearLabel }),
       });
       alert("Đã lưu nội dung trang Custom thành công.");
     } catch (err: any) {
@@ -137,6 +139,23 @@ export default function AdminCustomPage() {
             <i className={`pi ${saving ? "pi-spin pi-spinner" : "pi-save"}`} style={{ fontSize: 12 }}></i>
             <span>{saving ? "Đang lưu…" : "Lưu thay đổi"}</span>
           </button>
+        </div>
+      </div>
+
+      {/* Cấu hình chung */}
+      <div className="bg-[#121214] border border-[#1C1C1E] rounded-2xl" style={{ padding: 24 }}>
+        <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">Cấu hình chung</span>
+        <div className="mt-5 max-w-xs">
+          <label className={labelClass}>Chữ nhãn năm (Year label)</label>
+          <InputText
+            value={yearLabel}
+            onChange={(e) => setYearLabel(e.target.value)}
+            placeholder="YEAR"
+            style={inputStyle}
+          />
+          <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
+            Chữ hiển thị phía trên số năm ở mỗi slide (mặc định &quot;YEAR&quot;). Áp dụng cho tất cả slide.
+          </p>
         </div>
       </div>
 
@@ -246,25 +265,14 @@ export default function AdminCustomPage() {
                     style={inputStyle}
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className={labelClass}>Năm (Year)</label>
-                    <InputText
-                      value={slide.year}
-                      onChange={(e) => updateSlide(index, "year", e.target.value)}
-                      placeholder="2026"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Liên kết ảnh (URL)</label>
-                    <InputText
-                      value={slide.image}
-                      onChange={(e) => updateSlide(index, "image", e.target.value)}
-                      placeholder="/shop.png hoặc link Unsplash"
-                      style={{ ...inputStyle, fontFamily: "monospace", fontSize: 12 }}
-                    />
-                  </div>
+                <div>
+                  <label className={labelClass}>Năm (Year)</label>
+                  <InputText
+                    value={slide.year}
+                    onChange={(e) => updateSlide(index, "year", e.target.value)}
+                    placeholder="2026"
+                    style={inputStyle}
+                  />
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ export interface Slide {
 
 export interface CustomPageContent {
   showcase: Slide[];
+  yearLabel: string;
 }
 
 // Dữ liệu mặc định = đúng nội dung đang gán cứng trong CustomShowcase.tsx.
@@ -24,8 +25,11 @@ export const DEFAULT_SHOWCASE: Slide[] = [
   { title: "GUNNA", subtitle: "EMERALD BRACELET", year: "2022", image: "/shop.png" },
 ];
 
+export const DEFAULT_YEAR_LABEL = "YEAR";
+
 export const DEFAULT_CUSTOM_PAGE: CustomPageContent = {
   showcase: DEFAULT_SHOWCASE,
+  yearLabel: DEFAULT_YEAR_LABEL,
 };
 
 // Lấy nội dung trang custom từ backend; luôn trả về data hợp lệ (fallback default).
@@ -35,7 +39,8 @@ export async function getCustomPage(): Promise<CustomPageContent> {
     const showcase = Array.isArray(res?.showcase) && res.showcase.length > 0
       ? res.showcase
       : DEFAULT_SHOWCASE;
-    return { showcase };
+    const yearLabel = res?.yearLabel ?? DEFAULT_YEAR_LABEL;
+    return { showcase, yearLabel };
   } catch {
     return DEFAULT_CUSTOM_PAGE;
   }
