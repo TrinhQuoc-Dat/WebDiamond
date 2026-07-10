@@ -319,7 +319,35 @@ Tài liệu này liệt kê chi tiết danh sách tất cả các điểm cuối
 
 ---
 
-### 2.10. Module Uploads (Tải lên file)
+### 2.10. Module Custom Page (Trang Custom - Slider showcase)
+Cấu hình nội dung slider phần đầu trang `/custom` (YOUNG THUG / YEAR / ảnh). Lưu dưới dạng một document duy nhất (singleton), tương tự Settings.
+* **Endpoint công khai**: `GET /custom-page`
+  - *Lưu ý*: Tự khởi tạo với 7 slide mặc định (nội dung gốc) nếu chưa có trong Database, nên trang public không bao giờ trắng.
+* **Phản hồi thành công (200 OK)**:
+  ```json
+  {
+    "id": "6a3ab9...",
+    "showcase": [
+      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "image": "/shop.png" }
+    ],
+    "createdAt": "2026-07-10T18:00:00.000Z",
+    "updatedAt": "2026-07-10T18:00:00.000Z"
+  }
+  ```
+* **API Admin**: `PUT /admin/custom-page` (Yêu cầu Token Admin)
+  - **Payload**: gửi toàn bộ mảng `showcase` mới.
+  ```json
+  {
+    "showcase": [
+      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "image": "http://localhost:4000/uploads/xxx.png" }
+    ]
+  }
+  ```
+  - Ảnh nên dùng URL trả về từ `POST /admin/uploads` (hoặc link Unsplash đã whitelist).
+
+---
+
+### 2.11. Module Uploads (Tải lên file)
 * **Endpoint**: `POST /admin/uploads`
 * **Quyền truy cập**: Yêu cầu Token Admin
 * **Định dạng dữ liệu**: `multipart/form-data` chứa trường `files` (cho phép tối đa 10 tệp cùng lúc).
@@ -334,7 +362,7 @@ Tài liệu này liệt kê chi tiết danh sách tất cả các điểm cuối
 
 ---
 
-### 2.11. Module Dashboard (Bảng điều khiển Admin)
+### 2.12. Module Dashboard (Bảng điều khiển Admin)
 #### Thống kê tổng số lượng các thực thể
 * **Endpoint**: `GET /admin/dashboard/stats`
 * **Quyền truy cập**: Yêu cầu Token Admin
