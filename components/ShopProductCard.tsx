@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import TransitionLink from "./TransitionLink";
 import { Product } from "@/data/products";
+import { formatThousands } from "@/utils/formatPrice";
 
 interface ShopProductCardProps {
   product: Product;
@@ -65,7 +66,7 @@ export default function ShopProductCard({
             className="text-[18px] md:text-[16px] tracking-[0.05em] text-white font-bold uppercase text-center"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            {product.price}
+            {formatThousands(product.price)}
           </p>
         </div>
       </TransitionLink>

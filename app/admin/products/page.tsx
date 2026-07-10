@@ -9,6 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { formatThousands } from "@/utils/formatPrice";
 
 export default function ProductsPage() {
   const { products, addProduct, updateProduct, toggleProductVisibility, deleteProduct } = useAdminData();
@@ -274,7 +275,7 @@ export default function ProductsPage() {
         >
           <Column header="Ảnh" body={imageBodyTemplate} style={{ width: '100px', textAlign: 'center' }} align="center" />
           <Column header="Thông tin sản phẩm" body={infoBodyTemplate} />
-          <Column field="price" header="Giá bán" style={{ fontWeight: 'bold', color: 'white' }} />
+          <Column header="Giá bán" body={(p) => formatThousands(p.price)} style={{ fontWeight: 'bold', color: 'white' }} />
           <Column header="Danh mục / Nhãn" body={categoryBodyTemplate} />
           <Column header="Hiển thị" body={visibilityBodyTemplate} style={{ width: '150px' }} />
           <Column header="Thao tác" body={actionBodyTemplate} style={{ width: '120px', textAlign: 'right' }} align="right" />

@@ -9,6 +9,8 @@ import {
   PenLine, Sparkles,
 } from "lucide-react";
 
+import { formatThousands } from "@/utils/formatPrice";
+
 // PrimeReact components
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -60,7 +62,7 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
       setName(initialProduct.name);
       setSlug(initialProduct.slug);
       setCategory(initialProduct.category);
-      setPrice(initialProduct.price);
+      setPrice(formatThousands(initialProduct.price));
       setImage(initialProduct.image);
       setTag(initialProduct.tag || "");
       setSpec(initialProduct.spec || "");
@@ -236,7 +238,7 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
             </div>
             <div>
               <label className={labelCls} style={{ marginBottom: 10, display: 'flex' }}><DollarSign size={13} /> Giá bán <span style={{ color: '#D4AF37' }}>*</span></label>
-              <InputText value={price} onChange={(e) => setPrice(e.target.value)} placeholder="50.000.000 VNĐ" style={primeInputStyle} required />
+              <InputText value={price} onChange={(e) => setPrice(formatThousands(e.target.value))} placeholder="50.000.000 VNĐ" style={primeInputStyle} required />
             </div>
             <div>
               <label className={labelCls} style={{ marginBottom: 10, display: 'flex' }}><Bookmark size={13} /> Nhãn (Tag)</label>

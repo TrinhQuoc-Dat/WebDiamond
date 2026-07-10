@@ -1,6 +1,7 @@
 "use client";
 
 import { Product } from "@/data/products";
+import { formatThousands } from "@/utils/formatPrice";
 import Link from "next/link";
 
 interface ProductOrderSelectorProps {
@@ -140,7 +141,7 @@ export default function ProductOrderSelector({
           className="text-[30px] md:text-[34px] lg:text-[30px] font-black tracking-widest text-white whitespace-nowrap"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          {product.price}
+          {formatThousands(product.price)}
         </span>
       </div>
 
