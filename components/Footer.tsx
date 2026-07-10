@@ -10,10 +10,10 @@ export default function Footer() {
         className="w-full flex flex-col items-center"
         style={{ paddingLeft: "5%", paddingRight: "5%", marginTop: "20px", paddingBottom: "20px" }}
       >
-        <div className="max-w-[1440px] w-full mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center md:items-start justify-between py-12 gap-12">
+        <div className="max-w-[1440px] w-full mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center md:items-stretch justify-between py-12 gap-12">
 
           {/* ── LEFT: Logo & Socials ── */}
-          <div className="flex flex-col items-center md:items-start justify-between gap-6">
+          <div className="flex flex-col items-center md:items-start justify-between gap-6 self-stretch">
 
             {/* Logo */}
             <div className="flex items-center gap-4">
@@ -61,7 +61,7 @@ export default function Footer() {
             </div>
 
             {/* Social Icons — PrimeIcons */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-6">
               <a
                 href="https://facebook.com"
                 target="_blank"
@@ -69,7 +69,7 @@ export default function Footer() {
                 className="text-black/40 hover:text-black transition-colors duration-300"
                 aria-label="Facebook"
               >
-                <i className="pi pi-facebook" style={{ fontSize: "20px" }} />
+                <i className="pi pi-facebook" style={{ fontSize: "28px" }} />
               </a>
 
               <a
@@ -79,7 +79,7 @@ export default function Footer() {
                 className="text-black/40 hover:text-black transition-colors duration-300"
                 aria-label="YouTube"
               >
-                <i className="pi pi-youtube" style={{ fontSize: "20px" }} />
+                <i className="pi pi-youtube" style={{ fontSize: "28px" }} />
               </a>
 
               <a
@@ -89,7 +89,7 @@ export default function Footer() {
                 className="text-black/40 hover:text-black transition-colors duration-300"
                 aria-label="Instagram"
               >
-                <i className="pi pi-instagram" style={{ fontSize: "20px" }} />
+                <i className="pi pi-instagram" style={{ fontSize: "28px" }} />
               </a>
             </div>
           </div>
