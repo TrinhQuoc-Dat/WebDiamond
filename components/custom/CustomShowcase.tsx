@@ -7,13 +7,11 @@ import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage"
 
 interface CustomShowcaseProps {
   slides?: Slide[];
-  yearLabel?: string;
 }
 
-export default function CustomShowcase({ slides, yearLabel }: CustomShowcaseProps) {
+export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   // Dữ liệu đến từ API; fallback về data mặc định nếu rỗng để không vỡ slider.
   const projects = slides && slides.length > 0 ? slides : DEFAULT_SHOWCASE;
-  const yearText = yearLabel || DEFAULT_YEAR_LABEL;
 
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
@@ -56,6 +54,8 @@ export default function CustomShowcase({ slides, yearLabel }: CustomShowcaseProp
   // Guard: nếu mảng slide đổi (ngắn hơn) sau khi mount, active có thể vượt phạm vi.
   const safeActive = Math.min(active, projects.length - 1);
   const project = projects[safeActive];
+  // Nhãn năm riêng theo từng slide (fallback "YEAR").
+  const yearText = project?.yearLabel || DEFAULT_YEAR_LABEL;
 
   // Scroll offset so active item sits at center of the container
   const centerOffset = (420 - itemHeight) / 2;

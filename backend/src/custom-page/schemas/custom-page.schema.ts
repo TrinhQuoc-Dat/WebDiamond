@@ -9,6 +9,8 @@ export class Slide {
   @Prop({ default: '' }) title: string;
   @Prop({ default: '' }) subtitle: string;
   @Prop({ default: '' }) year: string;
+  // Nhãn chữ hiển thị phía trên số năm, riêng từng slide (mặc định "YEAR").
+  @Prop({ default: 'YEAR' }) yearLabel: string;
   @Prop({ default: '' }) image: string;
 }
 export const SlideSchema = SchemaFactory.createForClass(Slide);
@@ -33,10 +35,6 @@ const DEFAULT_SHOWCASE = [
 export class CustomPage {
   @Prop({ type: [SlideSchema], default: () => DEFAULT_SHOWCASE })
   showcase: Slide[];
-
-  // Nhãn chữ hiển thị phía trên năm (mặc định "YEAR"), dùng chung cho mọi slide.
-  @Prop({ default: 'YEAR' })
-  yearLabel: string;
 }
 
 export const CustomPageSchema = SchemaFactory.createForClass(CustomPage);

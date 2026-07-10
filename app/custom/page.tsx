@@ -8,18 +8,14 @@ import CustomShowcase from "@/components/custom/CustomShowcase";
 import HowItWorks from "@/components/custom/HowItWorks";
 import CustomForm from "@/components/custom/CustomForm";
 import ScrollIndicator from "@/components/ScrollIndicator";
-import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL, getCustomPage } from "@/utils/customPage";
+import { Slide, DEFAULT_SHOWCASE, getCustomPage } from "@/utils/customPage";
 
 export default function CustomPage() {
   // Khởi tạo bằng data mặc định để không nháy, rồi cập nhật từ API khi tải xong.
   const [slides, setSlides] = useState<Slide[]>(DEFAULT_SHOWCASE);
-  const [yearLabel, setYearLabel] = useState<string>(DEFAULT_YEAR_LABEL);
 
   useEffect(() => {
-    getCustomPage().then((content) => {
-      setSlides(content.showcase);
-      setYearLabel(content.yearLabel);
-    });
+    getCustomPage().then((content) => setSlides(content.showcase));
   }, []);
 
   return (
@@ -28,7 +24,7 @@ export default function CustomPage() {
       <Header />
 
       {/* ── Showcase Section (scroll-driven slider) ── */}
-      <CustomShowcase slides={slides} yearLabel={yearLabel} />
+      <CustomShowcase slides={slides} />
 
       {/* ── How It Works ── */}
       <HowItWorks />

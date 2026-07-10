@@ -16,6 +16,10 @@ export class SlideDto {
 
   @IsOptional()
   @IsString()
+  yearLabel?: string;
+
+  @IsOptional()
+  @IsString()
   image?: string;
 }
 
@@ -25,8 +29,4 @@ export class UpdateCustomPageDto {
   @ValidateNested({ each: true })
   @Type(() => SlideDto)
   showcase?: SlideDto[];
-
-  @IsOptional()
-  @IsString()
-  yearLabel?: string;
 }

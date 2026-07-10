@@ -328,22 +328,20 @@ Cấu hình nội dung slider phần đầu trang `/custom` (YOUNG THUG / YEAR /
   {
     "id": "6a3ab9...",
     "showcase": [
-      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "image": "/shop.png" }
+      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "yearLabel": "YEAR", "image": "/shop.png" }
     ],
-    "yearLabel": "YEAR",
     "createdAt": "2026-07-10T18:00:00.000Z",
     "updatedAt": "2026-07-10T18:00:00.000Z"
   }
   ```
-  - `yearLabel`: chữ nhãn hiển thị phía trên số năm (mặc định `"YEAR"`), dùng chung mọi slide.
+  - `yearLabel`: chữ nhãn hiển thị phía trên số năm của **từng slide** (mặc định `"YEAR"`).
 * **API Admin**: `PUT /admin/custom-page` (Yêu cầu Token Admin)
-  - **Payload**: gửi toàn bộ mảng `showcase` mới và/hoặc `yearLabel`.
+  - **Payload**: gửi toàn bộ mảng `showcase` mới.
   ```json
   {
     "showcase": [
-      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "image": "http://localhost:4000/uploads/xxx.png" }
-    ],
-    "yearLabel": "YEAR"
+      { "title": "YOUNG THUG", "subtitle": "NECKLACE LIGHTNING", "year": "2026", "yearLabel": "YEAR", "image": "http://localhost:4000/uploads/xxx.png" }
+    ]
   }
   ```
   - Ảnh nên dùng URL trả về từ `POST /admin/uploads` (hoặc link Unsplash đã whitelist).
