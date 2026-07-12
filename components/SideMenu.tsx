@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { triggerPageTransition } from "./LoadingOverlay";
 
 const menuItems = [
   { label: "Bracelets", href: "/shop/bracelets" },
@@ -34,6 +35,7 @@ export default function SideMenu() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <>
@@ -61,7 +63,12 @@ export default function SideMenu() {
               onClick={(e) => {
                 e.preventDefault();
                 setActiveIndex(i);
-                router.push(m.href);
+                if (pathname === "/" && m.href !== "/") {
+                  triggerPageTransition(m.href);
+                  setTimeout(() => router.push(m.href), 500);
+                } else {
+                  router.push(m.href);
+                }
               }}
               animate={{
                 opacity: anyHovered ? (isHovered ? 1 : 0.25) : 1,

@@ -66,8 +66,14 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setBanners(bannersRes || []);
       setContacts(contactsRes.data || []);
       setProducts(productsRes.data || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Lỗi khi tải dữ liệu Admin:", err);
+      // Token hết hạn hoặc không hợp lệ → tự động logout
+      if (err?.message === "Unauthorized" || err?.message?.includes("Unauthorized")) {
+        localStorage.removeItem("wd_admin_logged_in");
+        localStorage.removeItem("wd_access_token");
+        setIsLoggedIn(false);
+      }
     }
   };
 

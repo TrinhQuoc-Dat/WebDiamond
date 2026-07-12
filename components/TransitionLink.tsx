@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { triggerPageTransition } from "./LoadingOverlay";
 
 interface TransitionLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -12,7 +13,8 @@ interface TransitionLinkProps
 
 /**
  * Drop-in replacement cho Next.js <Link>.
- * Navigate bình thường — không có hiệu ứng chuyển trang.
+ * Khi đang ở trang chủ "/" và navigate ra trang khác → trigger hiệu ứng chuyển trang.
+ * Các trường hợp khác → navigate bình thường.
  */
 export default function TransitionLink({
   href,
@@ -22,6 +24,7 @@ export default function TransitionLink({
   ...rest
 }: TransitionLinkProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Bỏ qua external links hoặc khi giữ modifier keys → hành vi mặc định
@@ -41,7 +44,17 @@ export default function TransitionLink({
 
     e.preventDefault();
     if (onClick) onClick(e);
-    router.push(href);
+
+    // Nếu đang ở trang chủ và navigate đi trang khác → hiệu ứng transition
+    if (pathname === "/" && href !== "/") {
+      triggerPageTransition(href);
+      // Delay navigate để overlay kịp hiện
+      setTimeout(() => {
+        router.push(href);
+      }, 500);
+    } else {
+      router.push(href);
+    }
   };
 
   return (

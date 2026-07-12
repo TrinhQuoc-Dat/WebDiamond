@@ -57,3 +57,10 @@ Dự án gồm 2 phần độc lập: **Frontend (Next.js)** ở thư mục gố
 *   **Quản lý Banner Homepage**: Xem danh sách, thêm mới, chỉnh sửa tiêu đề/phụ đề, đổi ảnh và bật/tắt banner hoạt động chính của trang chủ.
 *   **Quản lý Liên hệ**: Danh sách khách gửi liên hệ dạng bảng, bộ lọc nhanh theo trạng thái (`Mới`, `Đang xử lý`, `Đã xử lý`) và Modal xem nội dung chi tiết tin nhắn cùng nút bấm chuyển đổi trạng thái xử lý nhanh.
 *   **Quản lý Sản phẩm**: Bảng danh mục sản phẩm, bộ lọc phân loại, chức năng Bật/Tắt ẩn hiện trực quan (sản phẩm ẩn sẽ biến mất khỏi trang cửa hàng khách hàng), biểu mẫu Modal đăng sản phẩm mới hoặc cập nhật thông tin sản phẩm có sẵn (slug, ảnh mẫu, giá bán VNĐ, kích thước, màu sắc, mô tả nhiều dòng,...).
+
+
+NODE DEPLOY
+net start MongoDB
+ssh root@157.10.52.96
+npm run build
+pm2 restart all

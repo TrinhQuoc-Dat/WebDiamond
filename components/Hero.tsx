@@ -3,7 +3,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiFetch } from "@/utils/api";
+import { triggerPageTransition } from "./LoadingOverlay";
 
 // Parse Google Drive share link → direct download URL
 const getGoogleDriveDirectLink = (url: string): string | null => {
@@ -35,6 +37,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [banner, setBanner] = useState<BannerData | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const router = useRouter();
 
   // Read active banner from API Backend (client-only)
   useEffect(() => {
@@ -250,6 +253,13 @@ export default function Hero() {
           transition={{ delay: 0.7, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
+          onClick={(e) => {
+            e.preventDefault();
+            if (linkHref && linkHref !== "/") {
+              triggerPageTransition(linkHref);
+              setTimeout(() => { router.push(linkHref); }, 500);
+            }
+          }}
         >
           <span
             className="block text-white font-bold uppercase select-none"
