@@ -48,7 +48,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       const targetScroll = sectionTop + (sectionScrollable * idx) / projects.length;
       window.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
-    setTimeout(() => { isScrolling.current = false; }, 800);
+    setTimeout(() => { isScrolling.current = false; }, 300);
   }, [active]);
 
   // Guard: nếu mảng slide đổi (ngắn hơn) sau khi mount, active có thể vượt phạm vi.
@@ -69,13 +69,11 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       let opacity = 0.15;
       let fontSize = "13px";
       let color = "rgba(255,255,255,0.3)";
-      let fontWeight = 400;
 
       if (absDist === 0) {
         opacity = 1;
         fontSize = "clamp(22px, 2.8vw, 44px)";
         color = "rgba(255,255,255,1)";
-        fontWeight = 700;
       } else if (absDist === 1) {
         opacity = 0.5;
         fontSize = "clamp(14px, 1.5vw, 18px)";
@@ -91,13 +89,8 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
           <motion.div
             className="cursor-pointer"
             onClick={() => handleClick(i)}
-            animate={{
-              opacity,
-              fontSize,
-              color,
-              fontWeight,
-            }}
-            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            animate={{ opacity, color }}
+            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{
               fontFamily: "var(--font-display)",
               textTransform: "uppercase",
@@ -105,13 +98,14 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               lineHeight: 1.2,
               whiteSpace: "nowrap",
               padding: "4px 0",
+              fontSize,
             }}
           >
             {absDist === 0 ? (
-              <span style={{ position: "relative", display: "inline-block", padding: "8px 0" }}>
-                <span style={{ position: "absolute", bottom: 0, left: "-14px", opacity: 0.5, fontSize: "0.6em", lineHeight: 1 }}>└</span>
+              <span style={{ position: "relative", display: "inline-block", padding: "8px 0 16px" }}>
+                <span style={{ position: "absolute", bottom: "-2px", left: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>└</span>
                 {p.title}
-                <span style={{ position: "absolute", bottom: 0, right: "-14px", opacity: 0.5, fontSize: "0.6em", lineHeight: 1 }}>┘</span>
+                <span style={{ position: "absolute", bottom: "-2px", right: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>┘</span>
               </span>
             ) : (
               p.subtitle
@@ -132,11 +126,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
         {/* Background Glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <motion.div
-            animate={{ opacity: [0.15, 0.4, 0.15] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-white/5 blur-[200px]"
-          />
+          <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-white/5 blur-[200px]" />
         </div>
 
         {/* Noise */}
@@ -159,7 +149,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
             {/* Active title — mobile: centered large text */}
             <div className="md:hidden text-center">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={`mobile-title-${active}`}
                   initial={{ opacity: 0, y: 10 }}
@@ -182,7 +172,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative", paddingLeft: "20px" }}>
                 <motion.div
                   animate={{ y: -active * itemHeight + centerOffset }}
-                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                   style={{ width: "100%" }}
                 >
                   {renderSubtitleList()}
@@ -192,7 +182,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
             {/* YEAR block — desktop only */}
             <div className="hidden md:block absolute right-[60px] top-1/2 -translate-y-1/2">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={`year-${active}`}
                   initial={{ opacity: 0, x: 30 }}
@@ -222,7 +212,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             {/* Glow */}
             <div className="absolute w-[500px] h-[500px] rounded-full bg-white/5 blur-[150px] pointer-events-none" />
 
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
                 key={`img-${active}`}
                 initial={{ opacity: 0, scale: 0.9 }}
