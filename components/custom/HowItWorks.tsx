@@ -85,7 +85,7 @@ export default function HowItWorks() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "clamp(32px, 4vw, 52px)",
-              fontWeight: 900,
+              fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.15em",
               textAlign: "center",

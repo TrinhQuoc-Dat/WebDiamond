@@ -145,7 +145,7 @@ export default function WarrantyPage() {
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "16px",
-                fontWeight: "900",
+                fontWeight: "700",
               }}
             >GODG1FT</span>
             <span className="tracking-[0.2em] text-zinc-500 uppercase ml-3"

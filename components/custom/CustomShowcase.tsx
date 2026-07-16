@@ -75,7 +75,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
         opacity = 1;
         fontSize = "clamp(22px, 2.8vw, 44px)";
         color = "rgba(255,255,255,1)";
-        fontWeight = 900;
+        fontWeight = 700;
       } else if (absDist === 1) {
         opacity = 0.5;
         fontSize = "clamp(14px, 1.5vw, 18px)";
@@ -167,7 +167,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 5vw, 32px)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.05em", color: "white" }}>
+                  <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 5vw, 32px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: "white" }}>
                     {project.title}
                   </h1>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "4px", letterSpacing: "0.15em" }}>
@@ -200,16 +200,16 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)" }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
                     {yearText}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 700 }}>
                     {project.year}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.6)", marginTop: "48px" }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)", marginTop: "48px" }}>
                     {yearText}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 900 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 700 }}>
                     {project.year}
                   </div>
                 </motion.div>

@@ -9,7 +9,7 @@ export default function RingGuide() {
         style={{ margin: "0 auto", paddingTop: "60px", paddingBottom: "50px" }}>
         {/* TITLE */}
         <h2 className="text-center text-4xl md:text-6xl font-bold tracking-[0.15em] uppercase mb-20" 
-          style={{ fontFamily: "var(--font-sans)", marginTop: "50px", textAlign: "center" }}>
+          style={{ fontFamily: "var(--font-display)", marginTop: "50px", textAlign: "center" }}>
           How To Find Your Ring Size
         </h2>
 
