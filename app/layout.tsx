@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { Syncopate } from "next/font/google";
 import "./globals.css";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import ScrollToTop from "@/components/ScrollToTop";
+
+const syncopate = Syncopate({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "GODG1FT - Jewelry & Grillz",
@@ -50,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className={syncopate.variable}>
         <LoadingOverlay />
         <div id="main-content-wrapper">
           {children}

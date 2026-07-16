@@ -78,7 +78,7 @@ export default function CustomForm() {
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(28px, 3.5vw, 44px)",
-            fontWeight: 900,
+            fontWeight: 700,
             textTransform: "uppercase",
             letterSpacing: "0.15em",
             textAlign: "center",

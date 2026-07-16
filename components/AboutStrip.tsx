@@ -40,7 +40,7 @@ export default function AboutStrip() {
           </h2>
           <p
             className="text-white/40 text-sm leading-relaxed max-w-md mb-8"
-            style={{ fontFamily: "var(--font-sans)" }}
+            style={{ fontFamily: "var(--font-display)" }}
           >
             Each WebDiamond piece is handcrafted by master artisans using only
             ethically sourced materials. No luck — all hustle. Every detail

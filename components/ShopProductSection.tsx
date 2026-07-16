@@ -39,7 +39,7 @@ export default function ShopProductSection({
       {title && (
         <motion.h2
           className="text-[28px] md:text-[48px] font-black uppercase tracking-[0.3em] mb-12 text-center text-white"
-          style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.2em", marginBottom: "3rem" }}
+          style={{ fontFamily: "var(--font-display)", letterSpacing: "0.2em", marginBottom: "3rem" }}
           {...headerAnimation}
           transition={{ delay: 0.2, duration: 0.8 }}
         >

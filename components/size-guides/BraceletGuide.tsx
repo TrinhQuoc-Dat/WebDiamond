@@ -11,7 +11,7 @@ export default function BraceletGuide() {
 
         {/* TITLE */}
         <h2 className="text-center text-4xl md:text-6xl font-bold tracking-[0.15em] uppercase mb-20" 
-          style={{ fontFamily: "var(--font-sans)", marginTop: "50px", textAlign: "center" }}>
+          style={{ fontFamily: "var(--font-display)", marginTop: "50px", textAlign: "center" }}>
            How To Find Your Bracelet Size
         </h2>
 
@@ -96,7 +96,7 @@ export default function BraceletGuide() {
         </div> */}
 
         {/* FOOTER */}
-        <div className="text-center mt-20 pb-10 text-white/50 text-sm uppercase tracking-[0.3em]" style={{ fontFamily: "var(--font-sans)" , marginTop: "30px", textAlign: "center" }}>
+        <div className="text-center mt-20 pb-10 text-white/50 text-sm uppercase tracking-[0.3em]" style={{ fontFamily: "var(--font-display)" , marginTop: "30px", textAlign: "center" }}>
           Bracelet Size Measurement Guide
         </div>
       </div>
