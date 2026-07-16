@@ -1,5 +1,8 @@
+"use client";
+
 import Header from "@/components/Header";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function WarrantyPage() {
   return (
@@ -28,7 +31,7 @@ export default function WarrantyPage() {
           <section className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase">
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
-                style={{ fontFamily: "var(--font-display)" }}>
+                style={{ fontFamily: "var(--font-montserrat)" }}>
                 Bảo Hành
               </h2>
 
@@ -84,7 +87,7 @@ export default function WarrantyPage() {
           <section className="p-8 flex flex-col justify-between uppercase">
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
-                style={{ fontFamily: "var(--font-display)" }}>
+                style={{ fontFamily: "var(--font-montserrat)" }}>
                 Bảo Quản
               </h2>
 
@@ -137,56 +140,128 @@ export default function WarrantyPage() {
           </section>
         </div>
 
-        <div className="relative w-full overflow-hidden" style={{ marginTop: "40px", paddingBottom: "0" }}>
-          {/* Small rotated GODG1FT label */}
-          <div className="absolute left-4 bottom-16 rotate-[-90deg] origin-left z-10">
-            <span
-              className="tracking-[0.3em] uppercase text-white/80"
+        <motion.div
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative w-full overflow-hidden border-x border-zinc-800"
+          style={{ marginTop: "0px", paddingBottom: "0" }}
+        >
+          {/* 3-column grid matching top section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3">
+            {/* Column 1: Vertical label + GO */}
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
+              className="relative text-white font-bold uppercase leading-none flex items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "16px",
-                fontWeight: "700",
+                fontSize: "clamp(80px, 14vw, 200px)",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                padding: "8px 0",
+                minHeight: "280px",
+                overflow: "hidden",
               }}
-            >GODG1FT</span>
-            <span className="tracking-[0.2em] text-zinc-500 uppercase ml-3"
-              style={{ fontSize: "9px", fontWeight: "700" }}
             >
-              © COPYRIGHT BY GODG1FT JEWELRY
-            </span>
-          </div>
+              {/* Vertical: copyright (top) → GODG1FT (bottom) — single vertical line */}
+              <div
+                className="absolute z-10"
+                style={{
+                  left: "8px",
+                  top: "0",
+                  bottom: "0",
+                  writingMode: "vertical-rl",
+                  textOrientation: "mixed",
+                  transform: "rotate(180deg)",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                }}
+              >
+                <span
+                  className="tracking-[0.25em] uppercase text-white/80"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  GODG1FT
+                </span>
+                <span
+                  className="tracking-[0.15em] text-zinc-500 uppercase"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "6px",
+                    fontWeight: "700",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  @ COPYRIGHT BY GODG1FT JEWELRY
+                </span>
+              </div>
+              GO
+            </motion.div>
 
-          {/* Full-width GODG1FT */}
-          <p
-            className="text-white font-bold uppercase w-full"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "18vw",
-              fontWeight: 700,
-              lineHeight: 0.85,
-              whiteSpace: "nowrap",
-              letterSpacing: "-0.02em",
-              margin: 0,
-              padding: 0,
-              paddingLeft: "3%",
-            }}
-          >
-            GODG1FT
-          </p>
-
-          {/* JEWELRY aligned right */}
-          <div className="flex justify-end" style={{ paddingRight: "3%", marginTop: "4px" }}>
-            <p
-              className="text-zinc-400 uppercase tracking-[0.4em]"
+            {/* Column 2: DG */}
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+              className="text-white font-bold uppercase leading-none flex items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(14px, 2.5vw, 32px)",
-                fontWeight: 400,
+                fontSize: "clamp(80px, 14vw, 200px)",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                padding: "8px 0",
+                overflow: "hidden",
               }}
             >
-              Jewelry
-            </p>
+              DG1
+            </motion.div>
+
+            {/* Column 3: FT + JEWELRY */}
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              className="relative text-white font-bold uppercase leading-none flex items-end justify-center"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(80px, 14vw, 200px)",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                padding: "8px 0",
+                overflow: "hidden",
+              }}
+            >
+              <span style={{ display: "inline-flex", alignItems: "baseline" }}>
+                FT
+                <span
+                  className="text-zinc-400 uppercase tracking-[0.2em]"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(14px, 2.5vw, 32px)",
+                    fontWeight: 400,
+                    marginLeft: "4px",
+                  }}
+                >
+                  JEWELRY
+                </span>
+              </span>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </main>
     </>
 
