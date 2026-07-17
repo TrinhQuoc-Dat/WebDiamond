@@ -184,20 +184,20 @@ export default function WarrantyPage() {
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="relative w-full overflow-hidden border-x border-zinc-800"
+          className="hidden lg:block w-full border-x border-zinc-800"
           style={{ marginTop: "0px", paddingBottom: "0" }}
         >
-          {/* 3-column grid matching top section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3">
+          {/* Desktop: 3-column grid */}
+          <div className="grid grid-cols-3">
             {/* Column 1: Vertical label + GO */}
             <motion.div
-              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
-              className="relative text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800 lg:min-h-[280px]"
+              className="relative text-white font-bold uppercase leading-none flex items-end justify-center border-r border-zinc-800 min-h-[280px]"
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(90px, 16vw, 220px)",
@@ -207,99 +207,74 @@ export default function WarrantyPage() {
                 overflow: "hidden",
               }}
             >
-              {/* Vertical: copyright (top) → GODG1FT (bottom) — single vertical line */}
               <div
-                className="absolute hidden lg:flex z-10"
-                style={{
-                  left: "4px",
-                  top: "0",
-                  bottom: "0",
-                  writingMode: "vertical-rl",
-                  textOrientation: "mixed",
-                  transform: "rotate(180deg)",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "4px",
-                }}
+                className="absolute flex z-10"
+                style={{ left: "4px", top: "0", bottom: "0", writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "4px" }}
               >
-                <span
-                  className="tracking-[0.25em] uppercase text-white/80"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "10px",
-                    fontWeight: "700",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  GODG1FT
-                </span>
-                <span
-                  className="tracking-[0.15em] text-zinc-500 uppercase"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "5px",
-                    fontWeight: "700",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  @ COPYRIGHT BY GODG1FT JEWELRY
-                </span>
+                <span className="tracking-[0.25em] uppercase text-white/80" style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: "700", whiteSpace: "nowrap" }}>GODG1FT</span>
+                <span className="tracking-[0.15em] text-zinc-500 uppercase" style={{ fontFamily: "var(--font-display)", fontSize: "5px", fontWeight: "700", whiteSpace: "nowrap" }}>@ COPYRIGHT BY GODG1FT JEWELRY</span>
               </div>
-              <span style={{ marginLeft: isDesktop ? "70px" : "0" }}>GO</span>
+              <span style={{ marginLeft: "70px" }}>GO</span>
             </motion.div>
 
             {/* Column 2: DG */}
             <motion.div
-              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-              className="text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(90px, 16vw, 220px)",
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-                padding: "8px 0",
-                overflow: "hidden",
-              }}
+              className="text-white font-bold uppercase leading-none flex items-end justify-center border-r border-zinc-800"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(90px, 16vw, 220px)", fontWeight: 700, letterSpacing: "-0.02em", padding: "8px 0", overflow: "hidden" }}
             >
               DG1
             </motion.div>
 
             {/* Column 3: FT + JEWELRY */}
             <motion.div
-              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="relative text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center lg:justify-start"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(90px, 16vw, 220px)",
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-                padding: "8px 0",
-                overflow: "hidden",
-              }}
+              className="relative text-white font-bold uppercase leading-none flex items-end justify-start"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(90px, 16vw, 220px)", fontWeight: 700, letterSpacing: "-0.02em", padding: "8px 0", overflow: "hidden" }}
             >
-              <span className="flex flex-col lg:flex-row items-center lg:items-baseline">
+              <span className="flex flex-row items-baseline">
                 <span>FT</span>
-                <span
-                  className="text-zinc-400 uppercase tracking-[0.2em] lg:ml-[6px]"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(14px, 2.2vw, 28px)",
-                    fontWeight: 600,
-                  }}
-                >
-                  JEWELRY
-                </span>
+                <span className="text-zinc-400 uppercase tracking-[0.2em] ml-[6px]" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(14px, 2.2vw, 28px)", fontWeight: 600 }}>JEWELRY</span>
               </span>
             </motion.div>
           </div>
         </motion.div>
+
+          {/* Mobile/tablet: flex row — outside motion.div to avoid animation nesting issues */}
+        <div className="block lg:hidden w-full border-x border-zinc-800 flex flex-row items-center justify-center py-6">
+          <div className="flex flex-row items-center justify-center gap-x-3">
+            <span
+              className="text-white font-bold uppercase leading-none"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px, 9vw, 86px)", fontWeight: 700, letterSpacing: "-0.02em" }}
+            >
+              GO
+            </span>
+            <span
+              className="text-white font-bold uppercase leading-none"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px, 9vw, 86px)", fontWeight: 700, letterSpacing: "-0.02em" }}
+            >
+              DG1
+            </span>
+            <span
+              className="text-white font-bold uppercase leading-none flex flex-row items-baseline"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(36px, 9vw, 86px)", fontWeight: 700, letterSpacing: "-0.02em" }}
+            >
+              <span>FT</span>
+              <span
+                className="text-zinc-400 uppercase tracking-[0.2em] ml-[4px]"
+                style={{ fontFamily: "var(--font-display)", fontSize: "clamp(8px, 1.5vw, 14px)", fontWeight: 600 }}
+              >
+                JEWELRY
+              </span>
+            </span>
+          </div>
+        </div>
       </main>
     </>
 
