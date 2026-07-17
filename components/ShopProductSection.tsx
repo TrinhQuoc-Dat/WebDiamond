@@ -11,6 +11,7 @@ interface ShopProductSectionProps {
   products: Product[];
   viewportOnce?: boolean;
   hideMoreButton?: boolean;
+  titleFontWeight?: number;
 }
 
 export default function ShopProductSection({
@@ -19,7 +20,13 @@ export default function ShopProductSection({
   products,
   viewportOnce = false,
   hideMoreButton = false,
+  titleFontWeight = 300,
 }: ShopProductSectionProps) {
+  const sortedProducts = [...products].sort((a, b) => {
+    if ((a as any).featured && !(b as any).featured) return -1;
+    if (!(a as any).featured && (b as any).featured) return 1;
+    return 0;
+  });
   const headerAnimation = viewportOnce
     ? {
       initial: { opacity: 0 },
@@ -38,8 +45,8 @@ export default function ShopProductSection({
       {/* Category Title */}
       {title && (
         <motion.h2
-          className="text-[28px] md:text-[48px] font-black uppercase tracking-[0.3em] mb-12 text-center text-white"
-          style={{ fontFamily: "var(--font-display)", letterSpacing: "0.2em", marginBottom: "3rem" }}
+          className="uppercase mb-12 text-center text-white"
+          style={{ fontFamily: "var(--font-display)", fontWeight: titleFontWeight, letterSpacing: "0.2em", marginBottom: "3rem", fontSize: "clamp(20px, 3vw, 30px)" }}
           {...headerAnimation}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
@@ -51,7 +58,7 @@ export default function ShopProductSection({
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-12 w-full px-4 md:px-40"
       >
-        {products.map((product, idx) => (
+        {sortedProducts.map((product, idx) => (
           <ShopProductCard
             key={product.slug}
             product={product}

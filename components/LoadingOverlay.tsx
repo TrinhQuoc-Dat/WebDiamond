@@ -26,13 +26,20 @@ export default function LoadingOverlay() {
     if (!mounted) return;
     if (pathname !== "/") return;
 
+    const wrapper = document.getElementById("main-content-wrapper");
+    if (wrapper) {
+      wrapper.style.filter = "blur(20px)";
+      wrapper.style.transition = "filter 0.3s ease";
+    }
     document.body.style.overflow = "hidden";
-    setIsVisible(true);
+
+    setTimeout(() => setIsVisible(true), 150);
 
     const t = setTimeout(() => {
       setIsVisible(false);
+      if (wrapper) wrapper.style.filter = "blur(0px)";
       document.body.style.overflow = "";
-    }, 2620);
+    }, 2220);
 
     return () => {
       clearTimeout(t);
@@ -45,22 +52,35 @@ export default function LoadingOverlay() {
   const pathnameRef = useRef(pathname);
   pathnameRef.current = pathname;
 
+  const blurWrapper = (blur: boolean) => {
+    const wrapper = document.getElementById("main-content-wrapper");
+    if (!wrapper) return;
+    if (blur) {
+      wrapper.style.filter = "blur(20px)";
+      wrapper.style.transition = "filter 0.3s ease";
+    } else {
+      wrapper.style.filter = "blur(0px)";
+    }
+  };
+
   const handleTransitionRequest = useCallback(
     (href: string) => {
       if (pathnameRef.current !== "/") return;
       if (href === "/") return;
 
+      blurWrapper(true);
       document.body.style.overflow = "hidden";
-      setIsVisible(true);
 
-      // Hiện overlay đúng 2620ms giống y intro trang chủ
+      setTimeout(() => setIsVisible(true), 150);
+
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
       transitionTimerRef.current = setTimeout(() => {
         setIsVisible(false);
+        blurWrapper(false);
         document.body.style.overflow = "";
-      }, 2620);
+      }, 2220);
     },
-    [] // Không phụ thuộc pathname → callback ổn định, timer không bị clear
+    []
   );
 
   useEffect(() => {
@@ -78,12 +98,15 @@ export default function LoadingOverlay() {
     <div
       className="fixed inset-0 z-[99999] overflow-hidden bg-black"
     >
-      {/* Logo GIF full cover — không hiệu ứng, hiện nguyên bản */}
+      {/* Logo GIF full cover */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/logo.gif"
         alt="GODG1FT JEWELRY"
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+        style={{
+          animation: "logoTransitionIn 0.5s ease-out forwards",
+        }}
       />
 
       {/* Loading text */}
@@ -94,6 +117,13 @@ export default function LoadingOverlay() {
           Loading Atelier
         </span>
       </div>
+
+      <style>{`
+        @keyframes logoTransitionIn {
+          0% { transform: scale(0.6); opacity: 0.3; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }

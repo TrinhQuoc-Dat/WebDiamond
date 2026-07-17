@@ -3,8 +3,28 @@
 import Header from "@/components/Header";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+
+const topVariants = (isDesktop: boolean) => ({
+  hidden: { opacity: 0, x: isDesktop ? -60 : 0, y: isDesktop ? 0 : 60 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: { duration: 0.6, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] },
+  }),
+});
 
 export default function WarrantyPage() {
+  const [isDesktop, setDesktop] = useState(false);
+
+  useEffect(() => {
+    setDesktop(window.innerWidth >= 1024);
+    const handleResize = () => setDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <Header />
@@ -13,7 +33,14 @@ export default function WarrantyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
 
           {/* Logo Section */}
-          <section className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8">
+          <motion.section
+            className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8"
+            variants={topVariants(isDesktop)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0}
+          >
             <div className="flex items-start justify-center" style={{ paddingTop: "80px" }}>
               <Image
                 src="/Rectangle.svg"
@@ -25,10 +52,17 @@ export default function WarrantyPage() {
             </div>
 
 
-          </section>
+          </motion.section>
 
           {/* Warranty */}
-          <section className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase">
+          <motion.section
+            className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase"
+            variants={topVariants(isDesktop)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={1}
+          >
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
@@ -81,10 +115,17 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </section>
+          </motion.section>
 
           {/* Storage */}
-          <section className="p-8 flex flex-col justify-between uppercase">
+          <motion.section
+            className="p-8 flex flex-col justify-between uppercase"
+            variants={topVariants(isDesktop)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={2}
+          >
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
@@ -137,7 +178,7 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </section>
+          </motion.section>
         </div>
 
         <motion.div
@@ -152,43 +193,41 @@ export default function WarrantyPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3">
             {/* Column 1: Vertical label + GO */}
             <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
-              className="relative text-white font-bold uppercase leading-none flex items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
+              className="relative text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800 lg:min-h-[280px]"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(80px, 14vw, 200px)",
+                fontSize: "clamp(90px, 16vw, 220px)",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
                 padding: "8px 0",
-                minHeight: "280px",
                 overflow: "hidden",
               }}
             >
               {/* Vertical: copyright (top) → GODG1FT (bottom) — single vertical line */}
               <div
-                className="absolute z-10"
+                className="absolute hidden lg:flex z-10"
                 style={{
-                  left: "8px",
+                  left: "4px",
                   top: "0",
                   bottom: "0",
                   writingMode: "vertical-rl",
                   textOrientation: "mixed",
                   transform: "rotate(180deg)",
-                  display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "8px",
+                  gap: "4px",
                 }}
               >
                 <span
                   className="tracking-[0.25em] uppercase text-white/80"
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "12px",
+                    fontSize: "10px",
                     fontWeight: "700",
                     whiteSpace: "nowrap",
                   }}
@@ -199,7 +238,7 @@ export default function WarrantyPage() {
                   className="tracking-[0.15em] text-zinc-500 uppercase"
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "6px",
+                    fontSize: "5px",
                     fontWeight: "700",
                     whiteSpace: "nowrap",
                   }}
@@ -207,19 +246,19 @@ export default function WarrantyPage() {
                   @ COPYRIGHT BY GODG1FT JEWELRY
                 </span>
               </div>
-              GO
+              <span style={{ marginLeft: isDesktop ? "70px" : "0" }}>GO</span>
             </motion.div>
 
             {/* Column 2: DG */}
             <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-              className="text-white font-bold uppercase leading-none flex items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
+              className="text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center border-b lg:border-b-0 lg:border-r border-zinc-800"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(80px, 14vw, 200px)",
+                fontSize: "clamp(90px, 16vw, 220px)",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
                 padding: "8px 0",
@@ -231,29 +270,28 @@ export default function WarrantyPage() {
 
             {/* Column 3: FT + JEWELRY */}
             <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, [isDesktop ? "x" : "y"]: isDesktop ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="relative text-white font-bold uppercase leading-none flex items-end justify-center"
+              className="relative text-white font-bold uppercase leading-none flex items-center lg:items-end justify-center lg:justify-start"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(80px, 14vw, 200px)",
+                fontSize: "clamp(90px, 16vw, 220px)",
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
                 padding: "8px 0",
                 overflow: "hidden",
               }}
             >
-              <span style={{ display: "inline-flex", alignItems: "baseline" }}>
-                FT
+              <span className="flex flex-col lg:flex-row items-center lg:items-baseline">
+                <span>FT</span>
                 <span
-                  className="text-zinc-400 uppercase tracking-[0.2em]"
+                  className="text-zinc-400 uppercase tracking-[0.2em] lg:ml-[6px]"
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "clamp(14px, 2.5vw, 32px)",
-                    fontWeight: 400,
-                    marginLeft: "4px",
+                    fontSize: "clamp(14px, 2.2vw, 28px)",
+                    fontWeight: 600,
                   }}
                 >
                   JEWELRY

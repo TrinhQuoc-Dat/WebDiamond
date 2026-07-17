@@ -51,7 +51,7 @@ export default function TransitionLink({
       // Delay navigate để overlay kịp hiện
       setTimeout(() => {
         router.push(href);
-      }, 500);
+      }, 400);
     } else {
       router.push(href);
     }
