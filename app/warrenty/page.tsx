@@ -29,7 +29,7 @@ export default function WarrantyPage() {
     <>
       <Header />
       <main className="min-h-screen bg-black text-white overflow-hidden"
-        style={{ margin: "0 auto", marginTop: "150px", marginBottom: "0" }}>
+        style={{ margin: "0 auto", marginTop: "120px", marginBottom: "0" }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
 
           {/* Logo Section */}
