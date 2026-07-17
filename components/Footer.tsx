@@ -124,6 +124,19 @@ export default function Footer() {
           </div>
 
         </div>
+
+        {/* Bottom bar — Warranty link */}
+        <div className="w-full border-t border-gray-200 py-6 flex justify-center">
+          <TransitionLink
+            href="/warrenty"
+            className="text-black/30 hover:text-black transition-colors duration-300 text-[10px] uppercase tracking-[0.3em] flex items-center gap-2"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="GodGift" style={{ height: "16px", width: "auto", filter: "invert(1)", opacity: 0.4 }} />
+            WARRANTY & CARE
+          </TransitionLink>
+        </div>
       </div>
     </footer>
   );

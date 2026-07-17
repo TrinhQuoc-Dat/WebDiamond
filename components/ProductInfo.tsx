@@ -24,15 +24,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       <ul className="flex flex-col gap-2 list-none pl-0 ml-0" style={{ fontFamily: "var(--font-display)" }}>
         {product.description.map((point, index) => (
-          <li key={index} className="flex items-start gap-2 text-[9px] md:text-[10px] text-white/70 font-normal uppercase tracking-widest leading-relaxed">
-            <span className="shrink-0 text-white/50 mt-[1px]">•</span>
+          <li key={index} className="flex items-start gap-2 text-[9px] md:text-[10px] text-white/90 font-normal uppercase tracking-widest leading-relaxed">
+            <span className="shrink-0 text-white/70 mt-[1px]">•</span>
             <span>{point}</span>
           </li>
         ))}
       </ul>
 
       {/* Micro Disclaimer Text */}
-      <p className="text-[9px] md:text-[10px] text-white/40 leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
+      <p className="text-[9px] md:text-[10px] text-white/60 leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
         {product.spec}
       </p>
     </div>

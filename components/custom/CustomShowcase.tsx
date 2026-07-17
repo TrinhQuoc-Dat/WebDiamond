@@ -25,10 +25,14 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   // Continuous scroll-driven index (float for smooth wheel effect)
   const continuousIndex = useTransform(scrollYProgress, [0, 1], [0, projects.length - 1]);
 
+  const activeRef = useRef(active);
+  activeRef.current = active;
+
   useMotionValueEvent(continuousIndex, "change", (latest) => {
     if (isScrolling.current) return;
     const idx = Math.min(Math.round(latest), projects.length - 1);
-    if (idx >= 0 && idx !== active) {
+    if (idx >= 0 && idx !== activeRef.current) {
+      activeRef.current = idx;
       setActive(idx);
     }
   });
@@ -61,7 +65,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const centerOffset = (420 - itemHeight) / 2;
 
   // Build text list — all items visible, scroll as a stack, active one is larger
-  const renderSubtitleList = () => {
+  const renderSubtitleList = useCallback(() => {
     return projects.map((p, i) => {
       const dist = i - active;
       const absDist = Math.abs(dist);
@@ -114,7 +118,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
         </div>
       );
     });
-  };
+  }, [active, projects, handleClick]);
 
   return (
     <section
@@ -188,7 +192,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
                     {yearText}
@@ -218,7 +222,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="relative w-full h-full flex items-center justify-center"
               >
                 <Image

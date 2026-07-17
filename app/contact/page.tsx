@@ -16,7 +16,6 @@ export default function ContactPage() {
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -32,8 +31,8 @@ export default function ContactPage() {
         method: "POST",
         body: JSON.stringify(formData),
       });
-      setSuccess(true);
       setFormData({ name: "", email: "", phone: "", message: "" });
+      window.location.href = "https://ig.me/m/godg1ft.jrl";
     } catch (err: any) {
       alert(err.message || "Gửi tin nhắn liên hệ thất bại. Vui lòng thử lại sau.");
     } finally {
@@ -90,26 +89,7 @@ export default function ContactPage() {
               GET IN TOUCH WITH WEBDIAMOND
             </p>
 
-            {success ? (
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="w-full p-8 border border-white/20 bg-white/[0.02] rounded-xl text-center flex flex-col items-center gap-4"
-              >
-                <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#D4AF37" className="w-12 h-12">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                </svg>
-                <h3 className="font-bold text-lg uppercase tracking-[0.1em] text-white">Gửi thành công!</h3>
-                <p className="text-sm text-gray-400">Cảm ơn tin nhắn của bạn. Chúng tôi sẽ phản hồi lại trong thời gian sớm nhất.</p>
-                <button
-                  onClick={() => setSuccess(false)}
-                  className="mt-4 px-6 py-2 border border-white text-white hover:bg-white hover:text-black transition-all text-xs font-bold uppercase tracking-widest"
-                >
-                  Gửi tin nhắn khác
-                </button>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <input
                     type="text"
@@ -190,7 +170,6 @@ export default function ContactPage() {
                   </button>
                 </div>
               </form>
-            )}
           </motion.div>
         </div>
       </main>

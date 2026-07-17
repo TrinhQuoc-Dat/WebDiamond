@@ -87,6 +87,7 @@ export default function Header() {
           w-auto
           block
         "
+              style={{ paddingTop: "2px" }}
             />
           </TransitionLink>
         </div>

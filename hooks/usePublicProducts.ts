@@ -4,6 +4,7 @@ import { apiFetch } from "@/utils/api";
 
 export interface PublicProduct extends Product {
   hidden?: boolean;
+  featured?: boolean;
 }
 
 export function usePublicProducts() {
