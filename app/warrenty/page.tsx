@@ -29,7 +29,7 @@ export default function WarrantyPage() {
     <>
       <Header />
       <main className="min-h-screen bg-black text-white overflow-hidden"
-        style={{ margin: "0 auto", marginTop: "120px", marginBottom: "0" }}>
+        style={{ margin: "0 auto", marginTop: "68px", marginBottom: "0" }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
 
           {/* Logo Section */}
@@ -41,7 +41,7 @@ export default function WarrantyPage() {
             viewport={{ once: true }}
             custom={0}
           >
-            <div className="flex items-start justify-center" style={{ paddingTop: "80px" }}>
+            <div className="flex items-center justify-center h-full min-h-[200px]">
               <Image
                 src="/Rectangle.svg"
                 alt="Godgift Jewelry"

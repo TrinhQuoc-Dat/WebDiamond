@@ -37,7 +37,7 @@ export default function LoadingOverlay() {
 
     const t = setTimeout(() => {
       setIsVisible(false);
-      if (wrapper) wrapper.style.filter = "blur(0px)";
+      if (wrapper) wrapper.style.filter = "none";
       document.body.style.overflow = "";
     }, 2220);
 
@@ -59,7 +59,7 @@ export default function LoadingOverlay() {
       wrapper.style.filter = "blur(20px)";
       wrapper.style.transition = "filter 0.3s ease";
     } else {
-      wrapper.style.filter = "blur(0px)";
+      wrapper.style.filter = "none";
     }
   };
 
