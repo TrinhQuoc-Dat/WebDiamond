@@ -62,5 +62,6 @@ Dự án gồm 2 phần độc lập: **Frontend (Next.js)** ở thư mục gố
 NODE DEPLOY
 net start MongoDB
 ssh root@157.10.52.96
+npm run start:dev
 npm run build
 pm2 restart all
