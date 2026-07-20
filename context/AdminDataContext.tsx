@@ -38,6 +38,7 @@ export interface CustomRequest {
 
 export interface AdminProduct extends Product {
   hidden?: boolean;
+  featured?: boolean;
 }
 
 interface AdminContextType {
@@ -56,6 +57,7 @@ interface AdminContextType {
   addProduct: (product: AdminProduct) => Promise<void>;
   updateProduct: (slug: string, updated: Partial<AdminProduct>) => Promise<void>;
   toggleProductVisibility: (slug: string) => Promise<void>;
+  toggleProductFeatured: (slug: string) => Promise<void>;
   deleteProduct: (slug: string) => Promise<void>;
   resetAllData: () => void;
 }
@@ -235,6 +237,23 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const toggleProductFeatured = async (slug: string) => {
+    try {
+      const existing = products.find((p) => p.slug === slug);
+      if (!existing) return;
+
+      await apiFetch(`/admin/products/${(existing as any).id}/featured`, {
+        method: "PATCH",
+      });
+
+      setProducts((prev) =>
+        prev.map((p) => (p.slug === slug ? { ...p, featured: !p.featured } : p))
+      );
+    } catch (e: any) {
+      alert(e.message || "Không thể thay đổi trạng thái ghim sản phẩm");
+    }
+  };
+
   const deleteProduct = async (slug: string) => {
     const existing = products.find((p) => p.slug === slug);
     if (!existing) return;
@@ -309,6 +328,7 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         addProduct,
         updateProduct,
         toggleProductVisibility,
+        toggleProductFeatured,
         deleteProduct,
         resetAllData,
       }}

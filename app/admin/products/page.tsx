@@ -12,7 +12,7 @@ import { Button } from "primereact/button";
 import { formatThousands } from "@/utils/formatPrice";
 
 export default function ProductsPage() {
-  const { products, addProduct, updateProduct, toggleProductVisibility, deleteProduct } = useAdminData();
+  const { products, addProduct, updateProduct, toggleProductVisibility, toggleProductFeatured, deleteProduct } = useAdminData();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
 
@@ -20,6 +20,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [visibilityFilter, setVisibilityFilter] = useState("Tất cả"); // Tất cả, Hiển thị, Đang ẩn
+  const [featuredFilter, setFeaturedFilter] = useState("Tất cả"); // Tất cả, Đã ghim, Chưa ghim
 
   // Lấy các danh mục hiện tại để lọc động
   const categories = ["Tất cả", ...Array.from(new Set(products.map((p) => p.category)))];
@@ -29,6 +30,11 @@ export default function ProductsPage() {
     { label: "TẤT CẢ TRẠNG THÁI", value: "Tất cả" },
     { label: "ĐANG HIỂN THỊ", value: "Hiển thị" },
     { label: "ĐANG ẨN", value: "Đang ẩn" }
+  ];
+  const featuredOptions = [
+    { label: "TẤT CẢ GHIM", value: "Tất cả" },
+    { label: "ĐÃ GHIM", value: "Đã ghim" },
+    { label: "CHƯA GHIM", value: "Chưa ghim" }
   ];
 
   const handleOpenAddModal = () => {
@@ -86,7 +92,14 @@ export default function ProductsPage() {
       matchesVisibility = !!p.hidden;
     }
 
-    return matchesSearch && matchesCategory && matchesVisibility;
+    let matchesFeatured = true;
+    if (featuredFilter === "Đã ghim") {
+      matchesFeatured = !!p.featured;
+    } else if (featuredFilter === "Chưa ghim") {
+      matchesFeatured = !p.featured;
+    }
+
+    return matchesSearch && matchesCategory && matchesVisibility && matchesFeatured;
   });
 
   // --- CÁC TEMPLATE CỘT CHO DATATABLE ---
@@ -116,26 +129,48 @@ export default function ProductsPage() {
     </div>
   );
 
-  const visibilityBodyTemplate = (p: AdminProduct) => (
-    <button
-      onClick={() => toggleProductVisibility(p.slug)}
-      className={`flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all duration-300 border ${
-        p.hidden
-          ? "bg-red-500/5 text-red-500 border-red-500/30 hover:bg-red-500/10"
-          : "bg-[#00E676]/5 text-[#00E676] border-[#00E676]/30 hover:bg-[#00E676]/10"
-      }`}
-      style={{ width: '90px', letterSpacing: '0.05em' }}
-    >
-      {p.hidden ? (
-        <>
-          <i className="pi pi-eye-slash" style={{ fontSize: '10px' }} /> Đang ẩn
-        </>
-      ) : (
-        <>
-          <i className="pi pi-eye" style={{ fontSize: '10px' }} /> Hiển thị
-        </>
-      )}
-    </button>
+  const statusBodyTemplate = (p: AdminProduct) => (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={() => toggleProductVisibility(p.slug)}
+        className={`flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all duration-300 border ${
+          p.hidden
+            ? "bg-red-500/5 text-red-500 border-red-500/30 hover:bg-red-500/10"
+            : "bg-[#00E676]/5 text-[#00E676] border-[#00E676]/30 hover:bg-[#00E676]/10"
+        }`}
+        style={{ width: '90px', letterSpacing: '0.05em' }}
+      >
+        {p.hidden ? (
+          <>
+            <i className="pi pi-eye-slash" style={{ fontSize: '10px' }} /> Đang ẩn
+          </>
+        ) : (
+          <>
+            <i className="pi pi-eye" style={{ fontSize: '10px' }} /> Hiển thị
+          </>
+        )}
+      </button>
+
+      <button
+        onClick={() => toggleProductFeatured(p.slug)}
+        className={`flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all duration-300 border ${
+          p.featured
+            ? "bg-[#D4AF37]/5 text-[#D4AF37] border-[#D4AF37]/30 hover:bg-[#D4AF37]/10"
+            : "bg-gray-500/5 text-gray-400 border-gray-500/30 hover:bg-gray-500/10"
+        }`}
+        style={{ width: '90px', letterSpacing: '0.05em' }}
+      >
+        {p.featured ? (
+          <>
+            <i className="pi pi-thumbtack" style={{ fontSize: '10px' }} /> Đã ghim
+          </>
+        ) : (
+          <>
+            <i className="pi pi-thumbtack" style={{ fontSize: '10px', transform: 'rotate(45deg)' }} /> Ghim
+          </>
+        )}
+      </button>
+    </div>
   );
 
   const actionBodyTemplate = (p: AdminProduct) => (
@@ -191,7 +226,7 @@ export default function ProductsPage() {
 
       {/* Filter Options panel */}
       <div 
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#121214] border border-[#1C1C1E] rounded-xl shadow-lg"
+        className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-[#121214] border border-[#1C1C1E] rounded-xl shadow-lg"
         style={{ padding: "14px 20px" }}
       >
         {/* Search */}
@@ -242,11 +277,35 @@ export default function ProductsPage() {
 
         {/* Visibility */}
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-500 font-semibold uppercase whitespace-nowrap">Trạng thái:</span>
+          <span className="text-xs text-gray-500 font-semibold uppercase whitespace-nowrap">Hiển thị:</span>
           <Dropdown
             value={visibilityFilter}
             options={visibilityOptions}
             onChange={(e) => setVisibilityFilter(e.value)}
+            style={{
+              width: "100%",
+              height: 48,
+              backgroundColor: "#0D0D0F",
+              border: "1px solid #2A2A30",
+              borderRadius: 12,
+              color: "rgba(255,255,255,0.9)",
+              fontSize: 11,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              alignItems: "center"
+            }}
+            panelClassName="dark-dropdown-panel uppercase-dropdown"
+          />
+        </div>
+
+        {/* Featured */}
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-500 font-semibold uppercase whitespace-nowrap">Ghim:</span>
+          <Dropdown
+            value={featuredFilter}
+            options={featuredOptions}
+            onChange={(e) => setFeaturedFilter(e.value)}
             style={{
               width: "100%",
               height: 48,
@@ -277,7 +336,7 @@ export default function ProductsPage() {
           <Column header="Thông tin sản phẩm" body={infoBodyTemplate} />
           <Column header="Giá bán" body={(p) => formatThousands(p.price)} style={{ fontWeight: 'bold', color: 'white' }} />
           <Column header="Danh mục / Nhãn" body={categoryBodyTemplate} />
-          <Column header="Hiển thị" body={visibilityBodyTemplate} style={{ width: '150px' }} />
+          <Column header="Trạng thái" body={statusBodyTemplate} style={{ width: '150px' }} />
           <Column header="Thao tác" body={actionBodyTemplate} style={{ width: '120px', textAlign: 'right' }} align="right" />
         </DataTable>
       </div>

@@ -11,10 +11,16 @@ import { motion } from "framer-motion";
 export default function ShopPage() {
   const { products } = usePublicProducts();
 
-  const necklaces = products.filter((p) => p.category === "NECKLACE").slice(0, 6);
-  const bracelets = products.filter((p) => p.category === "BRACELETS").slice(0, 6);
-  const rings = products.filter((p) => p.category === "RINGS").slice(0, 6);
-  const earrings = products.filter((p) => p.category === "EARINGS").slice(0, 6);
+  const sortFeaturedFirst = (a: any, b: any) => {
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    return 0;
+  };
+
+  const necklaces = products.filter((p) => p.category === "NECKLACE").sort(sortFeaturedFirst).slice(0, 6);
+  const bracelets = products.filter((p) => p.category === "BRACELETS").sort(sortFeaturedFirst).slice(0, 6);
+  const rings = products.filter((p) => p.category === "RINGS").sort(sortFeaturedFirst).slice(0, 6);
+  const earrings = products.filter((p) => p.category === "EARINGS").sort(sortFeaturedFirst).slice(0, 6);
 
   return (
     <>
