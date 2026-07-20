@@ -94,35 +94,51 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ── RIGHT: QR Code Instagram ── */}
-          <div className="flex flex-col items-center gap-3">
-            <p
-              className="text-[10px] uppercase tracking-[0.25em] text-black/40 font-normal"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Follow us
-            </p>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:scale-[1.03] transition-transform duration-300 block"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/instagram.svg"
-                alt="Instagram QR Code — GODG1FT"
-                className="w-[130px] h-[130px] sm:w-[160px] sm:h-[160px] lg:w-[180px] lg:h-[180px] object-contain"
-              />
-            </a>
-            <p
-              className="text-[10px] uppercase tracking-[0.2em] text-black/40"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              @godg1ft
-            </p>
-          </div>
+          <div className="flex items-center justify-center gap-12 self-stretch">
+            <div className="flex flex-col items-center gap-3">
+              
+              <a
+                href="/warrenty"
+                rel="noreferrer"
+                className="hover:scale-[1.03] transition-transform duration-300 block"
+              >
+                <img
+                  src="/logo-godg1ft-jewelry.svg"
+                  alt="Logo — GODG1FT"
+                  className="w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px] object-contain"
+                />
+              </a>
+            </div>
 
+            {/* ── RIGHT: QR Code Instagram ── */}
+            <div className="flex flex-col items-center gap-3">
+              <p
+                className="text-[10px] uppercase tracking-[0.25em] text-black/40 font-normal"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Follow us
+              </p>
+              <a
+                href="https://www.instagram.com/godg1ft.jrl/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:scale-[1.03] transition-transform duration-300 block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/instagram.svg"
+                  alt="Instagram QR Code — GODG1FT"
+                  className="w-[130px] h-[130px] sm:w-[160px] sm:h-[160px] lg:w-[180px] lg:h-[180px] object-contain"
+                />
+              </a>
+              <p
+                className="text-[10px] uppercase tracking-[0.2em] text-black/40"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                @godg1ft
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Bottom bar — Warranty link */}

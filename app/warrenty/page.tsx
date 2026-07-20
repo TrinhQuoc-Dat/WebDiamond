@@ -240,7 +240,7 @@ export default function WarrantyPage() {
             >
               <span className="flex flex-row items-baseline">
                 <span>FT</span>
-                <span className="text-zinc-400 uppercase tracking-[0.2em] ml-[6px]" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(14px, 2.2vw, 28px)", fontWeight: 600 }}>JEWELRY</span>
+                <span className="text-zinc-400 uppercase tracking-[0.2em] ml-[6px]" style={{ fontFamily: "var(--font-display)", fontSize: "clamp(14px, 2.2vw, 20px)", fontWeight: 300 }}>JEWELRY</span>
               </span>
             </motion.div>
           </div>
