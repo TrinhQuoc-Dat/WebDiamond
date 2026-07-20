@@ -32,7 +32,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </ul>
 
       {/* Micro Disclaimer Text */}
-      <p className="text-[9px] md:text-[10px] text-white/60 leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
+      <p className="text-[9px] md:text-[10px] leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
         {product.spec}
       </p>
     </div>

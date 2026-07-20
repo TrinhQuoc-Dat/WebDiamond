@@ -25,6 +25,17 @@ export interface Contact {
   status: "Mới" | "Đang xử lý" | "Đã xử lý";
 }
 
+export interface CustomRequest {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  idea: string;
+  budget: string;
+  status: "Mới" | "Đang xử lý" | "Hoàn thành";
+  createdAt: string;
+}
+
 export interface AdminProduct extends Product {
   hidden?: boolean;
 }
@@ -32,6 +43,7 @@ export interface AdminProduct extends Product {
 interface AdminContextType {
   banners: Banner[];
   contacts: Contact[];
+  customRequests: CustomRequest[];
   products: AdminProduct[];
   isLoggedIn: boolean;
   login: (email: string, pass: string) => Promise<boolean>;
@@ -40,6 +52,7 @@ interface AdminContextType {
   updateBanner: (id: string, updated: Partial<Banner>) => Promise<void>;
   deleteBanner: (id: string) => Promise<void>;
   updateContactStatus: (id: string, status: Contact["status"]) => Promise<void>;
+  updateCustomRequestStatus: (id: string, status: CustomRequest["status"]) => Promise<void>;
   addProduct: (product: AdminProduct) => Promise<void>;
   updateProduct: (slug: string, updated: Partial<AdminProduct>) => Promise<void>;
   toggleProductVisibility: (slug: string) => Promise<void>;
@@ -52,19 +65,22 @@ const AdminDataContext = createContext<AdminContextType | undefined>(undefined);
 export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [customRequests, setCustomRequests] = useState<CustomRequest[]>([]);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const loadAllData = async () => {
     try {
-      const [bannersRes, contactsRes, productsRes] = await Promise.all([
+      const [bannersRes, contactsRes, customReqRes, productsRes] = await Promise.all([
         apiFetch<Banner[]>("/admin/banners"),
         apiFetch<{ data: Contact[] }>("/admin/contacts?limit=1000"),
+        apiFetch<{ data: CustomRequest[] }>("/admin/custom-requests?limit=1000"),
         apiFetch<{ data: AdminProduct[] }>("/admin/products?limit=1000"),
       ]);
       setBanners(bannersRes || []);
       setContacts(contactsRes.data || []);
+      setCustomRequests(customReqRes.data || []);
       setProducts(productsRes.data || []);
     } catch (err: any) {
       console.error("Lỗi khi tải dữ liệu Admin:", err);
@@ -129,6 +145,20 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       );
     } catch (e: any) {
       alert(e.message || "Cập nhật trạng thái liên hệ thất bại");
+    }
+  };
+
+  const updateCustomRequestStatus = async (id: string, status: CustomRequest["status"]) => {
+    try {
+      await apiFetch(`/admin/custom-requests/${id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      });
+      setCustomRequests((prev) =>
+        prev.map((c) => (c.id === id ? { ...c, status } : c))
+      );
+    } catch (e: any) {
+      alert(e.message || "Cập nhật trạng thái yêu cầu custom thất bại");
     }
   };
 
@@ -227,13 +257,15 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         localStorage.setItem("wd_admin_logged_in", "true");
         setIsLoggedIn(true);
         // Load data immediately after login
-        const [bannersRes, contactsRes, productsRes] = await Promise.all([
+        const [bannersRes, contactsRes, customReqRes, productsRes] = await Promise.all([
           apiFetch<Banner[]>("/admin/banners"),
           apiFetch<{ data: Contact[] }>("/admin/contacts?limit=1000"),
+          apiFetch<{ data: CustomRequest[] }>("/admin/custom-requests?limit=1000"),
           apiFetch<{ data: AdminProduct[] }>("/admin/products?limit=1000"),
         ]);
         setBanners(bannersRes || []);
         setContacts(contactsRes.data || []);
+        setCustomRequests(customReqRes.data || []);
         setProducts(productsRes.data || []);
         return true;
       }
@@ -247,6 +279,7 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setIsLoggedIn(false);
     setBanners([]);
     setContacts([]);
+    setCustomRequests([]);
     setProducts([]);
     if (typeof window !== "undefined") {
       localStorage.removeItem("wd_admin_logged_in");
@@ -263,6 +296,7 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       value={{
         banners,
         contacts,
+        customRequests,
         products,
         isLoggedIn,
         login,
@@ -271,6 +305,7 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateBanner,
         deleteBanner,
         updateContactStatus,
+        updateCustomRequestStatus,
         addProduct,
         updateProduct,
         toggleProductVisibility,
