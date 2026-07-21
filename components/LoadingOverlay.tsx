@@ -15,16 +15,30 @@ export default function LoadingOverlay() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const prevPathRef = useRef<string>("/");
+  
+  // State mới để lưu timestamp, dùng để reset ảnh GIF
+  const [gifTimestamp, setGifTimestamp] = useState<number>(0);
+
+  const blurAnimationRef = useRef<Animation | null>(null);
+  const isFirstLoad = useRef(true);
+  
+  const GIF_DURATION = 2320;
+  const START_DELAY = 150;
 
   useEffect(() => {
     setMounted(true);
+    // Khởi tạo timestamp cho lần đầu tiên tải trang
+    setGifTimestamp(Date.now());
   }, []);
 
   // ── Intro: hiện khi vào trang chủ "/" ──
   useEffect(() => {
     if (!mounted) return;
-    if (pathname !== "/") return;
+    
+    // Nếu không phải trang chủ, hoặc không phải lần đầu load web thì bỏ qua
+    if (pathname !== "/" || !isFirstLoad.current) return;
+    
+    isFirstLoad.current = false; // Đánh dấu đã chạy xong lần đầu
 
     const wrapper = document.getElementById("main-content-wrapper");
     if (wrapper) {
@@ -33,14 +47,16 @@ export default function LoadingOverlay() {
     }
     document.body.style.overflow = "hidden";
 
-    setTimeout(() => setIsVisible(true), 150);
+    setTimeout(() => setIsVisible(true), START_DELAY);
 
     const t = setTimeout(() => {
       setIsVisible(false);
-      if (wrapper) wrapper.style.filter = "none";
+      if (wrapper) {
+        blurAnimationRef.current?.cancel();
+        wrapper.style.filter = "none";
+      }
       document.body.style.overflow = "";
-    }, 2220);
-
+    }, GIF_DURATION + START_DELAY + 100);
     return () => {
       clearTimeout(t);
       document.body.style.overflow = "";
@@ -59,26 +75,60 @@ export default function LoadingOverlay() {
       wrapper.style.filter = "blur(20px)";
       wrapper.style.transition = "filter 0.3s ease";
     } else {
+      blurAnimationRef.current?.cancel();
       wrapper.style.filter = "none";
     }
   };
 
+  const animateBlur = () => {
+    const wrapper = document.getElementById("main-content-wrapper");
+    if (!wrapper) return;
+
+    blurAnimationRef.current = wrapper.animate(
+      [
+        { filter: "blur(0px)", offset: 0 },
+        { filter: "blur(20px)", offset: 0.3 },
+        { filter: "blur(50px)", offset: 0.5 },
+        { filter: "blur(70px)", offset: 0.6 },
+        { filter: "blur(40px)", offset: 0.7 },
+        { filter: "blur(30px)", offset: 0.8 },
+        { filter: "blur(20px)", offset: 0.9 },
+        { filter: "blur(10px)", offset: 0.95 },
+        { filter: "blur(0px)", offset: 1 },
+      ],
+      {
+        duration: 2320,
+        easing: "ease-in-out",
+        fill: "forwards",
+      }
+    );
+  };
+
+  // Thêm 1 ref để quản lý timeout của việc show overlay
+  const showTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleTransitionRequest = useCallback(
     (href: string) => {
-      if (pathnameRef.current !== "/") return;
-      if (href === "/") return;
+      if (pathnameRef.current === href) return;
 
-      blurWrapper(true);
+      // 🔥 RESET GIF TẠI ĐÂY bằng cách cập nhật timestamp mới
+      setGifTimestamp(Date.now());
+
+      blurAnimationRef.current?.cancel();
+      animateBlur();
       document.body.style.overflow = "hidden";
 
-      setTimeout(() => setIsVisible(true), 150);
-
+      // Clear timeout cũ nếu người dùng click quá nhanh
+      if (showTimerRef.current) clearTimeout(showTimerRef.current);
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+
+      showTimerRef.current = setTimeout(() => setIsVisible(true), START_DELAY);
+      
       transitionTimerRef.current = setTimeout(() => {
         setIsVisible(false);
         blurWrapper(false);
         document.body.style.overflow = "";
-      }, 2220);
+      }, GIF_DURATION + START_DELAY + 100);
     },
     []
   );
@@ -95,28 +145,18 @@ export default function LoadingOverlay() {
   if (!isVisible) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-[99999] overflow-hidden bg-black"
-    >
+    <div className="fixed inset-0 z-[99999] overflow-hidden bg-transparent">
       {/* Logo GIF full cover */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo.gif"
+        // 🔥 Thêm timestamp vào URL để bắt buộc trình duyệt load và chạy lại GIF từ đầu
+        src={gifTimestamp ? `/logo.gif?t=${gifTimestamp}` : "/logo.gif"}
         alt="GODG1FT JEWELRY"
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
         style={{
           animation: "logoTransitionIn 0.5s ease-out forwards",
         }}
       />
-
-      {/* Loading text */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-        <span
-          className="text-[10px] tracking-[0.4em] text-white/50 uppercase animate-pulse"
-        >
-          Loading Atelier
-        </span>
-      </div>
 
       <style>{`
         @keyframes logoTransitionIn {
