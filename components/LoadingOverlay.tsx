@@ -22,7 +22,7 @@ export default function LoadingOverlay() {
   const blurAnimationRef = useRef<Animation | null>(null);
   const isFirstLoad = useRef(true);
   
-  const GIF_DURATION = 2320;
+  const GIF_DURATION = 2000;
   const START_DELAY = 150;
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function LoadingOverlay() {
         { filter: "blur(0px)", offset: 1 },
       ],
       {
-        duration: 2320,
+        duration: GIF_DURATION,
         easing: "ease-in-out",
         fill: "forwards",
       }
@@ -150,7 +150,7 @@ export default function LoadingOverlay() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         // 🔥 Thêm timestamp vào URL để bắt buộc trình duyệt load và chạy lại GIF từ đầu
-        src={gifTimestamp ? `/logo.gif?t=${gifTimestamp}` : "/logo.gif"}
+        src={gifTimestamp ? `/GG Logo fly_Faster_1.gif?t=${gifTimestamp}` : "/GG Logo fly_Faster_1.gif"}
         alt="GODG1FT JEWELRY"
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
         style={{
