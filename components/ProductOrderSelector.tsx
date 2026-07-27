@@ -26,7 +26,7 @@ export default function ProductOrderSelector({
   return (
     <div className="lg:col-span-3 flex flex-col gap-6 lg:pl-2 order-2 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
-      <div className="hidden lg:block h-[120px] w-full shrink-0" />
+      <div className="hidden lg:block h-[50px] w-full shrink-0" />
       {/* Mobile-only info block */}
       <div className="lg:hidden flex flex-col gap-3 mb-2">
         <h1

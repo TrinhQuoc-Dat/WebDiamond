@@ -118,7 +118,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
       <main
         className="w-full bg-black text-white min-h-screen relative overflow-hidden"
         style={{
-          paddingTop: "100px",
+          paddingTop: "120px",
           backgroundImage: "url('/product-detail-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "top center",

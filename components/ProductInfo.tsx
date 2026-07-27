@@ -11,7 +11,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   return (
     <div className="lg:col-span-4 flex flex-col gap-6 order-3 lg:order-none">
       {/* Explicit spacer to push text down on desktop */}
-      <div className="hidden lg:block h-[120px] w-full shrink-0" />
+      <div className="hidden lg:block h-[50px] w-full shrink-0" />
       <motion.h1
         className="hidden lg:block text-[20px] md:text-[24px] font-black uppercase leading-tight tracking-[0.1em]"
         style={{ fontFamily: "var(--font-display)" }}
@@ -35,6 +35,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       <p className="text-[9px] md:text-[10px] leading-relaxed uppercase tracking-[0.15em] pt-4 mt-2" style={{ fontFamily: "var(--font-display)" }}>
         {product.spec}
       </p>
+      
+      <a href="/custom">
+        <p className="text-[16px] md:text-[16px] leading-relaxed uppercase pt-4 mt-2" style={{ fontFamily: "var(--font-display)", fontWeight: "bold" }}>
+          (WE CAN CUSTOM YOUR IDEAS)
+        </p>
+      </a>
+
     </div>
   );
 }

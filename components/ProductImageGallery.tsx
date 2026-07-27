@@ -85,7 +85,7 @@ export default function ProductImageGallery({
           className="w-10 h-10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200"
           aria-label="Previous image"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
             <path d="M15 6l-6 6 6 6z"/>
           </svg>
         </button>
@@ -136,7 +136,7 @@ export default function ProductImageGallery({
           className="w-10 h-10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-200"
           aria-label="Next image"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
             <path d="M9 6l6 6-6 6z"/>
           </svg>
         </button>

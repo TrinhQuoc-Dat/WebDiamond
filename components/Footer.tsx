@@ -55,55 +55,63 @@ export default function Footer() {
                     width: "auto",
                     display: "block",
                     filter: "invert(1)",
+                    paddingTop: "3px",
                   }}
                 />
               </TransitionLink>
             </div>
 
             {/* Social Icons — PrimeIcons */}
-            <div className="flex items-center gap-6">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-black/40 hover:text-black transition-colors duration-300"
-                aria-label="Facebook"
-              >
-                <i className="pi pi-facebook" style={{ fontSize: "28px" }} />
-              </a>
+            <div>
+              <div>
+                <a href="https://maps.app.goo.gl/jNgH7UVCnZKR32UT8" target="_blank" rel="noreferrer" className="text-black/80 hover:text-black transition-colors duration-300">
+                  <p>192, Tran quang khai, tan dinh, D1, hcm</p>
+                </a>
+              </div>
+              <div className="flex items-center gap-6">
+                <a
+                  href="https://www.paypal.com/vn/home"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black/40 hover:text-black transition-colors duration-300"
+                  aria-label="Facebook"
+                >
+                  <img src="/2-2-paypal-logo-transparent-png 1.svg" />
+                </a>
 
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-black/40 hover:text-black transition-colors duration-300"
-                aria-label="YouTube"
-              >
-                <i className="pi pi-youtube" style={{ fontSize: "28px" }} />
-              </a>
+                <a
+                  href="https://www.visa.com.vn/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black/40 hover:text-black transition-colors duration-300"
+                  aria-label="YouTube"
+                >
+                  <img src="/images (5) 1.svg" />
+                </a>
 
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-black/40 hover:text-black transition-colors duration-300"
-                aria-label="Instagram"
-              >
-                <i className="pi pi-instagram" style={{ fontSize: "28px" }} />
-              </a>
+                <a
+                  href="https://www.apple.com/apple-pay/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black/40 hover:text-black transition-colors duration-300"
+                  aria-label="Instagram"
+                >
+                  <img src="/Apple_Pay_Acceptance_Mark.svg 1.svg" />
+                </a>
+              </div>
             </div>
           </div>
 
           <div className="flex items-center justify-center gap-12 self-stretch">
             <div className="flex flex-col items-center gap-3">
-              
+
               <a
                 href="/warrenty"
                 rel="noreferrer"
                 className="hover:scale-[1.03] transition-transform duration-300 block"
               >
                 <img
-                  src="/logo-godg1ft-jewelry.svg"
+                  src="/warranty-footer.png"
                   alt="Logo — GODG1FT"
                   className="w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px] object-contain"
                 />
