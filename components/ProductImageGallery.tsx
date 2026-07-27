@@ -24,8 +24,9 @@ export default function ProductImageGallery({
   const currentImage = galleryImages[activeImageIndex] || product.image;
 
   return (
-    <div className="lg:col-span-5 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
-      <div className="w-full flex flex-col items-center lg:-translate-y-[48px]">
+    <div className="lg:col-span-4 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
+      <div className="w-full flex flex-col items-center lg:-translate-y-[48px]"
+        style={{ paddingLeft: "5%", paddingRight: "5%" }}>
       {/* Main Image with side arrows on mobile */}
       <div className="flex items-center justify-center gap-4 w-full relative">
         {/* Left Arrow for mobile/tablet */}
@@ -38,7 +39,7 @@ export default function ProductImageGallery({
         </button>
 
         {/* Mannequin / Main Image Container */}
-        <div className="relative w-full aspect-[4/5] max-w-[400px] lg:max-w-[480px] bg-transparent overflow-hidden flex items-center justify-center">
+        <div className="relative w-full aspect-[4/5] bg-transparent overflow-hidden flex items-center justify-center">
           <div key={activeImageIndex} className="relative w-full h-full">
             <Image
               src={currentImage}

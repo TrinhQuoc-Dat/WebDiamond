@@ -89,7 +89,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
       <>
         <CustomCursor />
         <Header />
-        <main className="w-full bg-black text-white min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <main className="w-full bg-black text-white min-h-screen flex flex-col items-center justify-center p-2 text-center">
           <h1 className="text-xl font-bold tracking-[0.2em] uppercase text-[#D4AF37] mb-2">
             Sản phẩm không khả dụng
           </h1>
@@ -126,10 +126,10 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           paddingBottom: "100px",
         }}
       >
-        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px]" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px]" style={{ paddingLeft: "2%", paddingRight: "2%" }}>
 
           {/* ─── 3-Column Product Core ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-24 w-full max-w-[1440px] px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-1 mb-24 w-full max-w-[1440px] px-4 md:px-8">
 
             {/* 1. Left Column: Specs & QR */}
             <ProductInfo product={product} />

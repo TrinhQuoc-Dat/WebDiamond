@@ -10,8 +10,8 @@ export default function BraceletGuide() {
         style={{ margin: "0 auto", paddingTop: "60px", paddingBottom: "50px" }}>
 
         {/* TITLE */}
-        <h2 className="text-center text-4xl md:text-6xl font-bold tracking-[0.15em] uppercase mb-20" 
-          style={{ fontFamily: "var(--font-display)", marginTop: "50px", textAlign: "center" }}>
+        <h2 className="text-center text-2xl md:text-2xl font-bold uppercase mb-20" 
+          style={{ fontFamily: "var(--font-display)", marginTop: "20px", textAlign: "center" }}>
            How To Find Your Bracelet Size
         </h2>
 
@@ -30,12 +30,12 @@ export default function BraceletGuide() {
             />
           </div>
 
-          <div className="text-center">
-            <h3 className="font-bold uppercase tracking-wider text-2xl mb-3">
-              Method 1
+          <div className="text-center flex justify-center items-center" style={{ padding: "0 20px" }}>
+            <h3 className="font-bold uppercase tracking-wider text-1xl mb-3">
+              Method 1:
             </h3>
 
-            <p className="uppercase text-lg md:text-2xl tracking-wide text-white/90">
+            <p className="uppercase text-lg md:text-1xl tracking-wide text-white/90" style={{  marginLeft: "10px" }}>
               Wrap A Measuring Tape Around Your Wrist
             </p>
           </div>
@@ -62,11 +62,11 @@ export default function BraceletGuide() {
           </div>
 
           <div style={{ padding: "0 20px" }}>
-            <h3 className="font-bold uppercase tracking-wider text-2xl mb-3">
+            <h3 className="font-bold uppercase tracking-wider text-1xl mb-3">
               Method 2
             </h3>
 
-            <p className="uppercase text-lg md:text-2xl tracking-wide text-white/90 leading-relaxed">
+            <p className="uppercase text-lg md:text-1xl tracking-wide text-white/90 leading-relaxed">
               Use A String Or A Strip Of Paper To Wrap
               <br />
               Around Your Wrist, Then Measure It With A Ruler

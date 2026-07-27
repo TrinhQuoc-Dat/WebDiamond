@@ -3,6 +3,8 @@
 import { Product } from "@/data/products";
 import { formatThousands } from "@/utils/formatPrice";
 import Link from "next/link";
+import { useState } from "react";
+import SizeGuideDrawer from "./size-guides/SizeGuideDrawer";
 
 interface ProductOrderSelectorProps {
   product: Product;
@@ -23,42 +25,51 @@ export default function ProductOrderSelector({
   isAdded,
   onAddToBag,
 }: ProductOrderSelectorProps) {
+
+  const [openGuide, setOpenGuide] = useState(false);
   return (
-    <div className="lg:col-span-3 flex flex-col gap-6 lg:pl-2 order-2 lg:order-none w-full relative h-full">
+    <div className="lg:col-span-4 flex flex-col gap-2 lg:pl-2 order-2 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
       {/* Mobile-only info block */}
       <div className="lg:hidden flex flex-col gap-3 mb-2">
         <h1
-          className="text-[13px] sm:text-[16px] font-black uppercase leading-none tracking-[0.1em] text-white"
+          className="text-[22px] sm:text-[16px] font-black uppercase leading-none tracking-[0.1em] text-white"
           style={{ fontFamily: "var(--font-display)", lineHeight: "1.5em", padding: "0px 0px 0px 0px" }}
         >
           {product.name}
         </h1>
       </div>
 
+
+      <div className="">
+        <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+          Stone: CZ, MOIS
+        </span>
+      </div>
+
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
-        <span className="text-[22px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-montserrat)" }}>
+        <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
           Colour:
         </span>
         <div className="flex items-center gap-4">
           {(product.colors || []).map((color) => {
             const isSelected = selectedColor === color.id;
             const isNecklace = product.category === "NECKLACE";
-            
+
             const idLower = (color.id || "").toLowerCase();
             const nameLower = (color.name || "").toLowerCase();
             const hexLower = (color.hex || "").toLowerCase();
-            
-            const isGold = 
-              idLower.includes("gold") || 
-              idLower.includes("yellow") || 
-              idLower.includes("vang") || 
+
+            const isGold =
+              idLower.includes("gold") ||
+              idLower.includes("yellow") ||
+              idLower.includes("vang") ||
               idLower.includes("vàng") ||
-              nameLower.includes("gold") || 
-              nameLower.includes("yellow") || 
-              nameLower.includes("vang") || 
+              nameLower.includes("gold") ||
+              nameLower.includes("yellow") ||
+              nameLower.includes("vang") ||
               nameLower.includes("vàng") ||
               hexLower === "#d4af37";
 
@@ -66,15 +77,13 @@ export default function ProductOrderSelector({
               <button
                 key={color.id}
                 onClick={() => setSelectedColor(color.id)}
-                className={`transition-all duration-300 flex items-center justify-center cursor-pointer ${
-                  isNecklace ? "" : "overflow-hidden"
-                } ${
-                  isSelected
+                className={`transition-all duration-300 flex items-center justify-center cursor-pointer ${isNecklace ? "" : "overflow-hidden"
+                  } ${isSelected
                     ? isNecklace
                       ? "scale-110"
                       : "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                     : "opacity-70 hover:opacity-100"
-                }`}
+                  }`}
                 title={color.name}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -99,7 +108,7 @@ export default function ProductOrderSelector({
       {/* Size Select */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-4">
-          <span className="text-[22px] font-normal italic tracking-wider text-white" style={{ fontFamily: "var(--font-montserrat)" }}>
+          <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
             Size:
           </span>
           <div className="flex items-center gap-2">
@@ -109,11 +118,10 @@ export default function ProductOrderSelector({
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`w-10 h-8 flex items-center justify-center text-[14px] font-normal tracking-wider border transition-all duration-300 cursor-pointer ${
-                    isSizeSelected
-                      ? "bg-white text-black border-white font-semibold"
-                      : "text-white/60 border-white/20 hover:text-white hover:border-white/50"
-                  }`}
+                  className={`w-10 h-8 flex items-center justify-center text-[14px] font-normal tracking-wider border transition-all duration-300 cursor-pointer ${isSizeSelected
+                    ? "bg-white text-black border-white font-semibold"
+                    : "text-white/60 border-white/20 hover:text-white hover:border-white/50"
+                    }`}
                   style={{ fontFamily: "var(--font-montserrat)" }}
                 >
                   {size}
@@ -126,20 +134,25 @@ export default function ProductOrderSelector({
 
       {/* Size Guide — standalone để hưởng gap-8 từ parent */}
       <div>
-        <Link
-            href={`/size-guide/${product.category.toLocaleLowerCase()}`}
-            className="text-[22px] font-normal italic text-white hover:text-white/80 transition-colors duration-200"
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          >
-            Size Guide
-        </Link>
+        <button
+          onClick={() => setOpenGuide(true)}
+          className="text-[22px] font-bold text-white hover:text-white/80"
+        >
+          Size Guide
+        </button>
+
+        <SizeGuideDrawer
+          open={openGuide}
+          onClose={() => setOpenGuide(false)}
+          type={product.category.toLowerCase()}
+        />
       </div>
 
       {/* Price Tag */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 mt-20">
         <span
-          className="text-[30px] md:text-[34px] lg:text-[30px] font-black tracking-widest text-white whitespace-nowrap"
-          style={{ fontFamily: "var(--font-montserrat)" }}
+          className="text-[22px] md:text-[22px] lg:text-[28px] font-black tracking-widest text-white whitespace-nowrap"
+          style={{ fontFamily: "var(--font-display)", margin: "20px 0" }}
         >
           {formatThousands(product.price)}
         </span>
@@ -151,8 +164,8 @@ export default function ProductOrderSelector({
           href="https://www.instagram.com/godg1ft.jrl/"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full py-2 flex items-center justify-start gap-3 text-[40px] tracking-[0.05em] font-bold italic text-white hover:text-white/70 uppercase transition-all duration-300"
-          style={{ fontFamily: "var(--font-tomorrow)", textDecoration: "none", background: "none" }}
+          className="w-full py-2 flex items-center justify-start gap-3 text-[39px] lg:text-[45px] tracking-[0.05em] font-bold text-white hover:text-white/70 uppercase transition-all duration-300"
+          style={{ fontFamily: "var(--font-display)", textDecoration: "none", background: "none" }}
         >
           ADD TO BAG
         </a>
@@ -168,7 +181,7 @@ export default function ProductOrderSelector({
           BACK
         </Link>
       </div>
-      
+
       {/* Mobile BACK button */}
       <div className="mt-8 flex justify-end lg:hidden">
         <Link
@@ -179,6 +192,6 @@ export default function ProductOrderSelector({
           BACK
         </Link>
       </div>
-    </div> 
+    </div>
   );
 }
