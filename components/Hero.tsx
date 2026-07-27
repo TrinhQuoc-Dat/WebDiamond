@@ -115,7 +115,7 @@ export default function Hero() {
         window.removeEventListener("keydown", handleInteraction);
       };
     }
-  }, [banner, isMuted]);
+  }, [banner]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
