@@ -47,7 +47,7 @@ export default function ShopProductCard({
             className="object-contain object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             priority={priority}
-            unoptimized={product.image.startsWith("http")}
+            loading={priority ? "eager" : "lazy"}
           />
         </div>
 
@@ -56,11 +56,11 @@ export default function ShopProductCard({
           {/* Name: Gray, thin uppercase */}
           <h3
             className="text-[18px] md:text-[16px] tracking-[0.1em] text-gray-400 uppercase text-center font-normal"
-            style={{ fontFamily: "var(--font-display)" , padding: "20px 0px 0px 0px"}}
+            style={{ fontFamily: "var(--font-display)", padding: "20px 0px 0px 0px" }}
           >
             {product.name}
           </h3>
-          
+
           {/* Price: White, bold uppercase */}
           <p
             className="text-[18px] md:text-[16px] tracking-[0.05em] text-white font-bold uppercase text-center"

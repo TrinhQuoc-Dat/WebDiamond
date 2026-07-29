@@ -70,84 +70,78 @@ const itemVariants = {
 
 export default function HowItWorks() {
   return (
-    <section className="w-full bg-black text-white" style={{ padding: "96px 0" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(24px, 4vw, 48px)" }}>
+    <section className="relative w-full bg-black text-white px-6 md:px-12 lg:px-20" style={{ padding: "96px clamp(24px, 5vw, 80px)" }}>
 
-        {/* Heading */}
-        <motion.div
-          style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 96px)" }}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(32px, 4vw, 52px)",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: "0.15em",
-              textAlign: "center",
-            }}
-          >
-            HOW IT WORKS
-          </h2>
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              marginTop: "16px",
-              color: "rgba(255,255,255,0.5)",
-              textTransform: "uppercase",
-              letterSpacing: "0.3em",
-              fontSize: "clamp(11px, 1.2vw, 13px)",
-              textAlign: "center",
-            }}
-          >
-            THE PROCESS IN CREATING YOUR CUSTOM JEWELRY PIECE
-          </p>
-        </motion.div>
-
-        {/* Steps Grid — centered 2x2 */}
-        <motion.div
+      {/* Heading */}
+      <motion.div
+        style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 96px)" }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "clamp(32px, 4vw, 64px)",
-            justifyItems: "center",
+            fontFamily: "'Syncopate', var(--font-display)",
+            fontSize: "clamp(32px, 4vw, 52px)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.15em",
+            textAlign: "center",
           }}
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
         >
-          {steps.map((step, idx) => (
-            <motion.div
-              key={idx}
-              variants={itemVariants}
-              style={{ display: "flex", alignItems: "flex-start", gap: "20px", maxWidth: "480px" }}
+          HOW IT WORKS
+        </h2>
+        <p
+          style={{
+            fontFamily: "'Syncopate', var(--font-display)",
+            marginTop: "16px",
+            color: "rgba(255,255,255,0.5)",
+            textTransform: "uppercase",
+            letterSpacing: "0.3em",
+            fontSize: "clamp(11px, 1.2vw, 13px)",
+            textAlign: "center",
+          }}
+        >
+          THE PROCESS IN CREATING YOUR CUSTOM JEWELRY PIECE
+        </p>
+      </motion.div>
+
+      {/* Steps Grid — full-width 2x2 */}
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 w-full"
+        style={{ gap: "clamp(32px, 4vw, 64px)" }}
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        {steps.map((step, idx) => (
+          <motion.div
+            key={idx}
+            variants={itemVariants}
+            style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}
+          >
+            {/* Icon */}
+            <div style={{ flexShrink: 0, color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
+              {step.icon}
+            </div>
+
+            {/* Text */}
+            <p
+              style={{
+                fontFamily: "var(--font-montserrat)",
+                color: "rgba(255,255,255,0.55)",
+                fontSize: "clamp(13px, 1.2vw, 14px)",
+                lineHeight: 1.8,
+              }}
             >
-              {/* Icon */}
-              <div style={{ flexShrink: 0, color: "rgba(255,255,255,0.6)", marginTop: "2px" }}>
-                {step.icon}
-              </div>
+              {step.text}
+            </p>
+          </motion.div>
+        ))}
+      </motion.div>
 
-              {/* Text */}
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  color: "rgba(255,255,255,0.55)",
-                  fontSize: "clamp(13px, 1.2vw, 14px)",
-                  lineHeight: 1.8,
-                }}
-              >
-                {step.text}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-      </div>
     </section>
   );
 }

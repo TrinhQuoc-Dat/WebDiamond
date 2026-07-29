@@ -34,63 +34,14 @@ export default function Header() {
       >
 
         {/* ── Logo top-left ── */}
-        {/* Layout: [text block] [logo.gif] — side by side */}
-        <div className="flex items-center gap-4">
-
-          {/* Text block */}
-          <TransitionLink href="/" className="flex flex-col items-end leading-none gap-[1px] hover:opacity-80 transition-opacity">
-            {/* GODG1FT — wide spacing giữa các ký tự */}
-            <span
-              className="
-                      text-white/80
-                      uppercase
-                      font-normal
-                      leading-none
-                      text-[24px]
-                      sm:text-[22px]
-                      lg:text-[32px]
-                    "
-              style={{
-                fontFamily: "var(--font-display)",
-                letterSpacing: "0.35em",
-                marginRight: "-0.25em",
-                fontWeight: "700",
-              }}
-            >
-              GODG1FT
-            </span>
-            {/* JEWELRY — right-aligned */}
-            <span
-              className="text-white/50 uppercase font-normal"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "10px",
-                letterSpacing: "0.7em",
-                marginRight: "-0.4em",
-                transform: "translateX(-4px)",
-              }}
-            >
-              JEWELRY
-            </span>
-          </TransitionLink>
-
-          {/* logo.svg — placed in /public/logo.svg */}
+        <TransitionLink href="/" className="hover:opacity-80 transition-opacity">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <TransitionLink href="/" className="hover:opacity-80 transition-opacity">
-            <img
-              src="/logo.svg"
-              alt="WebDiamond logo"
-              className="
-          h-[32px]
-          sm:h-[38px]
-          lg:h-[44px]
-          w-auto
-          block
-        "
-              style={{ paddingTop: "2px" }}
-            />
-          </TransitionLink>
-        </div>
+          <img
+            src="/logo_header.png"
+            alt="GODG1FT Jewelry"
+            className="h-[36px] sm:h-[42px] lg:h-[48px] w-auto block"
+          />
+        </TransitionLink>
 
         {/* ── Hamburger Menu — chỉ hiện ở các trang con ── */}
         {!isHome && (

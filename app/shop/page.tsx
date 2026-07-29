@@ -39,10 +39,10 @@ export default function ShopPage() {
             SHOP ALL
           </motion.h1>
 
-           <ShopProductSection title="NECKLACE" category="NECKLACE" products={necklaces} />
-          
+          <ShopProductSection title="NECKLACE" category="NECKLACE" products={necklaces} />
+
           <div className="h-20 w-full" />
-          
+
           <ShopProductSection title="BRACELETS" category="BRACELETS" products={bracelets} viewportOnce />
 
           <div className="h-20 w-full" />

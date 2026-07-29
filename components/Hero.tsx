@@ -37,6 +37,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [banner, setBanner] = useState<BannerData | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const userMutedRef = useRef(false); // tracks if user manually muted
   const router = useRouter();
 
   // Read active banner from API Backend (client-only)
@@ -61,40 +62,51 @@ export default function Hero() {
     loadActiveBanner();
   }, []);
 
-  // Sync mute state with banner config
+  // Sync mute state with banner config + localStorage
   useEffect(() => {
-    if (banner) setIsMuted(banner.muted);
+    const savedMute = localStorage.getItem("godg1ft_muted");
+    if (savedMute === "true") {
+      // User previously muted — keep muted
+      setIsMuted(true);
+      userMutedRef.current = true;
+    } else if (banner) {
+      setIsMuted(banner.muted);
+    }
   }, [banner]);
 
-  // Unmute on first user interaction
+  // Unmute on first user interaction (skip if user manually muted)
   useEffect(() => {
     if (!banner || banner.type !== "video") return;
+    // If user has manually muted, don't auto-unmute
+    if (userMutedRef.current) return;
 
     const handleInteraction = () => {
+      // Re-check in case user muted between event registration and firing
+      if (userMutedRef.current) return;
+
       if (videoRef.current) {
         videoRef.current.muted = false;
         videoRef.current.volume = 1;
         videoRef.current.play().then(() => {
-          // Phát thành công -> Cập nhật UI và gỡ bỏ sự kiện
           setIsMuted(false);
-          window.removeEventListener("click", handleInteraction);
-          window.removeEventListener("touchstart", handleInteraction);
-          window.removeEventListener("scroll", handleInteraction);
-          window.removeEventListener("keydown", handleInteraction);
+          cleanup();
         }).catch(() => {
-          // Trình duyệt chặn (thường do timeout 3s) -> Giữ nguyên trạng thái để chờ click
           if (videoRef.current) {
             videoRef.current.muted = true;
-            videoRef.current.play().catch(() => {});
+            videoRef.current.play().catch(() => { });
           }
         });
       } else {
         setIsMuted(false);
-        window.removeEventListener("click", handleInteraction);
-        window.removeEventListener("touchstart", handleInteraction);
-        window.removeEventListener("scroll", handleInteraction);
-        window.removeEventListener("keydown", handleInteraction);
+        cleanup();
       }
+    };
+
+    const cleanup = () => {
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+      window.removeEventListener("scroll", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
     };
 
     if (isMuted) {
@@ -102,17 +114,14 @@ export default function Hero() {
       window.addEventListener("touchstart", handleInteraction, { passive: true });
       window.addEventListener("scroll", handleInteraction, { passive: true });
       window.addEventListener("keydown", handleInteraction, { passive: true });
-      
+
       const timer = setTimeout(() => {
         handleInteraction();
       }, 3000);
 
       return () => {
         clearTimeout(timer);
-        window.removeEventListener("click", handleInteraction);
-        window.removeEventListener("touchstart", handleInteraction);
-        window.removeEventListener("scroll", handleInteraction);
-        window.removeEventListener("keydown", handleInteraction);
+        cleanup();
       };
     }
   }, [banner]);
@@ -135,13 +144,6 @@ export default function Hero() {
   // Video sub-type helpers
   const youtubeId = isVideo ? getYouTubeId(src) : null;
   const driveLink = isVideo && !youtubeId ? getGoogleDriveDirectLink(src) : null;
-  console.log({
-  banner,
-  src,
-  isVideo,
-  youtubeId,
-  driveLink,
-});
   return (
     <motion.section
       ref={sectionRef}
@@ -198,7 +200,6 @@ export default function Hero() {
             quality={95}
             className="object-cover object-center"
             sizes="100vw"
-            unoptimized={src.startsWith("http")}
           />
         )}
       </motion.div>
@@ -309,17 +310,23 @@ export default function Hero() {
             onClick={(e) => {
               e.stopPropagation();
               if (isMuted) {
+                // User is unmuting
                 if (videoRef.current) {
                   videoRef.current.muted = false;
                   videoRef.current.volume = 1;
-                  videoRef.current.play().catch(() => {});
+                  videoRef.current.play().catch(() => { });
                 }
                 setIsMuted(false);
+                userMutedRef.current = false;
+                localStorage.removeItem("godg1ft_muted");
               } else {
+                // User is muting — persist across navigations
                 if (videoRef.current) {
                   videoRef.current.muted = true;
                 }
                 setIsMuted(true);
+                userMutedRef.current = true;
+                localStorage.setItem("godg1ft_muted", "true");
               }
             }}
             className="p-3 rounded-full bg-black/40 hover:bg-black/70 border border-white/20 text-white backdrop-blur-md transition-all flex items-center justify-center cursor-pointer group"

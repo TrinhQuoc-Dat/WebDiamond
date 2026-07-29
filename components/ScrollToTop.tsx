@@ -39,26 +39,32 @@ export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const toggleVisibility = () => {
-      // Check window scroll height
-      const windowScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        // Check window scroll height
+        const windowScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
 
-      // Check admin main content scroll height
-      const adminMain = document.querySelector(".admin-layout main") || document.querySelector("main.overflow-y-auto");
-      const adminScroll = adminMain ? adminMain.scrollTop : 0;
+        // Check admin main content scroll height
+        const adminMain = document.querySelector(".admin-layout main") || document.querySelector("main.overflow-y-auto");
+        const adminScroll = adminMain ? adminMain.scrollTop : 0;
 
-      // Use the maximum scroll value
-      const maxScroll = Math.max(windowScroll, adminScroll);
+        // Use the maximum scroll value
+        const maxScroll = Math.max(windowScroll, adminScroll);
 
-      if (maxScroll > 150) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+        if (maxScroll > 150) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+        ticking = false;
+      });
     };
 
     // Sử dụng capture phase (đối số thứ 3 là true) để bắt các sự kiện cuộn từ các thẻ con (như <main overflow-y-auto>)
-    window.addEventListener("scroll", toggleVisibility, true);
+    window.addEventListener("scroll", toggleVisibility, { capture: true, passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility, true);
   }, []);
 
