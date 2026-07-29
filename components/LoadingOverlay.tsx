@@ -15,122 +15,137 @@ export default function LoadingOverlay() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  
-  // State mới để lưu timestamp, dùng để reset ảnh GIF
-  const [gifTimestamp, setGifTimestamp] = useState<number>(0);
 
-  const blurAnimationRef = useRef<Animation | null>(null);
+  // ── Blob URL technique: preload GIF data vào RAM 1 lần,
+  //    mỗi lần cần restart tạo blob URL mới → browser coi như ảnh hoàn toàn mới → chạy từ frame 1
+  const gifDataRef = useRef<ArrayBuffer | null>(null);
+  const [gifUrl, setGifUrl] = useState<string | null>(null);
+  const prevBlobUrlRef = useRef<string | null>(null);
   const isFirstLoad = useRef(true);
-  
-  const GIF_DURATION = 2000;
-  const START_DELAY = 150;
 
+  // GIF thực tế: 50 frames × 40ms = 2000ms cho đúng 1 vòng
+  const GIF_DURATION = 2000;
+
+  // Preload GIF data vào memory 1 lần duy nhất
   useEffect(() => {
     setMounted(true);
-    // Khởi tạo timestamp cho lần đầu tiên tải trang
-    setGifTimestamp(Date.now());
+    fetch("/GG Logo fly_Faster_1.gif")
+      .then((r) => r.arrayBuffer())
+      .then((buffer) => {
+        gifDataRef.current = buffer;
+      })
+      .catch((err) => console.error("Lỗi preload GIF:", err));
+  }, []);
+
+  // Tạo blob URL mới từ data đã cache trong RAM (instant, 0 network)
+  const createFreshGifUrl = useCallback(() => {
+    // Revoke URL cũ để tránh memory leak
+    if (prevBlobUrlRef.current) {
+      URL.revokeObjectURL(prevBlobUrlRef.current);
+    }
+
+    if (gifDataRef.current) {
+      const blob = new Blob([gifDataRef.current], { type: "image/gif" });
+      const url = URL.createObjectURL(blob);
+      prevBlobUrlRef.current = url;
+      return url;
+    }
+
+    // Fallback nếu preload chưa xong
+    return `/GG Logo fly_Faster_1.gif?t=${Date.now()}`;
+  }, []);
+
+  // Cleanup blob URL khi unmount
+  useEffect(() => {
+    return () => {
+      if (prevBlobUrlRef.current) {
+        URL.revokeObjectURL(prevBlobUrlRef.current);
+      }
+    };
   }, []);
 
   // ── Intro: hiện khi vào trang chủ "/" ──
   useEffect(() => {
     if (!mounted) return;
-    
-    // Nếu không phải trang chủ, hoặc không phải lần đầu load web thì bỏ qua
     if (pathname !== "/" || !isFirstLoad.current) return;
-    
-    isFirstLoad.current = false; // Đánh dấu đã chạy xong lần đầu
+
+    isFirstLoad.current = false;
 
     const wrapper = document.getElementById("main-content-wrapper");
     if (wrapper) {
-      wrapper.style.filter = "blur(20px)";
-      wrapper.style.transition = "filter 0.3s ease";
+      wrapper.style.willChange = "filter, opacity";
+      wrapper.style.filter = "blur(16px)";
+      wrapper.style.opacity = "0.6";
+      wrapper.style.transition = "filter 0.3s ease, opacity 0.3s ease";
     }
     document.body.style.overflow = "hidden";
 
-    setTimeout(() => setIsVisible(true), START_DELAY);
+    // Tạo blob URL mới → GIF chạy từ frame 1
+    setGifUrl(createFreshGifUrl());
+    setIsVisible(true);
 
+    // Sau GIF xong 1 vòng → ẩn overlay ngay + unblur nền mượt
     const t = setTimeout(() => {
       setIsVisible(false);
       if (wrapper) {
-        blurAnimationRef.current?.cancel();
+        wrapper.style.transition = "filter 0.5s ease, opacity 0.5s ease";
         wrapper.style.filter = "none";
+        wrapper.style.opacity = "1";
+        setTimeout(() => {
+          if (wrapper) wrapper.style.willChange = "auto";
+        }, 600);
       }
       document.body.style.overflow = "";
-    }, GIF_DURATION + START_DELAY + 100);
+    }, GIF_DURATION);
+
     return () => {
       clearTimeout(t);
       document.body.style.overflow = "";
     };
-  }, [mounted, pathname]);
+  }, [mounted, pathname, createFreshGifUrl]);
 
   // ── Lắng nghe event bus: khi navigate từ homepage ra trang khác ──
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathnameRef = useRef(pathname);
   pathnameRef.current = pathname;
 
-  const blurWrapper = (blur: boolean) => {
-    const wrapper = document.getElementById("main-content-wrapper");
-    if (!wrapper) return;
-    if (blur) {
-      wrapper.style.filter = "blur(20px)";
-      wrapper.style.transition = "filter 0.3s ease";
-    } else {
-      blurAnimationRef.current?.cancel();
-      wrapper.style.filter = "none";
-    }
-  };
-
-  const animateBlur = () => {
-    const wrapper = document.getElementById("main-content-wrapper");
-    if (!wrapper) return;
-
-    blurAnimationRef.current = wrapper.animate(
-      [
-        { filter: "blur(0px)", offset: 0 },
-        { filter: "blur(20px)", offset: 0.3 },
-        { filter: "blur(50px)", offset: 0.5 },
-        { filter: "blur(70px)", offset: 0.6 },
-        { filter: "blur(40px)", offset: 0.7 },
-        { filter: "blur(30px)", offset: 0.8 },
-        { filter: "blur(20px)", offset: 0.9 },
-        { filter: "blur(10px)", offset: 0.95 },
-        { filter: "blur(0px)", offset: 1 },
-      ],
-      {
-        duration: GIF_DURATION,
-        easing: "ease-in-out",
-        fill: "forwards",
-      }
-    );
-  };
-
-  // Thêm 1 ref để quản lý timeout của việc show overlay
-  const showTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const handleTransitionRequest = useCallback(
     (href: string) => {
       if (pathnameRef.current === href) return;
 
-      // 🔥 RESET GIF TẠI ĐÂY bằng cách cập nhật timestamp mới
-      setGifTimestamp(Date.now());
+      // Tạo blob URL hoàn toàn mới → GIF chạy từ frame 1
+      setGifUrl(createFreshGifUrl());
 
-      blurAnimationRef.current?.cancel();
-      animateBlur();
+      // Blur wrapper
+      const wrapper = document.getElementById("main-content-wrapper");
+      if (wrapper) {
+        wrapper.style.willChange = "filter, opacity";
+        wrapper.style.transition = "filter 0.3s ease, opacity 0.3s ease";
+        wrapper.style.filter = "blur(16px)";
+        wrapper.style.opacity = "0.6";
+      }
       document.body.style.overflow = "hidden";
 
-      // Clear timeout cũ nếu người dùng click quá nhanh
-      if (showTimerRef.current) clearTimeout(showTimerRef.current);
+      // Clear timeout cũ
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
 
-      showTimerRef.current = setTimeout(() => setIsVisible(true), START_DELAY);
-      
+      setIsVisible(true);
+
+      // Sau GIF xong 1 vòng → ẩn overlay ngay + unblur nền mượt
       transitionTimerRef.current = setTimeout(() => {
         setIsVisible(false);
-        blurWrapper(false);
+        if (wrapper) {
+          wrapper.style.transition = "filter 0.5s ease, opacity 0.5s ease";
+          wrapper.style.filter = "none";
+          wrapper.style.opacity = "1";
+          setTimeout(() => {
+            if (wrapper) wrapper.style.willChange = "auto";
+          }, 600);
+        }
         document.body.style.overflow = "";
-      }, GIF_DURATION + START_DELAY + 100);
+      }, GIF_DURATION);
     },
-    []
+    [createFreshGifUrl]
   );
 
   useEffect(() => {
@@ -141,29 +156,16 @@ export default function LoadingOverlay() {
   }, [handleTransitionRequest]);
 
   if (!mounted) return null;
-
-  if (!isVisible) return null;
+  if (!isVisible || !gifUrl) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] overflow-hidden bg-transparent">
-      {/* Logo GIF full cover */}
+    <div className="fixed inset-0 z-[99999] overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        // 🔥 Thêm timestamp vào URL để bắt buộc trình duyệt load và chạy lại GIF từ đầu
-        src={gifTimestamp ? `/GG Logo fly_Faster_1.gif?t=${gifTimestamp}` : "/GG Logo fly_Faster_1.gif"}
+        src={gifUrl}
         alt="GODG1FT JEWELRY"
         className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-        style={{
-          animation: "logoTransitionIn 0.5s ease-out forwards",
-        }}
       />
-
-      <style>{`
-        @keyframes logoTransitionIn {
-          0% { transform: scale(0.6); opacity: 0.3; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }

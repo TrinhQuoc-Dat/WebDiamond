@@ -57,3 +57,22 @@ body {
   background-color: var(--color-gold);
   color: var(--color-black);
 }
+
+/* ── Performance: GPU compositing hints ── */
+
+/* Loading overlay — force GPU layer for smooth GIF + opacity animation */
+.fixed[class*="z-[99999]"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Main content wrapper — optimized for blur transition */
+#main-content-wrapper {
+  transform: translateZ(0);
+}
+
+/* Scroll-driven parallax elements */
+[style*="will-change: transform"] {
+  backface-visibility: hidden;
+}
+

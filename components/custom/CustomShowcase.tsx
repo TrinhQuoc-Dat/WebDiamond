@@ -130,7 +130,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
         {/* Background Glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-white/5 blur-[200px]" />
+          <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-white/5 blur-[120px]" />
         </div>
 
         {/* Noise */}
@@ -214,7 +214,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
           {/* ═══ RIGHT / BOTTOM — Product Image ═══ */}
           <div className="w-full md:w-[38%] h-[80%] md:h-full flex items-center justify-center relative">
             {/* Glow */}
-            <div className="absolute w-[500px] h-[500px] rounded-full bg-white/5 blur-[150px] pointer-events-none" />
+            <div className="absolute w-[400px] h-[400px] rounded-full bg-white/5 blur-[80px] pointer-events-none" />
 
             <AnimatePresence mode="popLayout">
               <motion.div
@@ -231,14 +231,14 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   width={600}
                   height={800}
                   priority
-                  className="object-contain drop-shadow-[0_0_80px_rgba(255,255,255,0.06)] select-none"
+                  className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none"
                   style={{ maxWidth: "90%", maxHeight: "90%" }}
                 />
               </motion.div>
             </AnimatePresence>
 
             {/* Lens flare */}
-            <div className="absolute bottom-[100px] w-[160px] h-[160px] bg-white/15 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-[100px] w-[120px] h-[120px] bg-white/15 blur-[50px] rounded-full pointer-events-none" />
 
 
           </div>

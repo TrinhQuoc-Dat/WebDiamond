@@ -17,17 +17,14 @@ const menuItems = [
 
 const container = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.9 },
-  },
+  visible: {},
 };
 
 const itemVariant = {
-  hidden: { opacity: 0, x: -16 },
+  hidden: { opacity: 1, x: 0 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] },
   },
 };
 

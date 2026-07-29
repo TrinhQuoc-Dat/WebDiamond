@@ -131,9 +131,9 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
-  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.04]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "6%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   // Resolved values with defaults
   const isVideo = banner ? banner.type === "video" : true;
@@ -148,14 +148,11 @@ export default function Hero() {
     <motion.section
       ref={sectionRef}
       className="relative w-full h-screen overflow-hidden bg-black"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.2 }}
     >
       {/* ── Full-bleed media ── */}
       <motion.div
         className="absolute inset-0 w-full h-full"
-        style={{ scale: imageScale, y: imageY }}
+        style={{ scale: imageScale, y: imageY, willChange: "transform" }}
       >
         {isVideo ? (
           youtubeId ? (
@@ -187,6 +184,7 @@ export default function Hero() {
               muted={isMuted}
               loop
               playsInline
+              preload="metadata"
               className="w-full h-full object-cover object-center"
             />
           )
@@ -243,15 +241,12 @@ export default function Hero() {
       {/* ── Centre CTA ── */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center"
-        style={{ y: contentY }}
+        style={{ y: contentY, willChange: "transform" }}
       >
         <motion.a
           href={linkHref}
           className="group relative"
           id="hero-shop-all"
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.7, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={(e) => {
@@ -270,12 +265,9 @@ export default function Hero() {
               letterSpacing: "0.15em",
               WebkitTextStroke: "2px white",
               textShadow: `
-                0 2px 8px rgba(0,0,0,0.8),
-                0 8px 24px rgba(0,0,0,0.75),
-                0 20px 60px rgba(0,0,0,0.65),
-                0 0 40px rgba(255,255,255,0.12)
+                0 2px 12px rgba(0,0,0,0.8),
+                0 12px 40px rgba(0,0,0,0.6)
               `,
-              filter: "drop-shadow(0 12px 30px rgba(0,0,0,0.7))",
             }}
           >
             {labelText}

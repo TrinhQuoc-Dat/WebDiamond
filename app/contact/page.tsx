@@ -65,7 +65,6 @@ export default function ContactPage() {
           backgroundImage: "url('/product-detail-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "top center",
-          backgroundAttachment: "fixed",
           paddingBottom: "100px",
         }}
       >

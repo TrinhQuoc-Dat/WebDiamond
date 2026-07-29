@@ -88,7 +88,7 @@ export default function ProductOrderSelector({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={isGold ? "/yellow.svg" : "/gray.svg"}
+                  src={isGold ? "/yellow.jpeg" : "/gray.jpeg"}
                   alt={color.name}
                   className="w-12 h-12 object-contain mix-blend-screen transition-all duration-300"
                   style={{

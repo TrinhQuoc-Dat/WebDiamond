@@ -174,19 +174,27 @@ export default function ProductShowcase() {
         </motion.div>
       </div>
 
-      {/* Marquee */}
+      {/* Marquee — pure CSS for GPU compositing */}
       <div className="relative mt-16 overflow-hidden border-t border-b border-white/8 py-3">
-        <motion.div
-          className="flex gap-10 whitespace-nowrap"
-          animate={{ x: [0, "-50%"] }}
-          transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
+        <div
+          className="flex gap-10 whitespace-nowrap marquee-track"
+          style={{ willChange: "transform" }}
         >
-          {Array.from({ length: 10 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <span key={i} className="text-[10px] tracking-[0.5em] text-white/15 uppercase">
               Bracelets · Necklace · Rings · Earings · Custom · Warranty ·
             </span>
           ))}
-        </motion.div>
+        </div>
+        <style>{`
+          @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .marquee-track {
+            animation: marqueeScroll 22s linear infinite;
+          }
+        `}</style>
       </div>
     </section>
   );
