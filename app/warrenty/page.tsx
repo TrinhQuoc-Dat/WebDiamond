@@ -4,23 +4,27 @@ import Header from "@/components/Header";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-/**
- * Mỗi khối trượt vào từ bên trái, khối sau trễ hơn khối trước ⇒ nội dung hiện dần
- * từ trái sang phải theo từng khối. `custom` là thứ tự cột (0, 1, 2…).
- *
- * Hướng trượt cố định, KHÔNG lấy từ state đo bề rộng màn hình: state đó khởi tạo
- * `false` và chỉ cập nhật trong useEffect, trong khi Framer đã chốt variant `hidden`
- * ngay lần render đầu — nên khối luôn chạy theo nhánh mobile (bay lên từ dưới) kể cả
- * trên desktop.
- */
-const blockVariants = {
-  hidden: { opacity: 0, x: -60 },
-  visible: (order: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, delay: order * 0.18, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
+import "./reveal.css";
+
+/** Mỗi khối trễ hơn khối bên trái 0.18s ⇒ nội dung hiện dần từ trái sang phải. */
+const revealDelay = (order: number) => ({ animationDelay: `${order * 0.18}s` });
+
+/** Một khối trong lưới; hiệu ứng do class `reveal-block` trong reveal.css lo. */
+function RevealBlock({
+  order,
+  className,
+  children,
+}: {
+  order: number;
+  className: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={`reveal-block ${className}`} style={revealDelay(order)}>
+      {children}
+    </section>
+  );
+}
 
 export default function WarrantyPage() {
   return (
@@ -31,13 +35,9 @@ export default function WarrantyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
 
           {/* Logo Section */}
-          <motion.section
+          <RevealBlock
+            order={0}
             className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8"
-            variants={blockVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
           >
             <div className="flex items-center justify-center h-full min-h-[200px]">
               <Image
@@ -50,16 +50,12 @@ export default function WarrantyPage() {
             </div>
 
 
-          </motion.section>
+          </RevealBlock>
 
           {/* Warranty */}
-          <motion.section
+          <RevealBlock
+            order={1}
             className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase"
-            variants={blockVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={1}
           >
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
@@ -113,17 +109,10 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </motion.section>
+          </RevealBlock>
 
           {/* Storage */}
-          <motion.section
-            className="p-8 flex flex-col justify-between uppercase"
-            variants={blockVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={2}
-          >
+          <RevealBlock order={2} className="p-8 flex flex-col justify-between uppercase">
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
@@ -176,7 +165,7 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </motion.section>
+          </RevealBlock>
         </div>
 
         <motion.div
