@@ -3,28 +3,30 @@
 import Header from "@/components/Header";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
-const topVariants = (isDesktop: boolean) => ({
-  hidden: { opacity: 0, x: isDesktop ? -60 : 0, y: isDesktop ? 0 : 60 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-});
+import "./reveal.css";
+
+/** Mỗi khối trễ hơn khối bên trái 0.18s ⇒ nội dung hiện dần từ trái sang phải. */
+const revealDelay = (order: number) => ({ animationDelay: `${order * 0.18}s` });
+
+/** Một khối trong lưới; hiệu ứng do class `reveal-block` trong reveal.css lo. */
+function RevealBlock({
+  order,
+  className,
+  children,
+}: {
+  order: number;
+  className: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={`reveal-block ${className}`} style={revealDelay(order)}>
+      {children}
+    </section>
+  );
+}
 
 export default function WarrantyPage() {
-  const [isDesktop, setDesktop] = useState(false);
-
-  useEffect(() => {
-    setDesktop(window.innerWidth >= 1024);
-    const handleResize = () => setDesktop(window.innerWidth >= 1024);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <>
       <Header />
@@ -33,13 +35,9 @@ export default function WarrantyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
 
           {/* Logo Section */}
-          <motion.section
+          <RevealBlock
+            order={0}
             className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8"
-            variants={topVariants(isDesktop)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
           >
             <div className="flex items-center justify-center h-full min-h-[200px]">
               <Image
@@ -52,16 +50,12 @@ export default function WarrantyPage() {
             </div>
 
 
-          </motion.section>
+          </RevealBlock>
 
           {/* Warranty */}
-          <motion.section
+          <RevealBlock
+            order={1}
             className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase"
-            variants={topVariants(isDesktop)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={1}
           >
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
@@ -115,17 +109,10 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </motion.section>
+          </RevealBlock>
 
           {/* Storage */}
-          <motion.section
-            className="p-8 flex flex-col justify-between uppercase"
-            variants={topVariants(isDesktop)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={2}
-          >
+          <RevealBlock order={2} className="p-8 flex flex-col justify-between uppercase">
             <div style={{ margin: "5%" }}>
               <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
@@ -178,7 +165,7 @@ export default function WarrantyPage() {
                 </li>
               </ul>
             </div>
-          </motion.section>
+          </RevealBlock>
         </div>
 
         <motion.div
@@ -209,10 +196,14 @@ export default function WarrantyPage() {
             >
               <div
                 className="absolute flex z-10"
-                style={{ left: "4px", top: "0", bottom: "0", writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "4px" }}
+                /* Cỡ chữ ở đây có trần: cột chỉ cao 280px và cắt phần tràn (overflow
+                   hidden), mà chữ chạy dọc nên chiều cao chữ = tổng chiều dài hai dòng.
+                   11px + 6px + gap ≈ 264px là vừa; 12px + 7px thành 302px, tràn 22px và
+                   mất chữ đầu/cuối. Muốn to hơn nữa phải nới min-h-[280px] của cột. */
+                style={{ left: "10px", top: "0", bottom: "0", writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "4px" }}
               >
-                <span className="tracking-[0.25em] uppercase text-white/80" style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: "700", whiteSpace: "nowrap" }}>GODG1FT</span>
-                <span className="tracking-[0.15em] text-zinc-500 uppercase" style={{ fontFamily: "var(--font-display)", fontSize: "5px", fontWeight: "700", whiteSpace: "nowrap" }}>@ COPYRIGHT BY GODG1FT JEWELRY</span>
+                <span className="tracking-[0.25em] uppercase text-white/80" style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: "700", whiteSpace: "nowrap" }}>GODG1FT</span>
+                <span className="tracking-[0.15em] text-zinc-500 uppercase" style={{ fontFamily: "var(--font-display)", fontSize: "6px", fontWeight: "700", whiteSpace: "nowrap" }}>@ COPYRIGHT BY GODG1FT JEWELRY</span>
               </div>
               <span style={{ marginLeft: "70px" }}>GO</span>
             </motion.div>

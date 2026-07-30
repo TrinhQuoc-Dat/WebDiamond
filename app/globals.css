@@ -66,12 +66,20 @@ body {
   backface-visibility: hidden;
 }
 
-/* Main content wrapper — optimized for blur transition */
-/* NOTE: Do NOT use transform here — it creates a containing block
-   that breaks position:fixed for the Header (makes it scroll with content).
-   Use will-change instead for GPU compositing hints. */
+/* Main content wrapper — KHÔNG đặt transform/filter/will-change cố định ở đây.
+   Cả ba đều tạo containing block mới, khiến `position: fixed` bên trong (Header,
+   ScrollToTop…) neo vào wrapper thay vì viewport và trôi theo scroll.
+   LoadingOverlay đã tự bật `will-change` bằng JS ngay trước lúc blur và trả về
+   `auto` khi xong — đó mới là cách dùng đúng của gợi ý compositing này.
+
+   `flow-root`: trong lúc chuyển trang, LoadingOverlay blur wrapper nên nó TẠM thời
+   là containing block — không tránh được. Nếu để margin-top của con đầu tiên
+   (vd `<main style="margin-top:68px">` ở /warrenty) collapse ra ngoài, mép trên
+   wrapper tụt xuống 68px và Header `top-0` tụt theo, rồi giật lên đầu khi hết hiệu
+   ứng. `flow-root` giữ margin đó bên trong nên mép wrapper luôn trùng mép tài liệu;
+   vị trí hiển thị của nội dung không đổi. */
 #main-content-wrapper {
-  will-change: filter, opacity;
+  display: flow-root;
 }
 
 /* Scroll-driven parallax elements */
