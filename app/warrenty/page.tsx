@@ -196,10 +196,14 @@ export default function WarrantyPage() {
             >
               <div
                 className="absolute flex z-10"
-                style={{ left: "4px", top: "0", bottom: "0", writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "4px" }}
+                /* Cỡ chữ ở đây có trần: cột chỉ cao 280px và cắt phần tràn (overflow
+                   hidden), mà chữ chạy dọc nên chiều cao chữ = tổng chiều dài hai dòng.
+                   11px + 6px + gap ≈ 264px là vừa; 12px + 7px thành 302px, tràn 22px và
+                   mất chữ đầu/cuối. Muốn to hơn nữa phải nới min-h-[280px] của cột. */
+                style={{ left: "10px", top: "0", bottom: "0", writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "4px" }}
               >
-                <span className="tracking-[0.25em] uppercase text-white/80" style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: "700", whiteSpace: "nowrap" }}>GODG1FT</span>
-                <span className="tracking-[0.15em] text-zinc-500 uppercase" style={{ fontFamily: "var(--font-display)", fontSize: "5px", fontWeight: "700", whiteSpace: "nowrap" }}>@ COPYRIGHT BY GODG1FT JEWELRY</span>
+                <span className="tracking-[0.25em] uppercase text-white/80" style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: "700", whiteSpace: "nowrap" }}>GODG1FT</span>
+                <span className="tracking-[0.15em] text-zinc-500 uppercase" style={{ fontFamily: "var(--font-display)", fontSize: "6px", fontWeight: "700", whiteSpace: "nowrap" }}>@ COPYRIGHT BY GODG1FT JEWELRY</span>
               </div>
               <span style={{ marginLeft: "70px" }}>GO</span>
             </motion.div>
