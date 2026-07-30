@@ -67,8 +67,11 @@ body {
 }
 
 /* Main content wrapper — optimized for blur transition */
+/* NOTE: Do NOT use transform here — it creates a containing block
+   that breaks position:fixed for the Header (makes it scroll with content).
+   Use will-change instead for GPU compositing hints. */
 #main-content-wrapper {
-  transform: translateZ(0);
+  will-change: filter, opacity;
 }
 
 /* Scroll-driven parallax elements */

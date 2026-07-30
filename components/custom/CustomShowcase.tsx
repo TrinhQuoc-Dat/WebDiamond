@@ -126,7 +126,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       className="relative bg-black text-white"
       style={{ height: `${(projects.length + 1) * 100}vh` }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden" style={{ paddingTop: "80px" }}>
+      <div className="sticky top-0 h-screen overflow-hidden z-40" style={{ paddingTop: "80px" }}>
 
         {/* Background Glow */}
         <div className="absolute inset-0 pointer-events-none">

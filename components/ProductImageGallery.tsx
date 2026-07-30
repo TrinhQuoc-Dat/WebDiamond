@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { Product } from "@/data/products";
 
@@ -21,8 +21,6 @@ export default function ProductImageGallery({
   onPrevImage,
   onNextImage,
 }: ProductImageGalleryProps) {
-  const currentImage = galleryImages[activeImageIndex] || product.image;
-
   return (
     <div className="lg:col-span-4 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
       <div className="w-full flex flex-col items-center lg:-translate-y-[48px]"
@@ -38,19 +36,28 @@ export default function ProductImageGallery({
             <span className="text-2xl leading-none">←</span>
           </button>
 
-          {/* Mannequin / Main Image Container */}
+          {/* Mannequin / Main Image Container — render ALL images, toggle visibility via opacity */}
           <div className="relative w-full aspect-square max-h-[500px] bg-transparent overflow-hidden flex items-center justify-center">
-            <div key={activeImageIndex} className="relative w-full h-full">
-              <Image
-                src={currentImage}
-                alt={`${product.name} display`}
-                fill
-                priority
-                className="object-contain object-center"
-                sizes="(max-width: 768px) 90vw, 480px"
-              />
-            </div>
-
+            {galleryImages.map((img, idx) => (
+              <div
+                key={img}
+                className="absolute inset-0 w-full h-full transition-opacity duration-300 ease-in-out"
+                style={{
+                  opacity: idx === activeImageIndex ? 1 : 0,
+                  pointerEvents: idx === activeImageIndex ? "auto" : "none",
+                }}
+              >
+                <Image
+                  src={img}
+                  alt={`${product.name} display ${idx + 1}`}
+                  fill
+                  priority={idx === 0}
+                  loading={idx === 0 ? "eager" : "eager"}
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 90vw, 480px"
+                />
+              </div>
+            ))}
           </div>
 
           {/* Right Arrow for mobile/tablet */}
@@ -136,3 +143,4 @@ export default function ProductImageGallery({
     </div>
   );
 }
+
