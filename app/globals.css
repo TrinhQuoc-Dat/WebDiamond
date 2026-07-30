@@ -70,7 +70,17 @@ body {
    Cả ba đều tạo containing block mới, khiến `position: fixed` bên trong (Header,
    ScrollToTop…) neo vào wrapper thay vì viewport và trôi theo scroll.
    LoadingOverlay đã tự bật `will-change` bằng JS ngay trước lúc blur và trả về
-   `auto` khi xong — đó mới là cách dùng đúng của gợi ý compositing này. */
+   `auto` khi xong — đó mới là cách dùng đúng của gợi ý compositing này.
+
+   `flow-root`: trong lúc chuyển trang, LoadingOverlay blur wrapper nên nó TẠM thời
+   là containing block — không tránh được. Nếu để margin-top của con đầu tiên
+   (vd `<main style="margin-top:68px">` ở /warrenty) collapse ra ngoài, mép trên
+   wrapper tụt xuống 68px và Header `top-0` tụt theo, rồi giật lên đầu khi hết hiệu
+   ứng. `flow-root` giữ margin đó bên trong nên mép wrapper luôn trùng mép tài liệu;
+   vị trí hiển thị của nội dung không đổi. */
+#main-content-wrapper {
+  display: flow-root;
+}
 
 /* Scroll-driven parallax elements */
 [style*="will-change: transform"] {
