@@ -25,8 +25,10 @@ export default function Header() {
       {/* Gradient backdrop layer — tạo khoảng cách thị giác giữa header và content khi scroll */}
       {/* <div className="fixed top-0 inset-x-0 h-[200px] bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-40" /> */}
 
+      {/* Trang chủ: header nằm im ở đầu trang rồi trôi theo nội dung.
+          Các trang còn lại: ghim vào viewport, luôn thấy khi cuộn. */}
       <motion.header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-black/90 backdrop-blur-sm"
+        className={`${isHome ? "absolute" : "fixed"} top-0 left-0 right-0 z-50 flex items-center justify-between bg-black/90 backdrop-blur-sm`}
         style={{ paddingTop: "12px", paddingLeft: "24px", paddingRight: "24px", paddingBottom: "12px" }}
       >
 
