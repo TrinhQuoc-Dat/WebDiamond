@@ -3,28 +3,26 @@
 import Header from "@/components/Header";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
 
-const topVariants = (isDesktop: boolean) => ({
-  hidden: { opacity: 0, x: isDesktop ? -60 : 0, y: isDesktop ? 0 : 60 },
-  visible: (i: number) => ({
+/**
+ * Mỗi khối trượt vào từ bên trái, khối sau trễ hơn khối trước ⇒ nội dung hiện dần
+ * từ trái sang phải theo từng khối. `custom` là thứ tự cột (0, 1, 2…).
+ *
+ * Hướng trượt cố định, KHÔNG lấy từ state đo bề rộng màn hình: state đó khởi tạo
+ * `false` và chỉ cập nhật trong useEffect, trong khi Framer đã chốt variant `hidden`
+ * ngay lần render đầu — nên khối luôn chạy theo nhánh mobile (bay lên từ dưới) kể cả
+ * trên desktop.
+ */
+const blockVariants = {
+  hidden: { opacity: 0, x: -60 },
+  visible: (order: number) => ({
     opacity: 1,
     x: 0,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.6, delay: order * 0.18, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
-});
+};
 
 export default function WarrantyPage() {
-  const [isDesktop, setDesktop] = useState(false);
-
-  useEffect(() => {
-    setDesktop(window.innerWidth >= 1024);
-    const handleResize = () => setDesktop(window.innerWidth >= 1024);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <>
       <Header />
@@ -35,7 +33,7 @@ export default function WarrantyPage() {
           {/* Logo Section */}
           <motion.section
             className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8"
-            variants={topVariants(isDesktop)}
+            variants={blockVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -57,7 +55,7 @@ export default function WarrantyPage() {
           {/* Warranty */}
           <motion.section
             className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase"
-            variants={topVariants(isDesktop)}
+            variants={blockVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -120,7 +118,7 @@ export default function WarrantyPage() {
           {/* Storage */}
           <motion.section
             className="p-8 flex flex-col justify-between uppercase"
-            variants={topVariants(isDesktop)}
+            variants={blockVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
