@@ -25,12 +25,21 @@
   transform-style: preserve-3d;
 }
 
+/* Vùng bấm: PHẲNG, nguyên khổ, không bao giờ nhận transform.
+ * Trước đây transform đặt thẳng lên đây nên vùng bấm co/nghiêng theo hiệu ứng, chừa
+ * khe hở giữa các dòng ⇒ bấm lúc trúng lúc trượt. Hiệu ứng chuyển hết xuống lớp con. */
 .showcase-row {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   white-space: nowrap;
+}
+
+/* Lớp chịu hiệu ứng bánh xe — JS ghi transform + opacity vào đây mỗi khung hình. */
+.showcase-row-inner {
+  display: inline-block;
+  pointer-events: none;
   backface-visibility: hidden;
 }
 

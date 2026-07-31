@@ -12,7 +12,7 @@ interface CustomShowcaseProps {
 }
 
 /** Chiều cao mỗi dòng trong bánh xe. Cố định để vòng lặp vô tận nối liền không lệch. */
-const ROW_HEIGHT = 50;
+const ROW_HEIGHT = 46;
 /** Số dòng thấy cùng lúc — theo mẫu Hall of Fame (~11 dòng, mờ dần về hai mép). */
 const VISIBLE_ROWS = 11;
 const WHEEL_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
@@ -68,6 +68,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const cancelMediaTween = useRef<() => void>(() => {});
   const paintRef = useRef<(() => void) | null>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
 
   const loopHeight = count * ROW_HEIGHT;
 
@@ -92,11 +93,22 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
         const d = Math.max(-1.4, Math.min(1.4, (rowCenter - center) / half));
         const ad = Math.min(Math.abs(d), 1);
         const row = rows[i];
-        row.style.transform = `rotateX(${-d * MAX_ANGLE}deg) scale(${1 - ad * 0.55})`;
+        const inner = row.firstElementChild as HTMLElement | null;
+        if (!inner) continue;
+        inner.style.transform = `rotateX(${-d * MAX_ANGLE}deg) scale(${1 - ad * 0.55})`;
         // Dòng đang chọn trôi theo bánh xe, nên phải giữ một mức sáng tối thiểu —
         // nếu để mờ theo khoảng cách như các dòng khác thì mất dấu dòng đã bấm.
         const dim = Math.max(0, 1 - ad * 0.72);
-        row.style.opacity = `${row.dataset.selected === "1" ? Math.max(dim, 0.85) : dim}`;
+        inner.style.opacity = `${row.dataset.selected === "1" ? Math.max(dim, 0.85) : dim}`;
+      }
+
+      // Chấm trên thanh dọc bám vị trí cuộn của bánh xe. Dùng phần dư theo một vòng
+      // danh sách nên khi vòng lặp nhảy ngầm, chấm không giật — phần dư không đổi.
+      const dot = dotRef.current;
+      if (dot) {
+        const phase = ((center % loopHeight) + loopHeight) % loopHeight;
+        const travel = TIMELINE_HEIGHT - TIMELINE_DOT_HEIGHT;
+        dot.style.transform = `translateY(${(phase / loopHeight) * travel}px)`;
       }
     };
 
@@ -159,19 +171,14 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             className="w-full md:w-[62%] h-[38%] md:h-full relative flex items-center justify-center md:justify-start px-6 md:px-0"
             style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}
           >
-            {/* Thanh chỉ vị trí — nay bám dòng ĐANG CHỌN, vì bánh xe lặp vô tận nên
-                không còn "tiến độ" nào để bám. */}
+            {/* Thanh chỉ vị trí — chấm bám vị trí cuộn của bánh xe (xem `paint`),
+                chạy vòng theo danh sách vì bánh xe lặp vô tận. */}
             <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
               <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
-                <motion.div
-                  className="absolute left-1/2 -translate-x-1/2 w-[5px] bg-white rounded-full"
-                  style={{ height: `${TIMELINE_DOT_HEIGHT}px` }}
-                  animate={{
-                    y: count > 1
-                      ? (safeSelected / (count - 1)) * (TIMELINE_HEIGHT - TIMELINE_DOT_HEIGHT)
-                      : 0,
-                  }}
-                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                <div
+                  ref={dotRef}
+                  className="absolute left-1/2 w-[5px] bg-white rounded-full"
+                  style={{ height: `${TIMELINE_DOT_HEIGHT}px`, marginLeft: "-2.5px" }}
                 />
               </div>
             </div>
@@ -281,21 +288,23 @@ function WheelRow({
       style={{ height: `${ROW_HEIGHT}px` }}
       onClick={onSelect}
     >
-      <span
-        style={{
-          position: "relative",
-          display: "inline-block",
-          padding: "0 18px",
-          fontFamily: "var(--font-display)",
-          textTransform: "uppercase",
-          letterSpacing: isSelected ? "0.05em" : "0.18em",
-          fontSize: "clamp(20px, 3.05vw, 46px)",
-          lineHeight: 1.15,
-          color: isSelected ? "#fff" : "rgba(255,255,255,0.75)",
-        }}
-      >
-        {isSelected && <SelectionCorners />}
-        {label}
+      <span className="showcase-row-inner">
+        <span
+          style={{
+            position: "relative",
+            display: "inline-block",
+            padding: "0 18px",
+            fontFamily: "var(--font-display)",
+            textTransform: "uppercase",
+            letterSpacing: isSelected ? "0.05em" : "0.16em",
+            fontSize: "clamp(15px, 2.05vw, 30px)",
+            lineHeight: 1.15,
+            color: isSelected ? "#fff" : "rgba(255,255,255,0.75)",
+          }}
+        >
+          {isSelected && <SelectionCorners />}
+          {label}
+        </span>
       </span>
     </div>
   );
