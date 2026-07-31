@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage";
 import { getGoogleDriveDirectLink, getYouTubeId, looksLikeVideo } from "@/utils/media";
@@ -30,6 +29,9 @@ function loopCopies(count: number): number {
 /** Góc nghiêng tối đa ở mép khung — tạo cảm giác mặt trống cong. */
 const MAX_ANGLE = 52;
 
+/** Thời gian tween — dùng chung cho bánh xe, cột media và số năm. */
+const WHEEL_TWEEN_MS = 420;
+
 const TIMELINE_HEIGHT = 420;
 const TIMELINE_DOT_HEIGHT = 72;
 
@@ -38,7 +40,7 @@ const MOBILE_HEAD_OFFSET = 60;
 
 /** Cuộn `el` tới `to` trong `duration` ms. Dùng thay `behavior:"smooth"` để tốc độ
  *  không phụ thuộc quãng đường — bấm tên nào cũng nhảy nhanh như nhau. */
-function tweenScrollTop(el: HTMLElement, to: number, duration = 420): () => void {
+function tweenScrollTop(el: HTMLElement, to: number, duration = WHEEL_TWEEN_MS): () => void {
   const from = el.scrollTop;
   const delta = to - from;
   if (Math.abs(delta) < 1) return () => {};
@@ -73,6 +75,9 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const cancelMediaTween = useRef<() => void>(() => {});
   const paintRef = useRef<(() => void) | null>(null);
   const dotRef = useRef<HTMLDivElement>(null);
+  const cancelWheelTween = useRef<() => void>(() => {});
+  const wrapRef = useRef<(() => void) | null>(null);
+  const suppressWrap = useRef(false);
 
   const loopHeight = count * ROW_HEIGHT;
 
@@ -116,10 +121,10 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       }
     };
 
-    const onScroll = () => {
-      // Chạm gần hai rìa thì kéo về giữa dải nhưng GIỮ NGUYÊN pha (phần dư theo một
-      // vòng danh sách), nên hình ảnh không đổi — đó là chỗ tạo cảm giác vô tận.
-      // Dùng modulo thay vì cộng/trừ một lần, để cú vuốt mạnh cỡ nào cũng về đúng dải.
+    // Chạm gần hai rìa thì kéo về giữa dải nhưng GIỮ NGUYÊN pha (phần dư theo một vòng
+    // danh sách), nên hình ảnh không đổi — đó là chỗ tạo cảm giác vô tận. Dùng modulo
+    // thay vì cộng/trừ một lần, để cú vuốt mạnh cỡ nào cũng về đúng dải.
+    const wrap = () => {
       const maxScroll = wheel.scrollHeight - wheel.clientHeight;
       const lo = loopHeight;
       const hi = maxScroll - loopHeight;
@@ -128,10 +133,17 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
         const middle = Math.floor((lo + hi) / 2 / loopHeight) * loopHeight;
         wheel.scrollTop = middle + phase;
       }
+    };
+
+    const onScroll = () => {
+      // Trong lúc bấm-để-đưa-vào-giữa thì KHÔNG được nhảy vòng: tween đang chạy theo
+      // giá trị scrollTop tuyệt đối, nhảy giữa chừng sẽ làm nó lệch đích.
+      if (!suppressWrap.current) wrap();
       if (!raf) raf = requestAnimationFrame(paint);
     };
 
     wheel.addEventListener("scroll", onScroll, { passive: true });
+    wrapRef.current = wrap;
     paintRef.current = paint;
     paint();
     return () => {
@@ -146,22 +158,64 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
     paintRef.current?.();
   }, [safeSelected]);
 
-  // ── Bấm 1 tên: đổi lựa chọn + kéo cột phải tới đúng ảnh ──
-  const handleSelect = useCallback((idx: number) => {
+  // ── Bấm 1 tên: đưa nó vào giữa bánh xe + kéo cột phải tới đúng media ──
+  // `loopIdx` là vị trí của ĐÚNG dòng vừa bấm trong danh sách đã nhân bản, nên bánh xe
+  // đi quãng ngắn nhất tới chính dòng đó chứ không nhảy sang bản sao khác.
+  const handleSelect = useCallback((idx: number, loopIdx: number) => {
     setSelected(idx);
+
+    const wheel = wheelRef.current;
+    if (wheel) {
+      cancelWheelTween.current();
+      suppressWrap.current = true;
+
+      let target = loopIdx * ROW_HEIGHT + ROW_HEIGHT / 2 - wheel.clientHeight / 2;
+      // Bấm vào bản sao sát mép thì đích tính ra có thể âm (hoặc quá đáy); trình duyệt
+      // kẹp lại và tên bị canh giữa hụt. Dịch đích đi từng vòng danh sách cho vào dải
+      // hợp lệ — cùng pha nên vẫn đúng tên đó, chỉ là bản sao khác.
+      const maxScroll = wheel.scrollHeight - wheel.clientHeight;
+      const lo = loopHeight;
+      const hi = maxScroll - loopHeight;
+      if (hi > lo) {
+        while (target < lo) target += loopHeight;
+        while (target > hi) target -= loopHeight;
+      } else {
+        target = Math.max(0, Math.min(target, maxScroll));
+      }
+
+      const stop = tweenScrollTop(wheel, target);
+      cancelWheelTween.current = () => {
+        stop();
+        suppressWrap.current = false;
+      };
+      // Hết tween mới cho phép nhảy vòng trở lại, rồi chuẩn hoá lại vị trí một lần.
+      window.setTimeout(() => {
+        suppressWrap.current = false;
+        wrapRef.current?.();
+      }, WHEEL_TWEEN_MS);
+    }
+
     const media = mediaRef.current;
-    const target = media?.children[idx] as HTMLElement | undefined;
-    if (media && target) {
+    const mediaTarget = media?.children[idx] as HTMLElement | undefined;
+    if (media && mediaTarget) {
       cancelMediaTween.current();
       // Lấy offsetTop thật của ảnh thay vì nhân idx với chiều cao khung — đúng kể cả
       // khi ảnh không còn cao bằng đúng một khung.
-      cancelMediaTween.current = tweenScrollTop(media, target.offsetTop);
+      cancelMediaTween.current = tweenScrollTop(media, mediaTarget.offsetTop);
     }
-  }, []);
+  }, [loopHeight]);
 
-  useEffect(() => () => cancelMediaTween.current(), []);
+  useEffect(
+    () => () => {
+      cancelMediaTween.current();
+      cancelWheelTween.current();
+    },
+    [],
+  );
 
   // Danh sách đã nhân bản cho vòng lặp; giữ lại index thật để biết dòng nào được chọn.
+  const years = projects.map((p) => p.year);
+
   const loopRows = Array.from({ length: loopCopies(count) * count }, (_, i) => i % count);
 
   return (
@@ -209,7 +263,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                       key={i}
                       label={projects[realIdx].title}
                       isSelected={realIdx === safeSelected}
-                      onSelect={() => handleSelect(realIdx)}
+                      onSelect={() => handleSelect(realIdx, i)}
                     />
                   ))}
                 </div>
@@ -217,29 +271,12 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             </div>
 
             {/* ═══ GIỮA — YEAR ═══ */}
+            {/* Chữ YEAR đứng yên; chỉ số năm chạy dọc như cột ảnh bên phải. */}
             <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
-              <AnimatePresence mode="popLayout">
-                <motion.div
-                  key={`year-${safeSelected}`}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
-                    {yearText}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
-                    {project.year}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)", marginTop: "44px" }}>
-                    {yearText}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
-                    {project.year}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+              <div style={yearLabelStyle}>{yearText}</div>
+              <YearReel years={years} index={safeSelected} />
+              <div style={{ ...yearLabelStyle, marginTop: "44px" }}>{yearText}</div>
+              <YearReel years={years} index={safeSelected} />
             </div>
           </div>
 
@@ -371,6 +408,49 @@ const valueStyle: React.CSSProperties = {
   textTransform: "uppercase",
   color: "rgba(255,255,255,0.9)",
 };
+
+const yearLabelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "24px",
+  fontStyle: "italic",
+  fontWeight: 400,
+  color: "rgba(255,255,255,0.6)",
+};
+
+/** Chiều cao một dòng số năm — cũng là chiều cao khung nhìn của cuộn năm. */
+const YEAR_LINE_HEIGHT = 44;
+
+/**
+ * Số năm dạng "cuộn": xếp dọc tất cả năm rồi trượt tới năm đang chọn, cùng kiểu chuyển
+ * động với cột ảnh bên phải. Khung `overflow: hidden` nên người dùng không tự cuộn được
+ * — chỉ đổi khi bấm chọn.
+ */
+function YearReel({ years, index }: { years: string[]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const cancel = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    cancel.current();
+    cancel.current = tweenScrollTop(el, index * YEAR_LINE_HEIGHT);
+    return () => cancel.current();
+  }, [index]);
+
+  return (
+    <div ref={ref} className="showcase-year-reel" style={{ height: `${YEAR_LINE_HEIGHT}px` }}>
+      {years.map((y, i) => (
+        <div
+          key={i}
+          className="flex items-center"
+          style={{ height: `${YEAR_LINE_HEIGHT}px`, fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}
+        >
+          {y}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /**
  * Media của một slide: ảnh, video đã upload, hoặc link YouTube/Google Drive.

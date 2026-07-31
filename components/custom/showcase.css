@@ -72,3 +72,8 @@
     scroll-behavior: auto;
   }
 }
+
+/* Khung số năm — cuộn bằng JS, người dùng không tự cuộn được. */
+.showcase-year-reel {
+  overflow: hidden;
+}
