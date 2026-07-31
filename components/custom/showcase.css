@@ -1,0 +1,62 @@
+/* Showcase trang /custom — hai cột cuộn độc lập.
+ *
+ * Cột trái là "bánh xe": vùng cuộn riêng, lặp vô tận, mỗi dòng nghiêng dần theo khoảng
+ * cách tới tâm. Cột phải là chồng ảnh cuộn riêng; cuộn hết thì trình duyệt tự chuyển
+ * tiếp sang cuộn trang (scroll chaining mặc định) để xuống How It Works.
+ *
+ * KHÔNG đặt `overscroll-behavior: contain` ở đây — nó sẽ chặn đúng cái chuyển tiếp đó.
+ */
+
+.showcase-wheel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Chiều sâu cho hiệu ứng bánh xe; càng nhỏ càng cong mạnh. */
+  perspective: 780px;
+  perspective-origin: 50% 50%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.showcase-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-wheel-track {
+  transform-style: preserve-3d;
+}
+
+.showcase-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  backface-visibility: hidden;
+}
+
+.showcase-media-scroller {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.showcase-media-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-media-item {
+  height: 100%;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-media-scroller {
+    scroll-behavior: auto;
+  }
+}
