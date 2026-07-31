@@ -162,22 +162,29 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const loopRows = Array.from({ length: loopCopies(count) * count }, (_, i) => i % count);
 
   return (
-    <section className="relative bg-black text-white h-screen overflow-hidden">
+    <>
+      {/* Mobile: danh sách dọc, hiện hết, cuộn như trang bình thường (mẫu Hall of Fame).
+          Đổi nhánh bằng CSS thuần — KHÔNG đo `window.innerWidth` bằng state, vì state đó
+          khởi tạo sai ở lần render đầu (đã dính đúng lỗi này ở trang /warrenty). */}
+      <ShowcaseMobileList projects={projects} />
+
+      {/* Desktop: hai cột cuộn độc lập + bánh xe. */}
+      <section className="relative bg-black text-white h-screen overflow-hidden hidden md:block">
       <div className="h-full overflow-hidden z-40" style={{ paddingTop: "80px" }}>
 
         {/* Noise */}
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
 
-        <div className="h-full flex flex-col md:flex-row">
+        <div className="h-full flex flex-row">
 
           {/* ═══ TRÁI — bánh xe tên ═══ */}
           <div
-            className="w-full md:w-[62%] h-[38%] md:h-full relative flex items-center justify-center md:justify-start px-6 md:px-0"
+            className="w-[62%] h-full relative flex items-center justify-start"
             style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}
           >
             {/* Thanh chỉ vị trí — chấm bám vị trí cuộn của bánh xe (xem `paint`),
                 chạy vòng theo danh sách vì bánh xe lặp vô tận. */}
-            <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
+            <div className="absolute left-28 top-1/2 -translate-y-1/2">
               <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
                 <div
                   ref={dotRef}
@@ -187,7 +194,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               </div>
             </div>
 
-            <div className="hidden md:block" style={{ width: "100%", paddingLeft: "100px" }}>
+            <div style={{ width: "100%", paddingLeft: "100px" }}>
               <div
                 ref={wheelRef}
                 className="showcase-wheel"
@@ -206,26 +213,8 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               </div>
             </div>
 
-            {/* Mobile: tạm hiển thị tên đang chọn — Phase 4 sẽ thay bằng list dọc. */}
-            <div className="md:hidden text-center">
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(20px, 5vw, 32px)",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                {project.title}
-              </h2>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "4px", letterSpacing: "0.15em" }}>
-                {yearText} {project.year}
-              </div>
-            </div>
-
             {/* ═══ GIỮA — YEAR ═══ */}
-            <div className="hidden md:block absolute right-[60px] top-1/2 -translate-y-1/2">
+            <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
               <AnimatePresence mode="popLayout">
                 <motion.div
                   key={`year-${safeSelected}`}
@@ -252,7 +241,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
           </div>
 
           {/* ═══ PHẢI — chồng ảnh, cuộn riêng ═══ */}
-          <div className="w-full md:w-[38%] h-[62%] md:h-full relative md:absolute md:inset-y-0 md:right-0">
+          <div className="w-[38%] h-full absolute inset-y-0 right-0">
             <div ref={mediaRef} className="showcase-media-scroller">
               {projects.map((p, i) => (
                 <div key={i} className="showcase-media-item">
@@ -263,9 +252,70 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
           </div>
         </div>
       </div>
+      </section>
+    </>
+  );
+}
+
+/**
+ * Nhánh mobile: mỗi slide là một khối xếp dọc (tên → PIECE/YEAR → media), cuộn bằng
+ * chính thanh cuộn của trang. Không sticky, không bánh xe, không vùng cuộn lồng nhau —
+ * trên màn hình hẹp mấy thứ đó chỉ gây khó chịu.
+ */
+function ShowcaseMobileList({ projects }: { projects: Slide[] }) {
+  return (
+    <section className="md:hidden bg-black text-white" style={{ paddingTop: "88px", paddingBottom: "24px" }}>
+      {projects.map((p, i) => (
+        <article key={i} style={{ paddingLeft: "16px", paddingRight: "16px", paddingBottom: "40px" }}>
+          <h2
+            className="text-center"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(18px, 6vw, 28px)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {p.title}
+          </h2>
+
+          {/* Hàng PIECE / YEAR giống bố cục mẫu khách gửi */}
+          <div
+            className="flex items-baseline justify-between"
+            style={{ paddingTop: "18px", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "8px" }}
+          >
+            <span style={labelStyle}>PIECE</span>
+            <span style={labelStyle}>{p.yearLabel || DEFAULT_YEAR_LABEL}</span>
+          </div>
+          <div className="flex items-baseline justify-between" style={{ paddingTop: "8px", paddingBottom: "16px" }}>
+            <span style={valueStyle}>{p.subtitle}</span>
+            <span style={valueStyle}>{p.year}</span>
+          </div>
+
+          <div className="w-full flex items-center justify-center overflow-hidden">
+            <SlideMedia slide={p} priority={i === 0} />
+          </div>
+        </article>
+      ))}
     </section>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "10px",
+  letterSpacing: "0.22em",
+  textTransform: "uppercase",
+  color: "rgba(255,255,255,0.45)",
+};
+
+const valueStyle: React.CSSProperties = {
+  fontFamily: "var(--font-montserrat)",
+  fontSize: "13px",
+  textTransform: "uppercase",
+  color: "rgba(255,255,255,0.9)",
+};
 
 /**
  * Media của một slide: ảnh, video đã upload, hoặc link YouTube/Google Drive.
