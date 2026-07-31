@@ -47,7 +47,11 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
+  /* KHÔNG dùng scroll-snap ở đây.
+   * Mỗi ảnh cao đúng bằng khung (~900px) còn một nấc chuột chỉ 120px, nên mọi nấc đều
+   * "gần ảnh cũ hơn" và bị kéo giật về chỗ cũ — đo được: lăn 25 nấc (3000px) mà
+   * scrollTop vẫn bằng 0, với cả `mandatory` lẫn `proximity`. Cuộn tự do mới mượt;
+   * bấm tên bên trái vẫn đưa đúng ảnh vào khung nhờ tween trong CustomShowcase. */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -58,7 +62,6 @@
 
 .showcase-media-item {
   height: 100%;
-  scroll-snap-align: center;
   display: flex;
   align-items: center;
   justify-content: flex-end;

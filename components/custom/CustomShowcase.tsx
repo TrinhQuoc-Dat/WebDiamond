@@ -146,9 +146,12 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const handleSelect = useCallback((idx: number) => {
     setSelected(idx);
     const media = mediaRef.current;
-    if (media) {
+    const target = media?.children[idx] as HTMLElement | undefined;
+    if (media && target) {
       cancelMediaTween.current();
-      cancelMediaTween.current = tweenScrollTop(media, idx * media.clientHeight);
+      // Lấy offsetTop thật của ảnh thay vì nhân idx với chiều cao khung — đúng kể cả
+      // khi ảnh không còn cao bằng đúng một khung.
+      cancelMediaTween.current = tweenScrollTop(media, target.offsetTop);
     }
   }, []);
 
