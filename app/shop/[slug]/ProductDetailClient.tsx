@@ -88,7 +88,6 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
     return (
       <>
         <CustomCursor />
-        <Header />
         <main className="w-full bg-black text-white min-h-screen flex flex-col items-center justify-center p-2 text-center">
           <h1 className="text-xl font-bold tracking-[0.2em] uppercase text-[#D4AF37] mb-2">
             Sản phẩm không khả dụng
@@ -124,7 +123,6 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
         }
       `}</style>
       <CustomCursor />
-      <Header />
 
       {/* Main container with starry/galaxy space background */}
       <main

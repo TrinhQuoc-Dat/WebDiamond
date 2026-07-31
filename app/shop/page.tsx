@@ -2,7 +2,6 @@
 
 import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import ShopProductSection from "@/components/ShopProductSection";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import { usePublicProducts } from "@/hooks/usePublicProducts";
@@ -25,7 +24,6 @@ export default function ShopPage() {
   return (
     <>
       <CustomCursor />
-      <Header />
 
       <main className="w-full bg-black text-white pb-12 min-h-screen" style={{ paddingTop: "95px" }}>
         <div className="w-full flex flex-col items-center" style={{ paddingLeft: "5%", paddingRight: "5%" }}>

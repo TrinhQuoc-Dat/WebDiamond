@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/Header";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -29,7 +28,6 @@ function RevealBlock({
 export default function WarrantyPage() {
   return (
     <>
-      <Header />
       <main className="min-h-screen bg-black text-white overflow-hidden"
         style={{ margin: "0 auto", marginTop: "68px", marginBottom: "0" }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">

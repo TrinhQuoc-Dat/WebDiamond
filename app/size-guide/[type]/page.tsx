@@ -2,7 +2,6 @@ import RingGuide from "@/components/size-guides/RingGuide";
 import NecklaceGuide from "@/components/size-guides/NecklaceGuide";
 import BraceletGuide from "@/components/size-guides/BraceletGuide";
 import EarringGuide from "@/components/size-guides/EarringGuide";
-import Header from "@/components/Header";
 
 interface Props {
   params: Promise<{
@@ -38,7 +37,6 @@ export default async function SizeGuidePage({ params }: Props) {
 
   return (
     <>
-      <Header />
       {GuideComponent}
     </>
   );

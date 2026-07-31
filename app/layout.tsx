@@ -3,6 +3,7 @@ import { Syncopate } from "next/font/google";
 import "./globals.css";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import ScrollToTop from "@/components/ScrollToTop";
+import Header from "@/components/Header";
 
 const syncopate = Syncopate({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <body suppressHydrationWarning className={syncopate.variable}>
+        <Header />
         <LoadingOverlay />
         <div id="main-content-wrapper">
           {children}

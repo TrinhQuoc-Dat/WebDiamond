@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import { apiFetch } from "@/utils/api";
@@ -55,9 +54,6 @@ export default function ContactPage() {
   return (
     <>
       <CustomCursor />
-      <Header />
-
-
       <main
         className="w-full bg-black text-white min-h-screen relative overflow-hidden flex flex-col items-center justify-center"
         style={{

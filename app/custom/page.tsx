@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import CustomShowcase from "@/components/custom/CustomShowcase";
@@ -21,7 +20,6 @@ export default function CustomPage() {
   return (
     <>
       <CustomCursor />
-      <Header />
 
       {/* ── Showcase Section (scroll-driven slider) ── */}
       <CustomShowcase slides={slides} />
