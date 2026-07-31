@@ -33,6 +33,9 @@ const MAX_ANGLE = 52;
 const TIMELINE_HEIGHT = 420;
 const TIMELINE_DOT_HEIGHT = 72;
 
+/** Chiều cao header cố định ở khổ mobile (đo được 60px) — khối tên ghim ngay dưới nó. */
+const MOBILE_HEAD_OFFSET = 60;
+
 /** Cuộn `el` tới `to` trong `duration` ms. Dùng thay `behavior:"smooth"` để tốc độ
  *  không phụ thuộc quãng đường — bấm tên nào cũng nhảy nhanh như nhau. */
 function tweenScrollTop(el: HTMLElement, to: number, duration = 420): () => void {
@@ -263,41 +266,93 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
  * trên màn hình hẹp mấy thứ đó chỉ gây khó chịu.
  */
 function ShowcaseMobileList({ projects }: { projects: Slide[] }) {
+  const [active, setActive] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+  const current = projects[Math.min(active, projects.length - 1)];
+
+  // Ảnh nào đang xem thì khối tên ghim ở trên hiển thị tên ảnh đó.
+  //
+  // Thu `root` thành đúng MỘT đường ngang giữa phần nhìn thấy (dưới header), rồi hỏi
+  // ảnh nào cắt đường đó. Cách này luôn cho đúng một đáp án. Bản trước dùng ngưỡng tỉ lệ
+  // hiển thị nên có đoạn hai ảnh cùng ló mà không ảnh nào vượt ngưỡng ⇒ tên đứng im, đo
+  // được lệch ở y=800 và y=1600.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    const attach = () => {
+      observer?.disconnect();
+      const lineY = MOBILE_HEAD_OFFSET + (window.innerHeight - MOBILE_HEAD_OFFSET) / 2;
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
+          }
+        },
+        { rootMargin: `-${lineY}px 0px -${Math.max(window.innerHeight - lineY - 1, 0)}px 0px`, threshold: 0 },
+      );
+      for (const child of Array.from(list.children)) observer.observe(child);
+    };
+
+    attach();
+    window.addEventListener("resize", attach);
+    return () => {
+      window.removeEventListener("resize", attach);
+      observer?.disconnect();
+    };
+  }, [projects.length]);
+
   return (
-    <section className="md:hidden bg-black text-white" style={{ paddingTop: "88px", paddingBottom: "24px" }}>
-      {projects.map((p, i) => (
-        <article key={i} style={{ paddingLeft: "16px", paddingRight: "16px", paddingBottom: "40px" }}>
-          <h2
-            className="text-center"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(18px, 6vw, 28px)",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            {p.title}
-          </h2>
+    <section className="md:hidden bg-black text-white" style={{ paddingBottom: "24px" }}>
+      {/* Khối tên ghim lại dưới header; nội dung cuộn qua bên dưới nó. */}
+      <div
+        className="sticky z-30 bg-black"
+        style={{ top: `${MOBILE_HEAD_OFFSET}px`, paddingTop: "16px", paddingLeft: "16px", paddingRight: "16px", paddingBottom: "12px" }}
+      >
+        <h2
+          className="text-center"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(18px, 6vw, 28px)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
+          <span style={{ position: "relative", display: "inline-block", padding: "0 16px" }}>
+            <SelectionCorners />
+            {current.title}
+          </span>
+        </h2>
 
-          {/* Hàng PIECE / YEAR giống bố cục mẫu khách gửi */}
+        {/* Hàng PIECE / YEAR giống bố cục mẫu khách gửi */}
+        <div
+          className="flex items-baseline justify-between"
+          style={{ paddingTop: "18px", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "8px" }}
+        >
+          <span style={labelStyle}>PIECE</span>
+          <span style={labelStyle}>{current.yearLabel || DEFAULT_YEAR_LABEL}</span>
+        </div>
+        <div className="flex items-baseline justify-between" style={{ paddingTop: "8px" }}>
+          <span style={valueStyle}>{current.subtitle}</span>
+          <span style={valueStyle}>{current.year}</span>
+        </div>
+      </div>
+
+      <div ref={listRef}>
+        {projects.map((p, i) => (
           <div
-            className="flex items-baseline justify-between"
-            style={{ paddingTop: "18px", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "8px" }}
+            key={i}
+            data-index={i}
+            className="w-full flex items-center justify-center overflow-hidden"
+            style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "20px" }}
           >
-            <span style={labelStyle}>PIECE</span>
-            <span style={labelStyle}>{p.yearLabel || DEFAULT_YEAR_LABEL}</span>
-          </div>
-          <div className="flex items-baseline justify-between" style={{ paddingTop: "8px", paddingBottom: "16px" }}>
-            <span style={valueStyle}>{p.subtitle}</span>
-            <span style={valueStyle}>{p.year}</span>
-          </div>
-
-          <div className="w-full flex items-center justify-center overflow-hidden">
             <SlideMedia slide={p} priority={i === 0} />
           </div>
-        </article>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }
