@@ -1,0 +1,32 @@
+/* Hiệu ứng hiện dần từng khối, trái → phải, cho lưới trang /warrenty.
+ *
+ * Cố tình dùng animation CSS thay vì `whileInView` của Framer: ba khối này luôn nằm
+ * trong khung nhìn ngay khi vào trang, nên không cần dò scroll. Bản Framer phải chờ
+ * React hydrate xong IntersectionObserver mới bắn — khối đứng im ~640ms rồi mới bật,
+ * đúng lúc main thread còn bận hydrate nên nhìn bị khựng. Animation CSS chạy trên
+ * compositor và bắt đầu ngay từ khung hình đầu tiên, không dính main thread.
+ *
+ * `fill-mode: both` giữ trạng thái `from` trong lúc chờ delay, nên không cần đặt
+ * `opacity: 0` mặc định — nếu vì lý do gì animation không chạy thì nội dung vẫn hiện.
+ */
+
+@keyframes warranty-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(-60px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal-block {
+  animation: warranty-reveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-block {
+    animation: none;
+  }
+}

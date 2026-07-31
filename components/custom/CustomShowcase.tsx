@@ -2,11 +2,28 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage";
 
 interface CustomShowcaseProps {
   slides?: Slide[];
+}
+
+/** Kích thước lấy từ Figma (frame 1440×762) — xem dtteck/plans/custom-page-figma-alignment. */
+const WHEEL_HEIGHT = 420;
+const TIMELINE_HEIGHT = 420;
+const TIMELINE_DOT_HEIGHT = 72;
+
+/**
+ * Chiều cao mỗi dòng trong "bánh xe" chữ, thu dần theo khoảng cách tới dòng đang chọn.
+ * Nhịp này khớp Figma và làm cả 7 dòng vừa khít khung 420px (tổng 338px),
+ * thay vì nhịp đều 72px cũ chỉ hiện được 5 dòng.
+ */
+function rowHeight(distance: number): number {
+  if (distance === 0) return 62;
+  if (distance === 1) return 52;
+  if (distance === 2) return 44;
+  return 42;
 }
 
 export default function CustomShowcase({ slides }: CustomShowcaseProps) {
@@ -37,9 +54,8 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
     }
   });
 
-  // Timeline indicator
-  const timelineY = useTransform(scrollYProgress, [0, 1], [0, 240]);
-  const itemHeight = 72;
+  // Timeline indicator — thanh cao 420px, chấm 72px ⇒ quãng chạy 348px (theo Figma).
+  const timelineY = useTransform(scrollYProgress, [0, 1], [0, TIMELINE_HEIGHT - TIMELINE_DOT_HEIGHT]);
 
   const handleClick = useCallback((idx: number) => {
     if (idx === active) return;
@@ -61,8 +77,13 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   // Nhãn năm riêng theo từng slide (fallback "YEAR").
   const yearText = project?.yearLabel || DEFAULT_YEAR_LABEL;
 
-  // Scroll offset so active item sits at center of the container
-  const centerOffset = (420 - itemHeight) / 2;
+  // Dời cả cột chữ sao cho dòng đang chọn nằm chính giữa khung — vì mỗi dòng cao khác
+  // nhau nên phải cộng dồn chiều cao các dòng phía trên thay vì nhân với một hằng số.
+  const wheelOffset = useMemo(() => {
+    let above = 0;
+    for (let i = 0; i < safeActive; i++) above += rowHeight(safeActive - i);
+    return WHEEL_HEIGHT / 2 - above - rowHeight(0) / 2;
+  }, [safeActive]);
 
   // Build text list — all items visible, scroll as a stack, active one is larger
   const renderSubtitleList = useCallback(() => {
@@ -76,7 +97,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
       if (absDist === 0) {
         opacity = 1;
-        fontSize = "clamp(22px, 2.8vw, 44px)";
+        fontSize = "clamp(22px, 3.05vw, 46px)";
         color = "rgba(255,255,255,1)";
       } else if (absDist === 1) {
         opacity = 0.5;
@@ -89,7 +110,10 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       }
 
       return (
-        <div key={`item-${i}`} style={{ display: "flex", alignItems: "center", minHeight: `${itemHeight}px` }}>
+        <div
+          key={`item-${i}`}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", height: `${rowHeight(absDist)}px` }}
+        >
           <motion.div
             className="cursor-pointer"
             onClick={() => handleClick(i)}
@@ -101,15 +125,15 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               letterSpacing: absDist === 0 ? "0.05em" : "6px",
               lineHeight: 1.2,
               whiteSpace: "nowrap",
-              padding: "4px 0",
+              textAlign: "center",
               fontSize,
             }}
           >
             {absDist === 0 ? (
-              <span style={{ position: "relative", display: "inline-block", padding: "8px 0 16px" }}>
-                <span style={{ position: "absolute", bottom: "-2px", left: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>└</span>
+              <span style={{ position: "relative", display: "inline-block" }}>
+                <span style={{ position: "absolute", bottom: "-8px", left: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>└</span>
                 {p.title}
-                <span style={{ position: "absolute", bottom: "-2px", right: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>┘</span>
+                <span style={{ position: "absolute", bottom: "-8px", right: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>┘</span>
               </span>
             ) : (
               p.subtitle
@@ -143,10 +167,10 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
             {/* Timeline bar — desktop only */}
             <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
-              <div className="relative w-px h-[300px] bg-white/20">
+              <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
                 <motion.div
-                  style={{ y: timelineY }}
-                  className="absolute left-1/2 -translate-x-1/2 w-[5px] h-[60px] bg-white rounded-full"
+                  style={{ y: timelineY, height: `${TIMELINE_DOT_HEIGHT}px` }}
+                  className="absolute left-1/2 -translate-x-1/2 w-[5px] bg-white rounded-full"
                 />
               </div>
             </div>
@@ -172,10 +196,20 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             </div>
 
             {/* Text wheel — desktop only */}
+            {/* Bề rộng khung có giới hạn để các dòng canh giữa quanh trục x≈370 như Figma,
+                thay vì canh trái theo cả cột. */}
             <div className="hidden md:block" style={{ width: "100%", paddingLeft: "100px" }}>
-              <div style={{ overflow: "hidden", height: "420px", width: "100%", position: "relative", paddingLeft: "20px" }}>
+              <div
+                style={{
+                  overflow: "hidden",
+                  height: `${WHEEL_HEIGHT}px`,
+                  width: "clamp(340px, 29vw, 440px)",
+                  position: "relative",
+                  paddingLeft: "20px",
+                }}
+              >
                 <motion.div
-                  animate={{ y: -active * itemHeight + centerOffset }}
+                  animate={{ y: wheelOffset }}
                   transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                   style={{ width: "100%" }}
                 >
@@ -194,16 +228,16 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
                     {yearText}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 700 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
                     {project.year}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)", marginTop: "48px" }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)", marginTop: "44px" }}>
                     {yearText}
                   </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "52px", fontWeight: 700 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
                     {project.year}
                   </div>
                 </motion.div>
@@ -212,7 +246,11 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
           </div>
 
           {/* ═══ RIGHT / BOTTOM — Product Image ═══ */}
-          <div className="w-full md:w-[38%] h-[80%] md:h-full flex items-center justify-center relative">
+          {/* Desktop: tách khỏi luồng flex và neo theo mép khung sticky, để cột ảnh thoát
+              padding-top 80px và chạy hết chiều cao màn hình, dính sát mép phải như Figma.
+              (Không dùng margin âm — reset `* { margin: 0 }` trong globals.css nằm ngoài
+              layer nên đè hết utility margin của Tailwind.) */}
+          <div className="w-full md:w-[38%] h-[80%] md:h-full relative md:absolute md:inset-y-0 md:right-0 flex items-center justify-center md:justify-end">
             {/* Glow */}
             <div className="absolute w-[400px] h-[400px] rounded-full bg-white/5 blur-[80px] pointer-events-none" />
 
@@ -223,7 +261,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative w-full h-full flex items-center justify-center md:justify-end"
               >
                 <Image
                   src={project.image}
@@ -231,8 +269,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
                   width={600}
                   height={800}
                   priority
-                  className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none"
-                  style={{ maxWidth: "90%", maxHeight: "90%" }}
+                  className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none max-w-[90%] max-h-[90%] md:max-w-full md:max-h-[95%]"
                 />
               </motion.div>
             </AnimatePresence>
