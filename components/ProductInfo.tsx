@@ -36,7 +36,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         {product.spec}
       </p>
       
-      <a href="/custom">
+      <a href="https://www.instagram.com/direct/t/17844706752215602/" target="_blank" rel="noreferrer">
         <p className="text-[16px] md:text-[16px] leading-relaxed uppercase pt-4 mt-2" style={{ fontFamily: "var(--font-display)", fontWeight: "bold" }}>
           (WE CAN CUSTOM YOUR IDEAS)
         </p>

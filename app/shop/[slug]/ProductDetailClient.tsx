@@ -53,9 +53,9 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
   // Gộp ảnh: thumbnail (image) đứng đầu + danh sách ảnh chi tiết (images), loại trùng
   const galleryImages = product
     ? [
-        product.image,
-        ...(product.images || []).filter((img: string) => img !== product.image),
-      ]
+      product.image,
+      ...(product.images || []).filter((img: string) => img !== product.image),
+    ]
     : [];
 
   const handlePrevImage = () => {
@@ -111,6 +111,18 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
 
   return (
     <>
+      <style>{`
+        .custom-padding {
+          padding-left: 5%;
+          padding-right: 5%;
+        }
+        @media (min-width: 768px) {
+          .custom-padding {
+            padding-left: 10%;
+            padding-right: 10%;
+          }
+        }
+      `}</style>
       <CustomCursor />
       <Header />
 
@@ -125,10 +137,10 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           paddingBottom: "100px",
         }}
       >
-        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px]" style={{ paddingLeft: "2%", paddingRight: "2%" }}>
+        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px] custom-padding">
 
           {/* ─── 3-Column Product Core ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-1 mb-24 w-full max-w-[1440px] px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-1 mb-24 w-full px-4 md:px-8">
 
             {/* 1. Left Column: Specs & QR */}
             <ProductInfo product={product} />
@@ -157,7 +169,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           </div>
 
           {/* ─── 4-Grid Benefits Section ─── */}
-          <div className="w-full max-w-[1440px] px-4 md:px-8">
+          <div className="w-full px-4 md:px-8">
             <ProductBenefits />
           </div>
 

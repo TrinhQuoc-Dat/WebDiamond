@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useState } from "react";
 import { Product } from "@/data/products";
 
 interface ProductImageGalleryProps {
@@ -21,23 +22,44 @@ export default function ProductImageGallery({
   onPrevImage,
   onNextImage,
 }: ProductImageGalleryProps) {
+  // State quản lý tọa độ con trỏ và trạng thái hover để zoom
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50, isHovered: false });
+
+  // Tính toán tọa độ chuột theo phần trăm (%) trong khung ảnh
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomPos({ x, y, isHovered: true });
+  };
+
+  const handleMouseLeave = () => {
+    setZoomPos((prev) => ({ ...prev, isHovered: false }));
+  };
+
   return (
     <div className="lg:col-span-4 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
-      <div className="w-full flex flex-col items-center lg:-translate-y-[48px]"
-        style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+      <div
+        className="w-full flex flex-col items-center lg:-translate-y-[48px]"
+        style={{ paddingLeft: "5%", paddingRight: "5%" }}
+      >
         {/* Main Image with side arrows on mobile */}
         <div className="flex items-center justify-center gap-4 w-full relative">
           {/* Left Arrow for mobile/tablet */}
           <button
             onClick={onPrevImage}
-            className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden"
+            className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden z-10"
             aria-label="Previous image"
           >
             <span className="text-2xl leading-none">←</span>
           </button>
 
-          {/* Mannequin / Main Image Container — render ALL images, toggle visibility via opacity */}
-          <div className="relative w-full aspect-square max-h-[500px] bg-transparent overflow-hidden flex items-center justify-center">
+          {/* Mannequin / Main Image Container — Thêm zoom khi Hover */}
+          <div
+            className="relative w-full aspect-square max-h-[500px] bg-transparent overflow-hidden flex items-center justify-center cursor-zoom-in"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
             {galleryImages.map((img, idx) => (
               <div
                 key={img}
@@ -47,15 +69,24 @@ export default function ProductImageGallery({
                   pointerEvents: idx === activeImageIndex ? "auto" : "none",
                 }}
               >
-                <Image
-                  src={img}
-                  alt={`${product.name} display ${idx + 1}`}
-                  fill
-                  priority={idx === 0}
-                  loading={idx === 0 ? "eager" : "eager"}
-                  className="object-contain object-center"
-                  sizes="(max-width: 768px) 90vw, 480px"
-                />
+                {/* Khung bao bọc hiệu ứng Zoom */}
+                <div
+                  className="w-full h-full relative transition-transform duration-150 ease-out pointer-events-none"
+                  style={{
+                    transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                    transform: zoomPos.isHovered ? "scale(2.2)" : "scale(1)",
+                  }}
+                >
+                  <Image
+                    src={img}
+                    alt={`${product.name} display ${idx + 1}`}
+                    fill
+                    priority={idx === 0}
+                    loading={idx === 0 ? "eager" : "eager"}
+                    className="object-contain object-center"
+                    sizes="(max-width: 768px) 90vw, 480px"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -63,7 +94,7 @@ export default function ProductImageGallery({
           {/* Right Arrow for mobile/tablet */}
           <button
             onClick={onNextImage}
-            className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden"
+            className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer lg:hidden z-10"
             aria-label="Next image"
           >
             <span className="text-2xl leading-none">→</span>
@@ -76,8 +107,9 @@ export default function ProductImageGallery({
             <button
               key={idx}
               onClick={() => setActiveImageIndex(idx)}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === activeImageIndex ? "bg-white w-3" : "bg-white/30"
-                }`}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                idx === activeImageIndex ? "bg-white w-3" : "bg-white/30"
+              }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
@@ -110,10 +142,11 @@ export default function ProductImageGallery({
                   onClick={() => setActiveImageIndex(idx)}
                 >
                   <div
-                    className={`w-10 h-14 relative bg-transparent overflow-hidden rounded-[2px] transition-all duration-300 ${isActive
+                    className={`w-10 h-14 relative bg-transparent overflow-hidden rounded-[2px] transition-all duration-300 ${
+                      isActive
                         ? "scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                         : "opacity-60 hover:opacity-100"
-                      }`}
+                    }`}
                   >
                     <Image
                       src={img}
@@ -143,4 +176,3 @@ export default function ProductImageGallery({
     </div>
   );
 }
-

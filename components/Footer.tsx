@@ -84,12 +84,6 @@ export default function Footer() {
 
             {/* ── RIGHT: QR Code Instagram ── */}
             <div className="flex flex-col items-center gap-3">
-              <p
-                className="text-[10px] uppercase tracking-[0.25em] text-black/40 font-normal"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                Follow us
-              </p>
               <a
                 href="https://www.instagram.com/godg1ft.jrl/"
                 target="_blank"
