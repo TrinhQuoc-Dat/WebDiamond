@@ -1,0 +1,79 @@
+/* Showcase trang /custom — hai cột cuộn độc lập.
+ *
+ * Cột trái là "bánh xe": vùng cuộn riêng, lặp vô tận, mỗi dòng nghiêng dần theo khoảng
+ * cách tới tâm. Cột phải là chồng ảnh cuộn riêng; cuộn hết thì trình duyệt tự chuyển
+ * tiếp sang cuộn trang (scroll chaining mặc định) để xuống How It Works.
+ *
+ * KHÔNG đặt `overscroll-behavior: contain` ở đây — nó sẽ chặn đúng cái chuyển tiếp đó.
+ */
+
+.showcase-wheel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Chiều sâu cho hiệu ứng bánh xe; càng nhỏ càng cong mạnh. */
+  perspective: 780px;
+  perspective-origin: 50% 50%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.showcase-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-wheel-track {
+  transform-style: preserve-3d;
+}
+
+/* Vùng bấm: PHẲNG, nguyên khổ, không bao giờ nhận transform.
+ * Trước đây transform đặt thẳng lên đây nên vùng bấm co/nghiêng theo hiệu ứng, chừa
+ * khe hở giữa các dòng ⇒ bấm lúc trúng lúc trượt. Hiệu ứng chuyển hết xuống lớp con. */
+.showcase-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Lớp chịu hiệu ứng bánh xe — JS ghi transform + opacity vào đây mỗi khung hình. */
+.showcase-row-inner {
+  display: inline-block;
+  pointer-events: none;
+  backface-visibility: hidden;
+}
+
+.showcase-media-scroller {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* KHÔNG dùng scroll-snap ở đây.
+   * Mỗi ảnh cao đúng bằng khung (~900px) còn một nấc chuột chỉ 120px, nên mọi nấc đều
+   * "gần ảnh cũ hơn" và bị kéo giật về chỗ cũ — đo được: lăn 25 nấc (3000px) mà
+   * scrollTop vẫn bằng 0, với cả `mandatory` lẫn `proximity`. Cuộn tự do mới mượt;
+   * bấm tên bên trái vẫn đưa đúng ảnh vào khung nhờ tween trong CustomShowcase. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.showcase-media-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-media-item {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-media-scroller {
+    scroll-behavior: auto;
+  }
+}
+
+/* Khung số năm — cuộn bằng JS, người dùng không tự cuộn được. */
+.showcase-year-reel {
+  overflow: hidden;
+}

@@ -6,6 +6,7 @@ import { Button } from "primereact/button";
 import { apiFetch } from "@/utils/api";
 import { uploadImage } from "@/utils/uploadImage";
 import { Slide, DEFAULT_SHOWCASE } from "@/utils/customPage";
+import { getYouTubeId } from "@/utils/media";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -20,7 +21,9 @@ const inputStyle: React.CSSProperties = {
 
 const labelClass = "block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2";
 
-const emptySlide: Slide = { title: "", subtitle: "", year: "", yearLabel: "YEAR", image: "" };
+const emptySlide: Slide = { title: "", subtitle: "", year: "", yearLabel: "YEAR", image: "", mediaType: "image" };
+
+const isYouTubeUrl = (url: string) => getYouTubeId(url) !== null;
 
 export default function AdminCustomPage() {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -78,7 +81,7 @@ export default function AdminCustomPage() {
       const url = await uploadImage(file);
       updateSlide(index, "image", url);
     } catch (err: any) {
-      alert(err.message || "Tải ảnh lên thất bại");
+      alert(err.message || "Tải file lên thất bại");
     } finally {
       setUploadingIndex(null);
     }
@@ -202,13 +205,39 @@ export default function AdminCustomPage() {
             <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8" style={{ padding: 24 }}>
               {/* Image preview + upload */}
               <div>
-                <label className={labelClass}>Ảnh slide</label>
+                <label className={labelClass}>Ảnh / Video slide</label>
+
+                {/* Chọn loại media — quyết định trang /custom render <Image> hay video. */}
+                <div className="flex gap-2 mb-3">
+                  {(["image", "video"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => updateSlide(index, "mediaType", t)}
+                      className={`flex-1 py-2 text-[10px] font-semibold uppercase tracking-wider rounded-lg border transition-all ${
+                        (slide.mediaType ?? "image") === t
+                          ? "bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/50"
+                          : "bg-white/[0.03] text-gray-400 border-[#2A2A30] hover:text-white"
+                      }`}
+                    >
+                      {t === "image" ? "Ảnh" : "Video"}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="relative w-full aspect-[3/4] bg-black rounded-xl overflow-hidden border border-[#1C1C1E] flex items-center justify-center mb-3">
-                  {slide.image ? (
+                  {!slide.image ? (
+                    <span className="text-gray-600 text-[10px] uppercase tracking-wider">Chưa có media</span>
+                  ) : (slide.mediaType ?? "image") === "video" ? (
+                    isYouTubeUrl(slide.image) ? (
+                      <span className="text-[#D4AF37] text-[10px] uppercase tracking-wider px-3 text-center">
+                        Link YouTube
+                      </span>
+                    ) : (
+                      <video src={slide.image} muted playsInline className="w-full h-full object-contain" />
+                    )
+                  ) : (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={slide.image} alt={slide.title} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-gray-600 text-[10px] uppercase tracking-wider">Chưa có ảnh</span>
                   )}
                   {uploadingIndex === index && (
                     <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
@@ -222,8 +251,21 @@ export default function AdminCustomPage() {
                   className="w-full flex items-center justify-center gap-2 bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white border border-[#2A2A30] hover:border-[#D4AF37]/50 rounded-lg transition-all py-2.5 text-xs font-semibold uppercase tracking-wider disabled:opacity-50"
                 >
                   <i className="pi pi-upload" style={{ fontSize: 12 }}></i>
-                  Tải ảnh lên
+                  {(slide.mediaType ?? "image") === "video" ? "Tải video lên" : "Tải ảnh lên"}
                 </button>
+
+                {/* Video còn có thể dán link YouTube / Google Drive thay vì upload. */}
+                {(slide.mediaType ?? "image") === "video" && (
+                  <div className="mt-3">
+                    <label className={labelClass}>hoặc dán link YouTube / Drive</label>
+                    <InputText
+                      value={slide.image}
+                      onChange={(e) => updateSlide(index, "image", e.target.value)}
+                      placeholder="https://youtu.be/..."
+                      style={inputStyle}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Text fields */}
@@ -276,7 +318,7 @@ export default function AdminCustomPage() {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,video/*"
         onChange={handleFileChange}
         className="hidden"
       />

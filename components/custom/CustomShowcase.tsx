@@ -1,286 +1,573 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useCallback, useEffect, useMemo } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage";
+import { getGoogleDriveDirectLink, getYouTubeId, looksLikeVideo } from "@/utils/media";
+
+import "./showcase.css";
 
 interface CustomShowcaseProps {
   slides?: Slide[];
 }
 
-/** Kích thước lấy từ Figma (frame 1440×762) — xem dtteck/plans/custom-page-figma-alignment. */
-const WHEEL_HEIGHT = 420;
+/** Chiều cao mỗi dòng trong bánh xe. Cố định để vòng lặp vô tận nối liền không lệch. */
+const ROW_HEIGHT = 46;
+/** Số dòng thấy cùng lúc — theo mẫu Hall of Fame (~11 dòng, mờ dần về hai mép). */
+const VISIBLE_ROWS = 11;
+const WHEEL_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
+/**
+ * Số bản sao danh sách xếp nối nhau, để cuộn tới gần rìa thì nhảy ngược lại nguyên
+ * một bản sao — nội dung giống hệt nên không thấy giật ⇒ cảm giác cuộn vô tận.
+ *
+ * Phải đủ nhiều để dải an toàn `[1 bản sao, hết - 1 bản sao]` rộng hơn khung nhìn,
+ * nếu không ngưỡng nhảy sẽ rơi ra ngoài tầm cuộn và bánh xe kẹt ở đáy.
+ */
+function loopCopies(count: number): number {
+  return Math.ceil(VISIBLE_ROWS / Math.max(count, 1)) + 3;
+}
+/** Góc nghiêng tối đa ở mép khung — tạo cảm giác mặt trống cong. */
+const MAX_ANGLE = 52;
+
+/** Thời gian tween — dùng chung cho bánh xe, cột media và số năm. */
+const WHEEL_TWEEN_MS = 420;
+
 const TIMELINE_HEIGHT = 420;
 const TIMELINE_DOT_HEIGHT = 72;
 
-/**
- * Chiều cao mỗi dòng trong "bánh xe" chữ, thu dần theo khoảng cách tới dòng đang chọn.
- * Nhịp này khớp Figma và làm cả 7 dòng vừa khít khung 420px (tổng 338px),
- * thay vì nhịp đều 72px cũ chỉ hiện được 5 dòng.
- */
-function rowHeight(distance: number): number {
-  if (distance === 0) return 62;
-  if (distance === 1) return 52;
-  if (distance === 2) return 44;
-  return 42;
+/** Chiều cao header cố định ở khổ mobile (đo được 60px) — khối tên ghim ngay dưới nó. */
+const MOBILE_HEAD_OFFSET = 60;
+
+/** Cuộn `el` tới `to` trong `duration` ms. Dùng thay `behavior:"smooth"` để tốc độ
+ *  không phụ thuộc quãng đường — bấm tên nào cũng nhảy nhanh như nhau. */
+function tweenScrollTop(el: HTMLElement, to: number, duration = WHEEL_TWEEN_MS): () => void {
+  const from = el.scrollTop;
+  const delta = to - from;
+  if (Math.abs(delta) < 1) return () => {};
+
+  const start = performance.now();
+  let raf = 0;
+  const step = (now: number) => {
+    const t = Math.min((now - start) / duration, 1);
+    // easeInOutCubic
+    const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    el.scrollTop = from + delta * e;
+    if (t < 1) raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(raf);
 }
 
 export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   // Dữ liệu đến từ API; fallback về data mặc định nếu rỗng để không vỡ slider.
   const projects = slides && slides.length > 0 ? slides : DEFAULT_SHOWCASE;
+  const count = projects.length;
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
-  const isScrolling = useRef(false);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Continuous scroll-driven index (float for smooth wheel effect)
-  const continuousIndex = useTransform(scrollYProgress, [0, 1], [0, projects.length - 1]);
-
-  const activeRef = useRef(active);
-  activeRef.current = active;
-
-  useMotionValueEvent(continuousIndex, "change", (latest) => {
-    if (isScrolling.current) return;
-    const idx = Math.min(Math.round(latest), projects.length - 1);
-    if (idx >= 0 && idx !== activeRef.current) {
-      activeRef.current = idx;
-      setActive(idx);
-    }
-  });
-
-  // Timeline indicator — thanh cao 420px, chấm 72px ⇒ quãng chạy 348px (theo Figma).
-  const timelineY = useTransform(scrollYProgress, [0, 1], [0, TIMELINE_HEIGHT - TIMELINE_DOT_HEIGHT]);
-
-  const handleClick = useCallback((idx: number) => {
-    if (idx === active) return;
-    isScrolling.current = true;
-    setActive(idx);
-    if (sectionRef.current) {
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionTop = window.scrollY + rect.top;
-      const sectionScrollable = sectionRef.current.offsetHeight - window.innerHeight;
-      const targetScroll = sectionTop + (sectionScrollable * idx) / projects.length;
-      window.scrollTo({ top: targetScroll, behavior: "smooth" });
-    }
-    setTimeout(() => { isScrolling.current = false; }, 300);
-  }, [active]);
-
-  // Guard: nếu mảng slide đổi (ngắn hơn) sau khi mount, active có thể vượt phạm vi.
-  const safeActive = Math.min(active, projects.length - 1);
-  const project = projects[safeActive];
-  // Nhãn năm riêng theo từng slide (fallback "YEAR").
+  /** Dòng đang chọn — CHỈ đổi khi bấm, không đổi khi cuộn bánh xe. */
+  const [selected, setSelected] = useState(0);
+  const safeSelected = Math.min(selected, count - 1);
+  const project = projects[safeSelected];
   const yearText = project?.yearLabel || DEFAULT_YEAR_LABEL;
 
-  // Dời cả cột chữ sao cho dòng đang chọn nằm chính giữa khung — vì mỗi dòng cao khác
-  // nhau nên phải cộng dồn chiều cao các dòng phía trên thay vì nhân với một hằng số.
-  const wheelOffset = useMemo(() => {
-    let above = 0;
-    for (let i = 0; i < safeActive; i++) above += rowHeight(safeActive - i);
-    return WHEEL_HEIGHT / 2 - above - rowHeight(0) / 2;
-  }, [safeActive]);
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const cancelMediaTween = useRef<() => void>(() => {});
+  const paintRef = useRef<(() => void) | null>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const cancelWheelTween = useRef<() => void>(() => {});
+  const wrapRef = useRef<(() => void) | null>(null);
+  const suppressWrap = useRef(false);
 
-  // Build text list — all items visible, scroll as a stack, active one is larger
-  const renderSubtitleList = useCallback(() => {
-    return projects.map((p, i) => {
-      const dist = i - active;
-      const absDist = Math.abs(dist);
+  const loopHeight = count * ROW_HEIGHT;
 
-      let opacity = 0.15;
-      let fontSize = "13px";
-      let color = "rgba(255,255,255,0.3)";
+  // ── Bánh xe: vòng lặp vô tận + nghiêng dần theo khoảng cách tới tâm ──
+  useEffect(() => {
+    const wheel = wheelRef.current;
+    const track = trackRef.current;
+    if (!wheel || !track || loopHeight === 0) return;
 
-      if (absDist === 0) {
-        opacity = 1;
-        fontSize = "clamp(22px, 3.05vw, 46px)";
-        color = "rgba(255,255,255,1)";
-      } else if (absDist === 1) {
-        opacity = 0.5;
-        fontSize = "clamp(14px, 1.5vw, 18px)";
-        color = "rgba(255,255,255,0.6)";
-      } else if (absDist === 2) {
-        opacity = 0.25;
-        fontSize = "clamp(12px, 1.2vw, 15px)";
-        color = "rgba(255,255,255,0.35)";
+    // Bắt đầu ở bản sao giữa để cuộn được cả hai chiều ngay từ đầu.
+    wheel.scrollTop = loopHeight * Math.floor(loopCopies(count) / 2);
+
+    let raf = 0;
+    const paint = () => {
+      raf = 0;
+      const half = wheel.clientHeight / 2;
+      const center = wheel.scrollTop + half;
+      const rows = track.children as HTMLCollectionOf<HTMLElement>;
+      for (let i = 0; i < rows.length; i++) {
+        const rowCenter = i * ROW_HEIGHT + ROW_HEIGHT / 2;
+        // -1 (mép trên) … 0 (tâm) … 1 (mép dưới)
+        const d = Math.max(-1.4, Math.min(1.4, (rowCenter - center) / half));
+        const ad = Math.min(Math.abs(d), 1);
+        const row = rows[i];
+        const inner = row.firstElementChild as HTMLElement | null;
+        if (!inner) continue;
+        inner.style.transform = `rotateX(${-d * MAX_ANGLE}deg) scale(${1 - ad * 0.55})`;
+        // Dòng đang chọn trôi theo bánh xe, nên phải giữ một mức sáng tối thiểu —
+        // nếu để mờ theo khoảng cách như các dòng khác thì mất dấu dòng đã bấm.
+        const dim = Math.max(0, 1 - ad * 0.72);
+        inner.style.opacity = `${row.dataset.selected === "1" ? Math.max(dim, 0.85) : dim}`;
       }
 
-      return (
-        <div
-          key={`item-${i}`}
-          style={{ display: "flex", alignItems: "center", justifyContent: "center", height: `${rowHeight(absDist)}px` }}
-        >
-          <motion.div
-            className="cursor-pointer"
-            onClick={() => handleClick(i)}
-            animate={{ opacity, color }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{
-              fontFamily: "var(--font-display)",
-              textTransform: "uppercase",
-              letterSpacing: absDist === 0 ? "0.05em" : "6px",
-              lineHeight: 1.2,
-              whiteSpace: "nowrap",
-              textAlign: "center",
-              fontSize,
-            }}
-          >
-            {absDist === 0 ? (
-              <span style={{ position: "relative", display: "inline-block" }}>
-                <span style={{ position: "absolute", bottom: "-8px", left: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>└</span>
-                {p.title}
-                <span style={{ position: "absolute", bottom: "-8px", right: "-14px", opacity: 0.5, fontSize: "0.5em", lineHeight: 1 }}>┘</span>
-              </span>
-            ) : (
-              p.subtitle
-            )}
-          </motion.div>
-        </div>
-      );
-    });
-  }, [active, projects, handleClick]);
+      // Chấm trên thanh dọc bám vị trí cuộn của bánh xe. Dùng phần dư theo một vòng
+      // danh sách nên khi vòng lặp nhảy ngầm, chấm không giật — phần dư không đổi.
+      const dot = dotRef.current;
+      if (dot) {
+        const phase = ((center % loopHeight) + loopHeight) % loopHeight;
+        const travel = TIMELINE_HEIGHT - TIMELINE_DOT_HEIGHT;
+        dot.style.transform = `translateY(${(phase / loopHeight) * travel}px)`;
+      }
+    };
+
+    // Chạm gần hai rìa thì kéo về giữa dải nhưng GIỮ NGUYÊN pha (phần dư theo một vòng
+    // danh sách), nên hình ảnh không đổi — đó là chỗ tạo cảm giác vô tận. Dùng modulo
+    // thay vì cộng/trừ một lần, để cú vuốt mạnh cỡ nào cũng về đúng dải.
+    const wrap = () => {
+      const maxScroll = wheel.scrollHeight - wheel.clientHeight;
+      const lo = loopHeight;
+      const hi = maxScroll - loopHeight;
+      if (hi > lo && (wheel.scrollTop < lo || wheel.scrollTop > hi)) {
+        const phase = ((wheel.scrollTop % loopHeight) + loopHeight) % loopHeight;
+        const middle = Math.floor((lo + hi) / 2 / loopHeight) * loopHeight;
+        wheel.scrollTop = middle + phase;
+      }
+    };
+
+    const onScroll = () => {
+      // Trong lúc bấm-để-đưa-vào-giữa thì KHÔNG được nhảy vòng: tween đang chạy theo
+      // giá trị scrollTop tuyệt đối, nhảy giữa chừng sẽ làm nó lệch đích.
+      if (!suppressWrap.current) wrap();
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+
+    wheel.addEventListener("scroll", onScroll, { passive: true });
+    wrapRef.current = wrap;
+    paintRef.current = paint;
+    paint();
+    return () => {
+      wheel.removeEventListener("scroll", onScroll);
+      paintRef.current = null;
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [loopHeight, count]);
+
+  // Paint chỉ tự chạy khi cuộn; đổi lựa chọn cũng phải vẽ lại để dòng vừa bấm sáng lên.
+  useEffect(() => {
+    paintRef.current?.();
+  }, [safeSelected]);
+
+  // ── Bấm 1 tên: đưa nó vào giữa bánh xe + kéo cột phải tới đúng media ──
+  // `loopIdx` là vị trí của ĐÚNG dòng vừa bấm trong danh sách đã nhân bản, nên bánh xe
+  // đi quãng ngắn nhất tới chính dòng đó chứ không nhảy sang bản sao khác.
+  const handleSelect = useCallback((idx: number, loopIdx: number) => {
+    setSelected(idx);
+
+    const wheel = wheelRef.current;
+    if (wheel) {
+      cancelWheelTween.current();
+      suppressWrap.current = true;
+
+      let target = loopIdx * ROW_HEIGHT + ROW_HEIGHT / 2 - wheel.clientHeight / 2;
+      // Bấm vào bản sao sát mép thì đích tính ra có thể âm (hoặc quá đáy); trình duyệt
+      // kẹp lại và tên bị canh giữa hụt. Dịch đích đi từng vòng danh sách cho vào dải
+      // hợp lệ — cùng pha nên vẫn đúng tên đó, chỉ là bản sao khác.
+      const maxScroll = wheel.scrollHeight - wheel.clientHeight;
+      const lo = loopHeight;
+      const hi = maxScroll - loopHeight;
+      if (hi > lo) {
+        while (target < lo) target += loopHeight;
+        while (target > hi) target -= loopHeight;
+      } else {
+        target = Math.max(0, Math.min(target, maxScroll));
+      }
+
+      const stop = tweenScrollTop(wheel, target);
+      cancelWheelTween.current = () => {
+        stop();
+        suppressWrap.current = false;
+      };
+      // Hết tween mới cho phép nhảy vòng trở lại, rồi chuẩn hoá lại vị trí một lần.
+      window.setTimeout(() => {
+        suppressWrap.current = false;
+        wrapRef.current?.();
+      }, WHEEL_TWEEN_MS);
+    }
+
+    const media = mediaRef.current;
+    const mediaTarget = media?.children[idx] as HTMLElement | undefined;
+    if (media && mediaTarget) {
+      cancelMediaTween.current();
+      // Lấy offsetTop thật của ảnh thay vì nhân idx với chiều cao khung — đúng kể cả
+      // khi ảnh không còn cao bằng đúng một khung.
+      cancelMediaTween.current = tweenScrollTop(media, mediaTarget.offsetTop);
+    }
+  }, [loopHeight]);
+
+  useEffect(
+    () => () => {
+      cancelMediaTween.current();
+      cancelWheelTween.current();
+    },
+    [],
+  );
+
+  // Danh sách đã nhân bản cho vòng lặp; giữ lại index thật để biết dòng nào được chọn.
+  const years = projects.map((p) => p.year);
+
+  const loopRows = Array.from({ length: loopCopies(count) * count }, (_, i) => i % count);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-black text-white"
-      style={{ height: `${(projects.length + 1) * 100}vh` }}
-    >
-      <div className="sticky top-0 h-screen overflow-hidden z-40" style={{ paddingTop: "80px" }}>
+    <>
+      {/* Mobile: danh sách dọc, hiện hết, cuộn như trang bình thường (mẫu Hall of Fame).
+          Đổi nhánh bằng CSS thuần — KHÔNG đo `window.innerWidth` bằng state, vì state đó
+          khởi tạo sai ở lần render đầu (đã dính đúng lỗi này ở trang /warrenty). */}
+      <ShowcaseMobileList projects={projects} />
 
-        {/* Background Glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-white/5 blur-[120px]" />
-        </div>
+      {/* Desktop: hai cột cuộn độc lập + bánh xe. */}
+      <section className="relative bg-black text-white h-screen overflow-hidden hidden md:block">
+      <div className="h-full overflow-hidden z-40" style={{ paddingTop: "80px" }}>
 
         {/* Noise */}
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
 
-        <div className="h-full flex flex-col md:flex-row">
+        <div className="h-full flex flex-row">
 
-          {/* ═══ LEFT / TOP — Text + Year ═══ */}
-          <div className="w-full md:w-[62%] h-[20%] md:h-full relative flex items-center justify-center md:justify-start px-6 md:px-0" style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}>
-
-            {/* Timeline bar — desktop only */}
-            <div className="hidden md:block absolute left-28 top-1/2 -translate-y-1/2">
+          {/* ═══ TRÁI — bánh xe tên ═══ */}
+          <div
+            className="w-[62%] h-full relative flex items-center justify-start"
+            style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}
+          >
+            {/* Thanh chỉ vị trí — chấm bám vị trí cuộn của bánh xe (xem `paint`),
+                chạy vòng theo danh sách vì bánh xe lặp vô tận. */}
+            <div className="absolute left-28 top-1/2 -translate-y-1/2">
               <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
-                <motion.div
-                  style={{ y: timelineY, height: `${TIMELINE_DOT_HEIGHT}px` }}
-                  className="absolute left-1/2 -translate-x-1/2 w-[5px] bg-white rounded-full"
+                <div
+                  ref={dotRef}
+                  className="absolute left-1/2 w-[5px] bg-white rounded-full"
+                  style={{ height: `${TIMELINE_DOT_HEIGHT}px`, marginLeft: "-2.5px" }}
                 />
               </div>
             </div>
 
-            {/* Active title — mobile: centered large text */}
-            <div className="md:hidden text-center">
-              <AnimatePresence mode="popLayout">
-                <motion.div
-                  key={`mobile-title-${active}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(20px, 5vw, 32px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: "white" }}>
-                    {project.title}
-                  </h1>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: "4px", letterSpacing: "0.15em" }}>
-                    {yearText} {project.year}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Text wheel — desktop only */}
-            {/* Bề rộng khung có giới hạn để các dòng canh giữa quanh trục x≈370 như Figma,
-                thay vì canh trái theo cả cột. */}
-            <div className="hidden md:block" style={{ width: "100%", paddingLeft: "100px" }}>
+            <div style={{ width: "100%", paddingLeft: "100px" }}>
               <div
-                style={{
-                  overflow: "hidden",
-                  height: `${WHEEL_HEIGHT}px`,
-                  width: "clamp(340px, 29vw, 440px)",
-                  position: "relative",
-                  paddingLeft: "20px",
-                }}
+                ref={wheelRef}
+                className="showcase-wheel"
+                style={{ height: `${WHEEL_HEIGHT}px`, width: "clamp(340px, 29vw, 440px)", paddingLeft: "20px" }}
               >
-                <motion.div
-                  animate={{ y: wheelOffset }}
-                  transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  style={{ width: "100%" }}
-                >
-                  {renderSubtitleList()}
-                </motion.div>
+                <div ref={trackRef} className="showcase-wheel-track">
+                  {loopRows.map((realIdx, i) => (
+                    <WheelRow
+                      key={i}
+                      label={projects[realIdx].title}
+                      isSelected={realIdx === safeSelected}
+                      onSelect={() => handleSelect(realIdx, i)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* YEAR block — desktop only */}
-            <div className="hidden md:block absolute right-[60px] top-1/2 -translate-y-1/2">
-              <AnimatePresence mode="popLayout">
-                <motion.div
-                  key={`year-${active}`}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)" }}>
-                    {yearText}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
-                    {project.year}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.6)", marginTop: "44px" }}>
-                    {yearText}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}>
-                    {project.year}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+            {/* ═══ GIỮA — YEAR ═══ */}
+            {/* Chữ YEAR đứng yên; chỉ số năm chạy dọc như cột ảnh bên phải. */}
+            <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
+              <div style={yearLabelStyle}>{yearText}</div>
+              <YearReel years={years} index={safeSelected} />
+              <div style={{ ...yearLabelStyle, marginTop: "44px" }}>{yearText}</div>
+              <YearReel years={years} index={safeSelected} />
             </div>
           </div>
 
-          {/* ═══ RIGHT / BOTTOM — Product Image ═══ */}
-          {/* Desktop: tách khỏi luồng flex và neo theo mép khung sticky, để cột ảnh thoát
-              padding-top 80px và chạy hết chiều cao màn hình, dính sát mép phải như Figma.
-              (Không dùng margin âm — reset `* { margin: 0 }` trong globals.css nằm ngoài
-              layer nên đè hết utility margin của Tailwind.) */}
-          <div className="w-full md:w-[38%] h-[80%] md:h-full relative md:absolute md:inset-y-0 md:right-0 flex items-center justify-center md:justify-end">
-            {/* Glow */}
-            <div className="absolute w-[400px] h-[400px] rounded-full bg-white/5 blur-[80px] pointer-events-none" />
-
-            <AnimatePresence mode="popLayout">
-              <motion.div
-                key={`img-${active}`}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative w-full h-full flex items-center justify-center md:justify-end"
-              >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={800}
-                  priority
-                  className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none max-w-[90%] max-h-[90%] md:max-w-full md:max-h-[95%]"
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Lens flare */}
-            <div className="absolute bottom-[100px] w-[120px] h-[120px] bg-white/15 blur-[50px] rounded-full pointer-events-none" />
-
-
+          {/* ═══ PHẢI — chồng ảnh, cuộn riêng ═══ */}
+          <div className="w-[38%] h-full absolute inset-y-0 right-0">
+            <div ref={mediaRef} className="showcase-media-scroller">
+              {projects.map((p, i) => (
+                <div key={i} className="showcase-media-item">
+                  <SlideMedia slide={p} priority={i === 0} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+      </section>
+    </>
+  );
+}
+
+/**
+ * Nhánh mobile: mỗi slide là một khối xếp dọc (tên → PIECE/YEAR → media), cuộn bằng
+ * chính thanh cuộn của trang. Không sticky, không bánh xe, không vùng cuộn lồng nhau —
+ * trên màn hình hẹp mấy thứ đó chỉ gây khó chịu.
+ */
+function ShowcaseMobileList({ projects }: { projects: Slide[] }) {
+  const [active, setActive] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+  const current = projects[Math.min(active, projects.length - 1)];
+
+  // Ảnh nào đang xem thì khối tên ghim ở trên hiển thị tên ảnh đó.
+  //
+  // Thu `root` thành đúng MỘT đường ngang giữa phần nhìn thấy (dưới header), rồi hỏi
+  // ảnh nào cắt đường đó. Cách này luôn cho đúng một đáp án. Bản trước dùng ngưỡng tỉ lệ
+  // hiển thị nên có đoạn hai ảnh cùng ló mà không ảnh nào vượt ngưỡng ⇒ tên đứng im, đo
+  // được lệch ở y=800 và y=1600.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    const attach = () => {
+      observer?.disconnect();
+      const lineY = MOBILE_HEAD_OFFSET + (window.innerHeight - MOBILE_HEAD_OFFSET) / 2;
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
+          }
+        },
+        { rootMargin: `-${lineY}px 0px -${Math.max(window.innerHeight - lineY - 1, 0)}px 0px`, threshold: 0 },
+      );
+      for (const child of Array.from(list.children)) observer.observe(child);
+    };
+
+    attach();
+    window.addEventListener("resize", attach);
+    return () => {
+      window.removeEventListener("resize", attach);
+      observer?.disconnect();
+    };
+  }, [projects.length]);
+
+  return (
+    <section className="md:hidden bg-black text-white" style={{ paddingBottom: "24px" }}>
+      {/* Khối tên ghim lại dưới header; nội dung cuộn qua bên dưới nó. */}
+      <div
+        className="sticky z-30 bg-black"
+        style={{ top: `${MOBILE_HEAD_OFFSET}px`, paddingTop: "16px", paddingLeft: "16px", paddingRight: "16px", paddingBottom: "12px" }}
+      >
+        <h2
+          className="text-center"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(18px, 6vw, 28px)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
+          <span style={{ position: "relative", display: "inline-block", padding: "0 16px" }}>
+            <SelectionCorners />
+            {current.title}
+          </span>
+        </h2>
+
+        {/* Hàng PIECE / YEAR giống bố cục mẫu khách gửi */}
+        <div
+          className="flex items-baseline justify-between"
+          style={{ paddingTop: "18px", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "8px" }}
+        >
+          <span style={labelStyle}>PIECE</span>
+          <span style={labelStyle}>{current.yearLabel || DEFAULT_YEAR_LABEL}</span>
+        </div>
+        <div className="flex items-baseline justify-between" style={{ paddingTop: "8px" }}>
+          <span style={valueStyle}>{current.subtitle}</span>
+          <span style={valueStyle}>{current.year}</span>
+        </div>
+      </div>
+
+      <div ref={listRef}>
+        {projects.map((p, i) => (
+          <div
+            key={i}
+            data-index={i}
+            className="w-full flex items-center justify-center overflow-hidden"
+            style={{ paddingLeft: "16px", paddingRight: "16px", paddingTop: "20px" }}
+          >
+            <SlideMedia slide={p} priority={i === 0} />
+          </div>
+        ))}
+      </div>
     </section>
+  );
+}
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "10px",
+  letterSpacing: "0.22em",
+  textTransform: "uppercase",
+  color: "rgba(255,255,255,0.45)",
+};
+
+const valueStyle: React.CSSProperties = {
+  fontFamily: "var(--font-montserrat)",
+  fontSize: "13px",
+  textTransform: "uppercase",
+  color: "rgba(255,255,255,0.9)",
+};
+
+const yearLabelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "24px",
+  fontStyle: "italic",
+  fontWeight: 400,
+  color: "rgba(255,255,255,0.6)",
+};
+
+/** Chiều cao một dòng số năm — cũng là chiều cao khung nhìn của cuộn năm. */
+const YEAR_LINE_HEIGHT = 44;
+
+/**
+ * Số năm dạng "cuộn": xếp dọc tất cả năm rồi trượt tới năm đang chọn, cùng kiểu chuyển
+ * động với cột ảnh bên phải. Khung `overflow: hidden` nên người dùng không tự cuộn được
+ * — chỉ đổi khi bấm chọn.
+ */
+function YearReel({ years, index }: { years: string[]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const cancel = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    cancel.current();
+    cancel.current = tweenScrollTop(el, index * YEAR_LINE_HEIGHT);
+    return () => cancel.current();
+  }, [index]);
+
+  return (
+    <div ref={ref} className="showcase-year-reel" style={{ height: `${YEAR_LINE_HEIGHT}px` }}>
+      {years.map((y, i) => (
+        <div
+          key={i}
+          className="flex items-center"
+          style={{ height: `${YEAR_LINE_HEIGHT}px`, fontFamily: "var(--font-display)", fontSize: "34px", fontWeight: 700 }}
+        >
+          {y}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Media của một slide: ảnh, video đã upload, hoặc link YouTube/Google Drive.
+ *
+ * `mediaType` là nguồn tin chính; slide lưu trước khi có field này thì đoán theo đuôi
+ * file / dạng link, nên dữ liệu cũ không cần sửa tay vẫn hiển thị đúng.
+ */
+function SlideMedia({ slide, priority }: { slide: Slide; priority: boolean }) {
+  const src = slide.image;
+  if (!src) return null;
+
+  const isVideo = slide.mediaType ? slide.mediaType === "video" : looksLikeVideo(src);
+  const mediaClass =
+    "object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none max-w-[90%] max-h-[90%] md:max-w-full md:max-h-[95%]";
+
+  if (!isVideo) {
+    return (
+      <Image
+        src={src}
+        alt={slide.title}
+        width={600}
+        height={800}
+        priority={priority}
+        sizes="(max-width: 768px) 100vw, 38vw"
+        className={mediaClass}
+      />
+    );
+  }
+
+  const youtubeId = getYouTubeId(src);
+  if (youtubeId) {
+    return (
+      <iframe
+        // `mute=1` bắt buộc, nếu không trình duyệt chặn autoplay.
+        src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&rel=0&modestbranding=1&playsinline=1`}
+        title={slide.title}
+        allow="autoplay; encrypted-media"
+        className="w-full aspect-video border-0 pointer-events-none"
+      />
+    );
+  }
+
+  return (
+    <video
+      src={getGoogleDriveDirectLink(src) ?? src}
+      // muted + playsInline là điều kiện để autoplay không bị chặn.
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className={mediaClass}
+    />
+  );
+}
+
+/** Một dòng trong bánh xe. Dấu 4 góc bám đúng dòng đã bấm, trôi theo bánh xe. */
+function WheelRow({
+  label,
+  isSelected,
+  onSelect,
+}: {
+  label: string;
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <div
+      className="showcase-row"
+      data-selected={isSelected ? "1" : "0"}
+      style={{ height: `${ROW_HEIGHT}px` }}
+      onClick={onSelect}
+    >
+      <span className="showcase-row-inner">
+        <span
+          style={{
+            position: "relative",
+            display: "inline-block",
+            padding: "0 18px",
+            fontFamily: "var(--font-display)",
+            textTransform: "uppercase",
+            letterSpacing: isSelected ? "0.05em" : "0.16em",
+            fontSize: "clamp(15px, 2.05vw, 30px)",
+            lineHeight: 1.15,
+            color: isSelected ? "#fff" : "rgba(255,255,255,0.75)",
+          }}
+        >
+          {isSelected && <SelectionCorners />}
+          {label}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+/** 4 dấu góc quanh dòng đang chọn (mẫu Hall of Fame). */
+function SelectionCorners() {
+  const bar = "rgba(255,255,255,0.55)";
+  const size = "0.34em";
+  const thickness = "1.5px";
+  const corner = (v: "top" | "bottom", h: "left" | "right") => ({
+    position: "absolute" as const,
+    [v]: "-0.22em",
+    [h]: 0,
+    width: size,
+    height: size,
+    [`border${v === "top" ? "Top" : "Bottom"}`]: `${thickness} solid ${bar}`,
+    [`border${h === "left" ? "Left" : "Right"}`]: `${thickness} solid ${bar}`,
+    pointerEvents: "none" as const,
+  });
+
+  return (
+    <>
+      <span style={corner("top", "left")} />
+      <span style={corner("top", "right")} />
+      <span style={corner("bottom", "left")} />
+      <span style={corner("bottom", "right")} />
+    </>
   );
 }
