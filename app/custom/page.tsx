@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 import CustomShowcase from "@/components/custom/CustomShowcase";
 import HowItWorks from "@/components/custom/HowItWorks";
 import CustomForm from "@/components/custom/CustomForm";
@@ -19,7 +18,6 @@ export default function CustomPage() {
 
   return (
     <>
-      <CustomCursor />
 
       {/* ── Showcase Section (scroll-driven slider) ── */}
       <CustomShowcase slides={slides} />

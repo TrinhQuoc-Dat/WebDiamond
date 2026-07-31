@@ -1,6 +1,5 @@
 "use client";
 
-import CustomCursor from "@/components/CustomCursor";
 import ShopProductSection from "@/components/ShopProductSection";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import { usePublicProducts } from "@/hooks/usePublicProducts";
@@ -17,7 +16,6 @@ export default function CategoryPage({ category, label }: CategoryPageProps) {
 
   return (
     <>
-      <CustomCursor />
       <main style={{margin:"0 6%"}}>
         <div className="w-full bg-black text-white min-h-screen" style={{ paddingTop: "120px", paddingBottom: "90px" }}>
           <ShopProductSection products={items} title={category} category={category} hideMoreButton={true} />
