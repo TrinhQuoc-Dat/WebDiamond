@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsIn, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class SlideDto {
   @IsOptional()
@@ -21,6 +21,10 @@ export class SlideDto {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsIn(['image', 'video'])
+  mediaType?: 'image' | 'video';
 }
 
 export class UpdateCustomPageDto {

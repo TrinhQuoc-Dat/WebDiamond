@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Slide, DEFAULT_SHOWCASE, DEFAULT_YEAR_LABEL } from "@/utils/customPage";
+import { getGoogleDriveDirectLink, getYouTubeId, looksLikeVideo } from "@/utils/media";
 
 import "./showcase.css";
 
@@ -255,15 +256,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             <div ref={mediaRef} className="showcase-media-scroller">
               {projects.map((p, i) => (
                 <div key={i} className="showcase-media-item">
-                  <Image
-                    src={p.image}
-                    alt={p.title}
-                    width={600}
-                    height={800}
-                    priority={i === 0}
-                    sizes="(max-width: 768px) 100vw, 38vw"
-                    className="object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none max-w-[90%] max-h-[90%] md:max-w-full md:max-h-[95%]"
-                  />
+                  <SlideMedia slide={p} priority={i === 0} />
                 </div>
               ))}
             </div>
@@ -271,6 +264,61 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Media của một slide: ảnh, video đã upload, hoặc link YouTube/Google Drive.
+ *
+ * `mediaType` là nguồn tin chính; slide lưu trước khi có field này thì đoán theo đuôi
+ * file / dạng link, nên dữ liệu cũ không cần sửa tay vẫn hiển thị đúng.
+ */
+function SlideMedia({ slide, priority }: { slide: Slide; priority: boolean }) {
+  const src = slide.image;
+  if (!src) return null;
+
+  const isVideo = slide.mediaType ? slide.mediaType === "video" : looksLikeVideo(src);
+  const mediaClass =
+    "object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.06)] select-none max-w-[90%] max-h-[90%] md:max-w-full md:max-h-[95%]";
+
+  if (!isVideo) {
+    return (
+      <Image
+        src={src}
+        alt={slide.title}
+        width={600}
+        height={800}
+        priority={priority}
+        sizes="(max-width: 768px) 100vw, 38vw"
+        className={mediaClass}
+      />
+    );
+  }
+
+  const youtubeId = getYouTubeId(src);
+  if (youtubeId) {
+    return (
+      <iframe
+        // `mute=1` bắt buộc, nếu không trình duyệt chặn autoplay.
+        src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&rel=0&modestbranding=1&playsinline=1`}
+        title={slide.title}
+        allow="autoplay; encrypted-media"
+        className="w-full aspect-video border-0 pointer-events-none"
+      />
+    );
+  }
+
+  return (
+    <video
+      src={getGoogleDriveDirectLink(src) ?? src}
+      // muted + playsInline là điều kiện để autoplay không bị chặn.
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className={mediaClass}
+    />
   );
 }
 

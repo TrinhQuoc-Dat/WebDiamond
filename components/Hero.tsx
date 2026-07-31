@@ -7,21 +7,7 @@ import { useRouter } from "next/navigation";
 import { apiFetch } from "@/utils/api";
 import { triggerPageTransition } from "./LoadingOverlay";
 
-// Parse Google Drive share link → direct download URL
-const getGoogleDriveDirectLink = (url: string): string | null => {
-  const match = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
-  return match?.[1]
-    ? `https://docs.google.com/uc?export=download&id=${match[1]}`
-    : null;
-};
-
-// Parse YouTube share/watch link → video ID
-const getYouTubeId = (url: string): string | null => {
-  const match = url.match(
-    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]{11})/
-  );
-  return match?.[1] ?? null;
-};
+import { getGoogleDriveDirectLink, getYouTubeId } from "@/utils/media";
 
 type BannerData = {
   title: string;

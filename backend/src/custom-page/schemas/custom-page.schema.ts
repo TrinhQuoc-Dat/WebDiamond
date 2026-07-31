@@ -11,7 +11,11 @@ export class Slide {
   @Prop({ default: '' }) year: string;
   // Nhãn chữ hiển thị phía trên số năm, riêng từng slide (mặc định "YEAR").
   @Prop({ default: 'YEAR' }) yearLabel: string;
+  // URL ảnh, file video đã upload, hoặc link YouTube/Google Drive.
   @Prop({ default: '' }) image: string;
+  // Loại media của khối bên phải trang /custom. Slide lưu trước khi có field này sẽ
+  // nhận 'image' theo default, đúng với hành vi cũ.
+  @Prop({ default: 'image', enum: ['image', 'video'] }) mediaType: string;
 }
 export const SlideSchema = SchemaFactory.createForClass(Slide);
 
