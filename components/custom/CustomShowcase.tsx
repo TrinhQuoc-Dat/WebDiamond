@@ -15,6 +15,18 @@ const TIMELINE_HEIGHT = 420;
 const TIMELINE_DOT_HEIGHT = 72;
 
 /**
+ * Quãng cuộn dành cho mỗi slide, tính theo chiều cao màn hình.
+ *
+ * Chiều cao section = `n * VIEWPORTS_PER_SLIDE + 1` màn hình; trừ đi 1 màn hình bị khối
+ * sticky chiếm, phần cuộn được chia cho `n - 1` bước. Trước đây hệ số là 1.0 ⇒ phải cuộn
+ * hơn một màn hình (1050px ở viewport 900) mới sang được slide kế, quá ì.
+ */
+const VIEWPORTS_PER_SLIDE = 0.5;
+
+/** Thời gian bánh xe chữ trượt sang dòng mới — khớp với nhịp cuộn đã rút ngắn. */
+const WHEEL_TRANSITION = { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] } as const;
+
+/**
  * Chiều cao mỗi dòng trong "bánh xe" chữ, thu dần theo khoảng cách tới dòng đang chọn.
  * Nhịp này khớp Figma và làm cả 7 dòng vừa khít khung 420px (tổng 338px),
  * thay vì nhịp đều 72px cũ chỉ hiện được 5 dòng.
@@ -118,7 +130,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
             className="cursor-pointer"
             onClick={() => handleClick(i)}
             animate={{ opacity, color }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={WHEEL_TRANSITION}
             style={{
               fontFamily: "var(--font-display)",
               textTransform: "uppercase",
@@ -148,7 +160,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
     <section
       ref={sectionRef}
       className="relative bg-black text-white"
-      style={{ height: `${(projects.length + 1) * 100}vh` }}
+      style={{ height: `${(projects.length * VIEWPORTS_PER_SLIDE + 1) * 100}vh` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden z-40" style={{ paddingTop: "80px" }}>
 
@@ -210,7 +222,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
               >
                 <motion.div
                   animate={{ y: wheelOffset }}
-                  transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={WHEEL_TRANSITION}
                   style={{ width: "100%" }}
                 >
                   {renderSubtitleList()}
