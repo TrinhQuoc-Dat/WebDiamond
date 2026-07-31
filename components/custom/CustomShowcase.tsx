@@ -96,7 +96,18 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       const half = wheel.clientHeight / 2;
       const center = wheel.scrollTop + half;
       const rows = track.children as HTMLCollectionOf<HTMLElement>;
-      for (let i = 0; i < rows.length; i++) {
+
+      // Chỉ tính cho các dòng đang trong khung nhìn. Danh sách nhân bản có ~35 dòng
+      // nhưng chỉ ~11 dòng nhìn thấy; ghi style cho 24 dòng bị `overflow:hidden` cắt
+      // mất là công toi. Dòng ngoài khung giữ nguyên style cũ, khi trôi vào lại thì
+      // vòng lặp này đã bao gồm nó rồi.
+      const firstVisible = Math.max(0, Math.floor(wheel.scrollTop / ROW_HEIGHT) - 1);
+      const lastVisible = Math.min(
+        rows.length - 1,
+        Math.ceil((wheel.scrollTop + wheel.clientHeight) / ROW_HEIGHT) + 1,
+      );
+
+      for (let i = firstVisible; i <= lastVisible; i++) {
         const rowCenter = i * ROW_HEIGHT + ROW_HEIGHT / 2;
         // -1 (mép trên) … 0 (tâm) … 1 (mép dưới)
         const d = Math.max(-1.4, Math.min(1.4, (rowCenter - center) / half));

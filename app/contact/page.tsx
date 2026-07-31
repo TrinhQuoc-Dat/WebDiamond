@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 import { apiFetch } from "@/utils/api";
 import { motion } from "framer-motion";
 
@@ -53,7 +52,6 @@ export default function ContactPage() {
 
   return (
     <>
-      <CustomCursor />
       <main
         className="w-full bg-black text-white min-h-screen relative overflow-hidden flex flex-col items-center justify-center"
         style={{

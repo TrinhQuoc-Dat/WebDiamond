@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
-import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
 import ProductInfo from "@/components/ProductInfo";
 import ProductImageGallery from "@/components/ProductImageGallery";
@@ -87,7 +86,6 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
   if (!product || product.hidden) {
     return (
       <>
-        <CustomCursor />
         <main className="w-full bg-black text-white min-h-screen flex flex-col items-center justify-center p-2 text-center">
           <h1 className="text-xl font-bold tracking-[0.2em] uppercase text-[#D4AF37] mb-2">
             Sản phẩm không khả dụng
@@ -122,7 +120,6 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           }
         }
       `}</style>
-      <CustomCursor />
 
       {/* Main container with starry/galaxy space background */}
       <main
