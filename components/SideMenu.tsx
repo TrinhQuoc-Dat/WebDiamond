@@ -12,7 +12,7 @@ const menuItems = [
   { label: "Earings", href: "/shop/earings" },
   { label: "Custom", href: "/custom" },
   { label: "Contact", href: "/contact" },
-  { label: "Warranty", href: "/warrenty" },
+  { label: "Warranty", href: "/warranty" },
 ];
 
 const container = {
