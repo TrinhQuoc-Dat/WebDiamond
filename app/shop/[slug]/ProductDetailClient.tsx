@@ -119,17 +119,25 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
             padding-right: 10%;
           }
         }
+          .product-detail {
+          padding-top: 80px;
+          padding-bottom: 100px;
+        }
+
+        @media (min-width: 1024px) {
+          .product-detail {
+            padding-top: 120px;
+          }
+        }
       `}</style>
 
       {/* Main container with starry/galaxy space background */}
       <main
-        className="w-full bg-black text-white min-h-screen relative overflow-hidden"
+        className="w-full bg-black text-white min-h-screen relative overflow-hidden product-detail"
         style={{
-          paddingTop: "120px",
           backgroundImage: "url('/product-detail-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "top center",
-          paddingBottom: "100px",
         }}
       >
         <div className="w-full flex flex-col items-center pb-40 md:pb-[150px] custom-padding">

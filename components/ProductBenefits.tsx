@@ -20,7 +20,7 @@ export default function ProductBenefits() {
           <div className="text-white/60 shrink-0">
             <img src="/image_benefit/image 3.svg" alt="Fill out the form below to share your ideas and requirements for your custom jewelry piece. We will then look into determining the best solution and providing a quote." />
           </div>
-          <p className="text-[12px] md:text-[18px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
+          <p className="text-[12px] md:text-[18px] text-white/80 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
             Fill out the form below to share your ideas and requirements for your custom jewelry piece. We will then look into determining the best solution and providing a quote.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function ProductBenefits() {
           <div className="text-white/60 shrink-0">
             <img src="/image_benefit/image 5.svg" alt="We will provide you with a personalized quote for your custom piece. If you are ready to proceed, we require a 50% deposit to begin work on your custom jewelry." />
           </div>
-          <p className="text-[12px] md:text-[18px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
+          <p className="text-[12px] md:text-[18px] text-white/80 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
             We will provide you with a personalized quote for your custom piece. If you are ready to proceed, we require a 50% deposit to begin work on your custom jewelry.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function ProductBenefits() {
           <div className="text-white/60 shrink-0">
             <img src="/image_benefit/image 4.svg" alt="We will create design concepts for your custom piece, and once you are satisfied, we will begin craftsmanship on your custom jewelry piece." />
           </div>
-          <p className="text-[12px] md:text-[18px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
+          <p className="text-[12px] md:text-[18px] text-white/80 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
             We will create design concepts for your custom piece, and once you are satisfied, we will begin craftsmanship on your custom jewelry piece.
           </p>
         </div>
@@ -50,7 +50,7 @@ export default function ProductBenefits() {
           <div className="text-white/60 shrink-0">
             <img src="/image_benefit/image 6.svg" alt="Once final payment is received, your completed final piece will be ready for collection or delivery." />
           </div>
-          <p className="text-[12px] md:text-[18px] text-white/40 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
+          <p className="text-[12px] md:text-[18px] text-white/80 leading-relaxed font-light tracking-wide" style={{ fontFamily: "var(--font-montserrat)" }}>
             Once final payment is received, your completed final piece will be ready for collection or delivery.
           </p>
         </div>

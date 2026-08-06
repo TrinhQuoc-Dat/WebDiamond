@@ -9,11 +9,11 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="lg:col-span-4 flex flex-col gap-6 order-3 lg:order-none">
+    <div className="lg:col-span-4 flex flex-col gap-6 order-2 lg:order-none">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
       <motion.h1
-        className="hidden lg:block text-[20px] md:text-[24px] font-black uppercase leading-tight tracking-[0.1em]"
+        className="block text-[26px] md:text-[24px] font-black uppercase leading-tight tracking-[0.1em]"
         style={{ fontFamily: "var(--font-display)" }}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -37,7 +37,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </p>
       
       <a href="https://www.instagram.com/direct/t/17844706752215602/" target="_blank" rel="noreferrer">
-        <p className="text-[16px] md:text-[16px] leading-relaxed uppercase pt-4 mt-2" style={{ fontFamily: "var(--font-display)", fontWeight: "bold" }}>
+        <p className="text-[12px] md:text-[16px] leading-relaxed uppercase pt-4 mt-2" style={{ fontFamily: "var(--font-display)", fontWeight: "bold" }}>
           (WE CAN CUSTOM YOUR IDEAS)
         </p>
       </a>

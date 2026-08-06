@@ -27,25 +27,33 @@ export default function ProductOrderSelector({
 }: ProductOrderSelectorProps) {
 
   const [openGuide, setOpenGuide] = useState(false);
+  const [selectedStone, setSelectedStone] = useState<"CZ" | "MOIS">("CZ");
   return (
-    <div className="lg:col-span-4 flex flex-col gap-2 lg:pl-2 order-2 lg:order-none w-full relative h-full">
+    <div className="lg:col-span-4 flex flex-col gap-2 lg:pl-2 order-3 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
-      {/* Mobile-only info block */}
-      <div className="lg:hidden flex flex-col gap-3 mb-2">
-        <h1
-          className="text-[22px] sm:text-[16px] font-black uppercase leading-none tracking-[0.1em] text-white"
-          style={{ fontFamily: "var(--font-display)", lineHeight: "1.5em", padding: "0px 0px 0px 0px" }}
+      <div className="flex items-center gap-4">
+        <span
+          className="text-[22px] font-bold text-white"
+          style={{ fontFamily: "var(--font-display)" }}
         >
-          {product.name}
-        </h1>
-      </div>
-
-
-      <div className="">
-        <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
-          Stone: CZ, MOIS
+          Stone
         </span>
+
+        <div className="flex gap-2">
+          {["CZ", "MOIS"].map((stone) => (
+            <button
+              key={stone}
+              onClick={() => setSelectedStone(stone as "CZ" | "MOIS")}
+              className={`px-4 py-2 border transition-all duration-300 font-bold ${selectedStone === stone
+                ? "bg-white text-black border-white"
+                : "bg-transparent text-white border-zinc-600 hover:border-white"
+                }`}
+            >
+              {stone}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Colour Select */}
