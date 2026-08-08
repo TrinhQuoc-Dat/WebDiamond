@@ -43,7 +43,7 @@ const MOBILE_HEAD_OFFSET = 60;
 function tweenScrollTop(el: HTMLElement, to: number, duration = WHEEL_TWEEN_MS): () => void {
   const from = el.scrollTop;
   const delta = to - from;
-  if (Math.abs(delta) < 1) return () => {};
+  if (Math.abs(delta) < 1) return () => { };
 
   const start = performance.now();
   let raf = 0;
@@ -72,12 +72,17 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
-  const cancelMediaTween = useRef<() => void>(() => {});
+  const cancelMediaTween = useRef<() => void>(() => { });
   const paintRef = useRef<(() => void) | null>(null);
   const dotRef = useRef<HTMLDivElement>(null);
-  const cancelWheelTween = useRef<() => void>(() => {});
+  const cancelWheelTween = useRef<() => void>(() => { });
   const wrapRef = useRef<(() => void) | null>(null);
   const suppressWrap = useRef(false);
+  /** Ref để scroll handler đọc được selected hiện tại mà không re-create effect. */
+  const selectedRef = useRef(0);
+  selectedRef.current = safeSelected;
+  /** Timer snap-back: cuộn xong 600ms mà không bấm thì tự trở về phần tử đang chọn. */
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | 0>(0);
 
   const loopHeight = count * ROW_HEIGHT;
 
@@ -146,10 +151,51 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       }
     };
 
+    // Sau khi user dừng cuộn 600ms mà không bấm chọn, tự tween về phần tử đang chọn.
+    const SNAP_DELAY = 600;
+    const snapToSelected = () => {
+      const sel = selectedRef.current;
+      const center = wheel.scrollTop + wheel.clientHeight / 2;
+      // Tìm bản sao gần nhất của phần tử đang chọn.
+      const copies = loopCopies(count);
+      let bestTarget = 0;
+      let bestDist = Infinity;
+      for (let c = 0; c < copies; c++) {
+        const rowIdx = c * count + sel;
+        const rowCenter = rowIdx * ROW_HEIGHT + ROW_HEIGHT / 2;
+        const t = rowCenter - wheel.clientHeight / 2;
+        const dist = Math.abs(t - wheel.scrollTop);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestTarget = t;
+        }
+      }
+      const maxScroll = wheel.scrollHeight - wheel.clientHeight;
+      bestTarget = Math.max(0, Math.min(bestTarget, maxScroll));
+      if (Math.abs(bestTarget - wheel.scrollTop) < 1) return; // đã đúng giữa rồi
+
+      suppressWrap.current = true;
+      cancelWheelTween.current();
+      const stop = tweenScrollTop(wheel, bestTarget);
+      cancelWheelTween.current = () => {
+        stop();
+        suppressWrap.current = false;
+      };
+      window.setTimeout(() => {
+        suppressWrap.current = false;
+        wrapRef.current?.();
+      }, WHEEL_TWEEN_MS);
+    };
+
     const onScroll = () => {
       // Trong lúc bấm-để-đưa-vào-giữa thì KHÔNG được nhảy vòng: tween đang chạy theo
       // giá trị scrollTop tuyệt đối, nhảy giữa chừng sẽ làm nó lệch đích.
-      if (!suppressWrap.current) wrap();
+      if (!suppressWrap.current) {
+        wrap();
+        // Reset idle timer — chỉ snap-back khi user cuộn TỰ DO (không phải tween click).
+        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = setTimeout(snapToSelected, SNAP_DELAY);
+      }
       if (!raf) raf = requestAnimationFrame(paint);
     };
 
@@ -161,6 +207,7 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       wheel.removeEventListener("scroll", onScroll);
       paintRef.current = null;
       if (raf) cancelAnimationFrame(raf);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, [loopHeight, count]);
 
@@ -173,6 +220,8 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
   // `loopIdx` là vị trí của ĐÚNG dòng vừa bấm trong danh sách đã nhân bản, nên bánh xe
   // đi quãng ngắn nhất tới chính dòng đó chứ không nhảy sang bản sao khác.
   const handleSelect = useCallback((idx: number, loopIdx: number) => {
+    // Huỷ idle snap-back — click đã tự center rồi, không cần snap.
+    if (idleTimerRef.current) { clearTimeout(idleTimerRef.current); idleTimerRef.current = 0; }
     setSelected(idx);
 
     const wheel = wheelRef.current;
@@ -181,18 +230,12 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
       suppressWrap.current = true;
 
       let target = loopIdx * ROW_HEIGHT + ROW_HEIGHT / 2 - wheel.clientHeight / 2;
-      // Bấm vào bản sao sát mép thì đích tính ra có thể âm (hoặc quá đáy); trình duyệt
-      // kẹp lại và tên bị canh giữa hụt. Dịch đích đi từng vòng danh sách cho vào dải
-      // hợp lệ — cùng pha nên vẫn đúng tên đó, chỉ là bản sao khác.
+      // Chỉ kẹp theo giới hạn thật của trình duyệt — KHÔNG kẹp theo [lo, hi] nữa.
+      // Trước đây kẹp về vùng an toàn của wrap khiến bánh xe cuộn ngược khi bấm tên
+      // nằm ngoài dải [lo, hi]. Vì suppressWrap = true suốt lúc tween, wrap không can
+      // thiệp; tween xong thì wrap() chuẩn hoá vị trí — cùng pha nên không giật.
       const maxScroll = wheel.scrollHeight - wheel.clientHeight;
-      const lo = loopHeight;
-      const hi = maxScroll - loopHeight;
-      if (hi > lo) {
-        while (target < lo) target += loopHeight;
-        while (target > hi) target -= loopHeight;
-      } else {
-        target = Math.max(0, Math.min(target, maxScroll));
-      }
+      target = Math.max(0, Math.min(target, maxScroll));
 
       const stop = tweenScrollTop(wheel, target);
       cancelWheelTween.current = () => {
@@ -238,71 +281,71 @@ export default function CustomShowcase({ slides }: CustomShowcaseProps) {
 
       {/* Desktop: hai cột cuộn độc lập + bánh xe. */}
       <section className="relative bg-black text-white h-screen overflow-hidden hidden md:block">
-      <div className="h-full overflow-hidden z-40" style={{ paddingTop: "80px" }}>
+        <div className="h-full overflow-hidden z-40" style={{ paddingTop: "80px" }}>
 
-        {/* Noise */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
+          {/* Noise */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
 
-        <div className="h-full flex flex-row">
+          <div className="h-full flex flex-row">
 
-          {/* ═══ TRÁI — bánh xe tên ═══ */}
-          <div
-            className="w-[62%] h-full relative flex items-center justify-start"
-            style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}
-          >
-            {/* Thanh chỉ vị trí — chấm bám vị trí cuộn của bánh xe (xem `paint`),
+            {/* ═══ TRÁI — bánh xe tên ═══ */}
+            <div
+              className="w-[62%] h-full relative flex items-center justify-start"
+              style={{ paddingLeft: "clamp(16px, 4vw, 320px)", paddingRight: "clamp(16px, 4vw, 80px)" }}
+            >
+              {/* Thanh chỉ vị trí — chấm bám vị trí cuộn của bánh xe (xem `paint`),
                 chạy vòng theo danh sách vì bánh xe lặp vô tận. */}
-            <div className="absolute left-28 top-1/2 -translate-y-1/2">
-              <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
+              <div className="absolute left-28 top-1/2 -translate-y-1/2">
+                <div className="relative w-px bg-white/20" style={{ height: `${TIMELINE_HEIGHT}px` }}>
+                  <div
+                    ref={dotRef}
+                    className="absolute left-1/2 w-[5px] bg-white rounded-full"
+                    style={{ height: `${TIMELINE_DOT_HEIGHT}px`, marginLeft: "-2.5px" }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ width: "100%", paddingLeft: "100px" }}>
                 <div
-                  ref={dotRef}
-                  className="absolute left-1/2 w-[5px] bg-white rounded-full"
-                  style={{ height: `${TIMELINE_DOT_HEIGHT}px`, marginLeft: "-2.5px" }}
-                />
+                  ref={wheelRef}
+                  className="showcase-wheel"
+                  style={{ height: `${WHEEL_HEIGHT}px`, width: "clamp(340px, 29vw, 440px)", paddingLeft: "20px" }}
+                >
+                  <div ref={trackRef} className="showcase-wheel-track">
+                    {loopRows.map((realIdx, i) => (
+                      <WheelRow
+                        key={i}
+                        label={projects[realIdx].title}
+                        isSelected={realIdx === safeSelected}
+                        onSelect={() => handleSelect(realIdx, i)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ═══ GIỮA — YEAR ═══ */}
+              {/* Chữ YEAR đứng yên; chỉ số năm chạy dọc như cột ảnh bên phải. */}
+              <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
+                <div style={yearLabelStyle}>{yearText}</div>
+                <YearReel years={years} index={safeSelected} />
+                <div style={{ ...yearLabelStyle, marginTop: "44px" }}>{yearText}</div>
+                <YearReel years={years} index={safeSelected} />
               </div>
             </div>
 
-            <div style={{ width: "100%", paddingLeft: "100px" }}>
-              <div
-                ref={wheelRef}
-                className="showcase-wheel"
-                style={{ height: `${WHEEL_HEIGHT}px`, width: "clamp(340px, 29vw, 440px)", paddingLeft: "20px" }}
-              >
-                <div ref={trackRef} className="showcase-wheel-track">
-                  {loopRows.map((realIdx, i) => (
-                    <WheelRow
-                      key={i}
-                      label={projects[realIdx].title}
-                      isSelected={realIdx === safeSelected}
-                      onSelect={() => handleSelect(realIdx, i)}
-                    />
-                  ))}
-                </div>
+            {/* ═══ PHẢI — chồng ảnh, cuộn riêng ═══ */}
+            <div className="w-[38%] h-full absolute inset-y-0 right-0">
+              <div ref={mediaRef} className="showcase-media-scroller">
+                {projects.map((p, i) => (
+                  <div key={i} className="showcase-media-item">
+                    <SlideMedia slide={p} priority={i === 0} />
+                  </div>
+                ))}
               </div>
-            </div>
-
-            {/* ═══ GIỮA — YEAR ═══ */}
-            {/* Chữ YEAR đứng yên; chỉ số năm chạy dọc như cột ảnh bên phải. */}
-            <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
-              <div style={yearLabelStyle}>{yearText}</div>
-              <YearReel years={years} index={safeSelected} />
-              <div style={{ ...yearLabelStyle, marginTop: "44px" }}>{yearText}</div>
-              <YearReel years={years} index={safeSelected} />
-            </div>
-          </div>
-
-          {/* ═══ PHẢI — chồng ảnh, cuộn riêng ═══ */}
-          <div className="w-[38%] h-full absolute inset-y-0 right-0">
-            <div ref={mediaRef} className="showcase-media-scroller">
-              {projects.map((p, i) => (
-                <div key={i} className="showcase-media-item">
-                  <SlideMedia slide={p} priority={i === 0} />
-                </div>
-              ))}
             </div>
           </div>
         </div>
-      </div>
       </section>
     </>
   );
@@ -438,7 +481,7 @@ const YEAR_LINE_HEIGHT = 44;
  */
 function YearReel({ years, index }: { years: string[]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const cancel = useRef<() => void>(() => {});
+  const cancel = useRef<() => void>(() => { });
 
   useEffect(() => {
     const el = ref.current;

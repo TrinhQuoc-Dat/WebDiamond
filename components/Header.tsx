@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
-        
+
         {/* ── LỚP NỀN (BACKGROUND LAYER) ── 
             Tách riêng lớp nền ra để maskImage và blur không ảnh hưởng tới dropdown menu 
         */}

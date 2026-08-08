@@ -31,12 +31,12 @@ export default function WarrantyPage() {
     <>
       <main className="bg-black text-white overflow-hidden"
         style={{ margin: "0 auto", marginTop: "68px", marginBottom: "0" }}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-800">
+        <div className="grid grid-cols-1 lg:grid-cols-3 border-x border-zinc-400">
 
           {/* Logo Section */}
           <RevealBlock
             order={0}
-            className="relative flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 p-8"
+            className="relative flex flex-col warranty-row-divider lg:border-r border-zinc-400 p-8"
           >
             <div className="flex items-center justify-center h-full min-h-[200px]">
               <Image
@@ -80,27 +80,27 @@ export default function WarrantyPage() {
           {/* Warranty */}
           <RevealBlock
             order={1}
-            className="border-b lg:border-b-0 lg:border-r border-zinc-800 p-8 flex flex-col justify-between uppercase"
+            className="warranty-row-divider lg:border-r border-zinc-400 p-8 flex flex-col justify-between uppercase"
           >
             <div style={{ margin: "5%" }}>
-              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
+              <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
                 Bảo Hành
               </h2>
 
               <ul className="space-y-5">
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Bảo hành sửa chữa miễn phí 12 tháng về việc rớt đá,
                   hay bất kì lỗi nào thuộc về kĩ thuật gia công.
                 </li>
 
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Bảo hành đánh bóng và làm sáng trọn đời.
                 </li>
 
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Bảo hành lớp xi:
                   miễn phí xi bạch kim 1 lần lại cho khách hàng.
@@ -109,25 +109,25 @@ export default function WarrantyPage() {
                 </li>
               </ul>
 
-              <h3 className="text-4xl md:text-5xl font-bold uppercase mb-8"
+              <h3 className="text-2xl md:text-3xl font-bold uppercase mb-8"
                 style={{ fontFamily: "var(--font-display)", marginTop: "10%" }}>
                 Warranty Policy
               </h3>
 
               <ul className="space-y-5">
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Free repair warranty for 12 months covering stone loss
                   or any defects caused by manufacturing workmanship.
                 </li>
 
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Lifetime free polishing and shining warranty.
                 </li>
 
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Plating warranty: one-time free platinum plating service
                   for customer. For subsequent requests, a fee of
                   150,000 VND per service will apply.
@@ -139,24 +139,24 @@ export default function WarrantyPage() {
           {/* Storage */}
           <RevealBlock order={2} className="p-8 flex flex-col justify-between uppercase">
             <div style={{ margin: "5%" }}>
-              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wide mb-8"
+              <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-8"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
                 Bảo Quản
               </h2>
 
               <ul className="space-y-5">
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Hạn chế tiếp xúc với hóa chất. Tránh để trang sức
                   tiếp xúc với mỹ phẩm, nước hoa, keo xịt.
                 </li>
 
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Tháo ra khi chơi thể thao hoặc vận động.
                 </li>
 
-                <li className="text-[13px] text-white leading-relaxed font-light"
+                <li className="text-[15px] text-zinc-300 leading-relaxed font-bold normal-case"
                   style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
                   · Vệ sinh định kỳ: Có thể dùng nước ấm pha với một lượng
                   nhỏ kem đánh răng và dùng bàn chải mềm để làm sạch
@@ -164,27 +164,27 @@ export default function WarrantyPage() {
                 </li>
               </ul>
 
-              <h3 className="text-4xl md:text-5xl font-bold uppercase mb-8"
+              <h3 className="text-2xl md:text-3xl font-bold uppercase mb-8"
                 style={{ fontFamily: "var(--font-display)", marginTop: "10%" }}>
                 Storage
               </h3>
 
               <ul className="space-y-5">
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Avoid chemical exposure: keep jewelry away from
                   cosmetics, perfume, hairspray, hand sanitizers,
                   cleaning agents, and chlorine.
                 </li>
 
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Remove jewelry when playing sports or engaging in
                   vigorous activities.
                 </li>
 
-                <li className="text-[12px] text-white leading-relaxed font-light uppercase tracking-wide"
-                  style={{ fontFamily: "var(--font-montserrat)", padding: "2%" }}>
+                <li className="text-[12px] text-white leading-relaxed font-light normal-case tracking-wide"
+                  style={{ fontFamily: "var(--font-display)", padding: "2%" }}>
                   · Regular cleaning: Use warm water mixed with a small
                   amount of toothpaste and a soft brush to clean the jewelry.
                 </li>
@@ -197,7 +197,7 @@ export default function WarrantyPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="w-full border-x border-zinc-800 py-5 sm:py-6 md:py-7 lg:py-8 xl:py-10"
+          className="w-full border-x border-zinc-400 py-5 sm:py-6 md:py-7 lg:py-8 xl:py-10"
         >
           <div className="w-full mx-auto flex justify-center">
             <h1

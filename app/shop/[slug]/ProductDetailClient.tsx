@@ -121,7 +121,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
         }
           .product-detail {
           padding-top: 80px;
-          padding-bottom: 100px;
+          padding-bottom: 20px;
         }
 
         @media (min-width: 1024px) {
@@ -140,7 +140,7 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
           backgroundPosition: "top center",
         }}
       >
-        <div className="w-full flex flex-col items-center pb-40 md:pb-[150px] custom-padding">
+        <div className="w-full flex flex-col items-center pb-10 md:pb-[150px] custom-padding">
 
           {/* ─── 3-Column Product Core ─── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-1 mb-24 w-full px-4 md:px-8">

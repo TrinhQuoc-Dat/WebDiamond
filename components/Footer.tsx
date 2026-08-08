@@ -8,12 +8,87 @@ export default function Footer() {
     <footer className="w-full bg-white text-black border-t border-gray-200">
       <div
         className="w-full flex flex-col items-center"
-        style={{ paddingLeft: "5%", paddingRight: "5%", marginTop: "20px", paddingBottom: "20px" }}
+        style={{ paddingLeft: "5%", paddingRight: "5%", marginTop: "8px", paddingBottom: "20px" }}
       >
-        <div className="max-w-[1440px] w-full mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center md:items-stretch justify-between py-12 gap-12">
+        {/* ═══════════ MOBILE FOOTER ═══════════ */}
+        <div className="w-full md:hidden" style={{ maxWidth: "600px" }}>
+          <div className="flex items-stretch justify-between">
+            {/* ── LEFT: Logo + address + payment ── */}
+            <div className="flex flex-col" style={{ paddingRight: "16px", gap: "75px" }}>
+              {/* Text Logo */}
+              <TransitionLink href="/" className="hover:opacity-80 transition-opacity">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo_footer.png"
+                  alt="GODG1FT Jewelry"
+                  style={{ height: "35px", width: "auto" }}
+                />
+              </TransitionLink>
+
+              {/* Address + payment icons */}
+              <div>
+                <a
+                  href="https://maps.app.goo.gl/jNgH7UVCnZKR32UT8"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black/80 hover:text-black transition-colors duration-300 block"
+                  style={{ fontSize: "9px", lineHeight: 1.4, paddingBottom: "8px" }}
+                >
+                  192, Tran Quang Khai, Tan Dinh, D1, HCM
+                </a>
+                <div className="flex items-center" style={{ gap: "10px" }}>
+                  <a href="https://www.paypal.com/vn/home" target="_blank" rel="noreferrer" aria-label="PayPal">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/2-2-paypal-logo-transparent-png 1.svg" alt="PayPal" style={{ height: "16px", width: "auto" }} />
+                  </a>
+                  <a href="https://www.visa.com.vn/" target="_blank" rel="noreferrer" aria-label="Visa">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images (5) 1.svg" alt="Visa" style={{ height: "16px", width: "auto" }} />
+                  </a>
+                  <a href="https://www.apple.com/apple-pay/" target="_blank" rel="noreferrer" aria-label="Apple Pay">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/Apple_Pay_Acceptance_Mark.svg 1.svg" alt="Apple Pay" style={{ height: "16px", width: "auto" }} />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* ── RIGHT: Round logo + Instagram QR (to bằng nhau) ── */}
+            <div className="flex flex-col items-end" style={{ flexShrink: 0, gap: "0px", marginTop: "-8px" }}>
+              <a
+                href="/warrenty"
+                rel="noreferrer"
+                className="hover:scale-[1.03] transition-transform duration-300 block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/warranty-footer.png"
+                  alt="Logo — GODG1FT"
+                  style={{ width: "90px", height: "90px", objectFit: "contain" }}
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/godg1ft.jrl/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:scale-[1.03] transition-transform duration-300 block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/instagram.svg"
+                  alt="Instagram QR Code"
+                  style={{ width: "70px", height: "70px", objectFit: "contain" }}
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════════ DESKTOP FOOTER ═══════════ */}
+        <div className="max-w-[1440px] w-full mx-auto px-4 md:px-8 hidden md:flex flex-row items-stretch justify-between py-12 gap-12">
 
           {/* ── LEFT: Logo & Socials ── */}
-          <div className="flex flex-col items-center md:items-start justify-between gap-6 self-stretch">
+          <div className="flex flex-col items-start justify-between gap-6 self-stretch">
 
             {/* Logo */}
             <TransitionLink href="/" className="hover:opacity-80 transition-opacity">
@@ -21,11 +96,11 @@ export default function Footer() {
               <img
                 src="/logo_footer.png"
                 alt="GODG1FT Jewelry"
-                className="h-[45px] sm:h-[50px] lg:h-[55px] w-auto block"
+                className="h-[50px] lg:h-[55px] w-auto block"
               />
             </TransitionLink>
 
-            {/* Social Icons — PrimeIcons */}
+            {/* Address & payment */}
             <div>
               <div>
                 <a href="https://maps.app.goo.gl/jNgH7UVCnZKR32UT8" target="_blank" rel="noreferrer" className="text-black/80 hover:text-black transition-colors duration-300">
@@ -38,9 +113,10 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   className="text-black/40 hover:text-black transition-colors duration-300"
-                  aria-label="Facebook"
+                  aria-label="PayPal"
                 >
-                  <img src="/2-2-paypal-logo-transparent-png 1.svg" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/2-2-paypal-logo-transparent-png 1.svg" alt="PayPal" />
                 </a>
 
                 <a
@@ -48,9 +124,10 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   className="text-black/40 hover:text-black transition-colors duration-300"
-                  aria-label="YouTube"
+                  aria-label="Visa"
                 >
-                  <img src="/images (5) 1.svg" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images (5) 1.svg" alt="Visa" />
                 </a>
 
                 <a
@@ -58,9 +135,10 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   className="text-black/40 hover:text-black transition-colors duration-300"
-                  aria-label="Instagram"
+                  aria-label="Apple Pay"
                 >
-                  <img src="/Apple_Pay_Acceptance_Mark.svg 1.svg" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/Apple_Pay_Acceptance_Mark.svg 1.svg" alt="Apple Pay" />
                 </a>
               </div>
             </div>
@@ -74,10 +152,11 @@ export default function Footer() {
                 rel="noreferrer"
                 className="hover:scale-[1.03] transition-transform duration-300 block"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/warranty-footer.png"
                   alt="Logo — GODG1FT"
-                  className="w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px] object-contain"
+                  className="w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] object-contain"
                 />
               </a>
             </div>
@@ -94,7 +173,7 @@ export default function Footer() {
                 <img
                   src="/instagram.svg"
                   alt="Instagram QR Code — GODG1FT"
-                  className="w-[130px] h-[130px] sm:w-[160px] sm:h-[160px] lg:w-[180px] lg:h-[180px] object-contain"
+                  className="w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] object-contain"
                 />
               </a>
 
