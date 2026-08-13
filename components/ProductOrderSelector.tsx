@@ -180,10 +180,10 @@ export default function ProductOrderSelector({
       </div>
 
       {/* BACK BUTTON */}
-      <div className="absolute bottom-0 right-0 lg:flex justify-end hidden">
+      <div className="absolute bottom-[10%] right-[20%] lg:flex justify-end hidden">
         <Link
           href="/shop"
-          className="text-[18px] md:text-[22px] tracking-[0.1em] font-black uppercase text-white hover:text-white/70 transition-colors duration-200 block"
+          className="text-[32px] tracking-[0.1em] font-black uppercase text-white hover:text-white/70 transition-colors duration-200 block"
           style={{ fontFamily: "var(--font-display)" }}
         >
           BACK
