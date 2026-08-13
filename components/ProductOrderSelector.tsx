@@ -29,12 +29,12 @@ export default function ProductOrderSelector({
   const [openGuide, setOpenGuide] = useState(false);
   const [selectedStone, setSelectedStone] = useState<"CZ" | "MOIS">("CZ");
   return (
-    <div className="lg:col-span-4 flex flex-col gap-2 lg:pl-2 order-3 lg:order-none w-full relative h-full">
+    <div className="lg:col-span-4 flex flex-col gap-0 lg:pl-2 order-3 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
       <div className="flex items-center gap-4">
         <span
-          className="text-[22px] font-bold text-white"
+          className="text-[20px] md:text-[24px] font-bold text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Stone
@@ -58,7 +58,7 @@ export default function ProductOrderSelector({
 
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
-        <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+        <span className="text-[20px] md:text-[24px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
           Colour:
         </span>
         <div className="flex items-center gap-4">
@@ -96,7 +96,7 @@ export default function ProductOrderSelector({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={isGold ? "/yellow.jpeg" : "/gray.jpeg"}
+                  src={isGold ? "/yellow.svg" : "/gray.svg"}
                   alt={color.name}
                   className="w-12 h-12 object-contain mix-blend-screen transition-all duration-300"
                   style={{
@@ -116,7 +116,7 @@ export default function ProductOrderSelector({
       {/* Size Select */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-4">
-          <span className="text-[22px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+          <span className="text-[20px] md:text-[24px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
             Size:
           </span>
           <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export default function ProductOrderSelector({
       <div>
         <button
           onClick={() => setOpenGuide(true)}
-          className="text-[22px] font-bold text-white hover:text-white/80"
+          className="text-[20px] md:text-[24px] font-bold text-white hover:text-white/80"
         >
           Size Guide
         </button>
@@ -159,7 +159,7 @@ export default function ProductOrderSelector({
       {/* Price Tag */}
       <div className="flex flex-col gap-1 mt-20">
         <span
-          className="text-[22px] md:text-[22px] lg:text-[28px] font-black tracking-widest text-white whitespace-nowrap"
+          className="text-[20px] md:text-[24px] lg:text-[28px] font-black tracking-widest text-white whitespace-nowrap"
           style={{ fontFamily: "var(--font-display)", margin: "20px 0" }}
         >
           {formatThousands(product.price)}
@@ -167,7 +167,7 @@ export default function ProductOrderSelector({
       </div>
 
       {/* Add to Bag Button — links to Instagram DM */}
-      <div className="flex flex-col gap-4">
+      <div className="hidden lg:flex flex-col gap-4">
         <a
           href="https://www.instagram.com/godg1ft.jrl/"
           target="_blank"
