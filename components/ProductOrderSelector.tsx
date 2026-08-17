@@ -29,12 +29,12 @@ export default function ProductOrderSelector({
   const [openGuide, setOpenGuide] = useState(false);
   const [selectedStone, setSelectedStone] = useState<"CZ" | "MOIS">("CZ");
   return (
-    <div className="lg:col-span-4 flex flex-col gap-0 lg:pl-2 order-3 lg:order-none w-full relative h-full">
+    <div className="lg:col-span-3 flex flex-col gap-0 lg:pl-2 order-3 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
       <div className="flex items-center gap-4">
         <span
-          className="text-[20px] md:text-[24px] font-bold text-white"
+          className="text-[20px] font-bold text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Stone
@@ -58,7 +58,7 @@ export default function ProductOrderSelector({
 
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
-        <span className="text-[20px] md:text-[24px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+        <span className="text-[20px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
           Colour:
         </span>
         <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export default function ProductOrderSelector({
       {/* Size Select */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-4">
-          <span className="text-[20px] md:text-[24px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+          <span className="text-[20px] font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
             Size:
           </span>
           <div className="flex items-center gap-2">
@@ -141,10 +141,10 @@ export default function ProductOrderSelector({
       </div>
 
       {/* Size Guide — standalone để hưởng gap-8 từ parent */}
-      <div>
+      <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => setOpenGuide(true)}
-          className="text-[20px] md:text-[24px] font-bold text-white hover:text-white/80"
+          className="text-[20px] font-bold text-white hover:text-white/80]"
         >
           Size Guide
         </button>
@@ -159,7 +159,7 @@ export default function ProductOrderSelector({
       {/* Price Tag */}
       <div className="flex flex-col gap-1 mt-20">
         <span
-          className="text-[20px] md:text-[24px] lg:text-[28px] font-black tracking-widest text-white whitespace-nowrap"
+          className="text-[24px] font-black tracking-widest text-white whitespace-nowrap"
           style={{ fontFamily: "var(--font-display)", margin: "20px 0" }}
         >
           {formatThousands(product.price)}
@@ -172,7 +172,7 @@ export default function ProductOrderSelector({
           href="https://www.instagram.com/godg1ft.jrl/"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full py-2 flex items-center justify-start gap-3 text-[39px] lg:text-[45px] tracking-[0.05em] font-bold text-white hover:text-white/70 uppercase transition-all duration-300"
+          className="w-full py-2 flex items-center justify-start gap-3 text-[39px] tracking-[0.05em] font-bold text-white hover:text-white/70 uppercase transition-all duration-300"
           style={{ fontFamily: "var(--font-display)", textDecoration: "none", background: "none" }}
         >
           ADD TO BAG
@@ -180,7 +180,7 @@ export default function ProductOrderSelector({
       </div>
 
       {/* BACK BUTTON */}
-      <div className="absolute bottom-[10%] right-[20%] lg:flex justify-end hidden">
+      <div className="absolute bottom-[10%] right-[0%] lg:flex justify-end hidden back-right">
         <Link
           href="/shop"
           className="text-[32px] tracking-[0.1em] font-black uppercase text-white hover:text-white/70 transition-colors duration-200 block"

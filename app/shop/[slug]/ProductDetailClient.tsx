@@ -110,14 +110,22 @@ export default function ProductDetailClient({ slug, initialProduct }: Props) {
     <>
       <style>{`
         .custom-padding {
-          padding-left: 5%;
-          padding-right: 5%;
+          padding-left: 2%;
+          padding-right: 2%;
         }
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
           .custom-padding {
-            padding-right: 3%;
+            padding-left: 5%;
+          padding-right: 5%;
           }
         }
+          @media (min-width: 1920px) {
+          .back-right {
+            right: 20%;
+          }
+        }
+
+       
           .product-detail {
           padding-top: 80px;
           padding-bottom: 20px;

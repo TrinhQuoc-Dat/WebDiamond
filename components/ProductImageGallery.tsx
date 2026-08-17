@@ -38,7 +38,7 @@ export default function ProductImageGallery({
   };
 
   return (
-    <div className="lg:col-span-4 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
+    <div className="lg:col-span-5 flex flex-col items-center gap-6 lg:gap-12 relative order-1 lg:order-none w-full">
       <div
         className="w-full flex flex-col items-center lg:-translate-y-[48px]"
         style={{ paddingLeft: "5%", paddingRight: "5%", gap: "1rem" }}
