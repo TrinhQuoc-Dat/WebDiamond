@@ -9,6 +9,15 @@ class ColorDto {
   @IsString() hex: string;
 }
 
+class MaterialPriceDto {
+  @IsOptional() @IsString() price?: string;
+}
+
+class MaterialPricesDto {
+  @IsOptional() @ValidateNested() @Type(() => MaterialPriceDto) cz?: MaterialPriceDto;
+  @IsOptional() @ValidateNested() @Type(() => MaterialPriceDto) mois?: MaterialPriceDto;
+}
+
 export class CreateProductDto {
   @IsString() slug: string;
   @IsString() name: string;
@@ -22,6 +31,7 @@ export class CreateProductDto {
   @IsOptional() @IsString() spec?: string;
   @IsOptional() @IsArray() @ValidateNested({ each: true }) @Type(() => ColorDto) colors?: ColorDto[];
   @IsOptional() @IsArray() @IsString({ each: true }) sizes?: string[];
+  @IsOptional() @ValidateNested() @Type(() => MaterialPricesDto) materialPrices?: MaterialPricesDto;
   @IsOptional() @IsString() style?: string;
   @IsOptional() @IsString() collection?: string;
   @IsOptional() @IsBoolean() featured?: boolean;

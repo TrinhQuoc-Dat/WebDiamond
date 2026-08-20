@@ -11,6 +11,19 @@ export class ProductColor {
 }
 const ProductColorSchema = SchemaFactory.createForClass(ProductColor);
 
+@Schema({ _id: false })
+export class MaterialPrice {
+  @Prop({ default: '' }) price: string;
+}
+const MaterialPriceSchema = SchemaFactory.createForClass(MaterialPrice);
+
+@Schema({ _id: false })
+export class MaterialPrices {
+  @Prop({ type: MaterialPriceSchema, default: null }) cz: MaterialPrice | null;
+  @Prop({ type: MaterialPriceSchema, default: null }) mois: MaterialPrice | null;
+}
+const MaterialPricesSchema = SchemaFactory.createForClass(MaterialPrices);
+
 @Schema({
   timestamps: true,
   suppressReservedKeysWarning: true,
@@ -32,6 +45,7 @@ export class Product {
   @Prop({ default: '' }) spec: string;
   @Prop({ type: [ProductColorSchema], default: [] }) colors: ProductColor[];
   @Prop({ type: [String], default: [] }) sizes: string[];
+  @Prop({ type: MaterialPricesSchema, default: null }) materialPrices: MaterialPrices | null;
   @Prop({ default: '' }) style: string;
   @Prop({ default: '' }) collection: string;
   @Prop({ default: false, index: true }) featured: boolean;

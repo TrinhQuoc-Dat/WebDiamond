@@ -1,3 +1,7 @@
+export interface MaterialPrice {
+  price: string;
+}
+
 export interface Product {
   slug: string;
   name: string;
@@ -10,6 +14,11 @@ export interface Product {
   spec: string;
   colors: { id: string; name: string; hex: string }[];
   sizes: string[];
+  materialPrices?: {
+    cz?: MaterialPrice;
+    mois?: MaterialPrice;
+  };
 }
+
 
 export const products: Product[] = [];

@@ -19,16 +19,18 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isCustom = pathname === "/custom";
+
+  // Ẩn header trên tất cả trang admin
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
 
-        {/* ── LỚP NỀN (BACKGROUND LAYER) ── 
-            Tách riêng lớp nền ra để maskImage và blur không ảnh hưởng tới dropdown menu 
-        */}
+        {/* ── LỚP NỀN blur/gradient — desktop mọi trang + mobile các trang khác ── */}
         <div
-          className="absolute inset-0 pointer-events-none -z-10"
+          className={`absolute inset-0 pointer-events-none -z-10 ${isCustom ? "hidden md:block" : ""}`}
           style={{
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
@@ -40,6 +42,11 @@ export default function Header() {
               "linear-gradient(to bottom, black 55%, transparent 100%)",
           }}
         />
+
+        {/* ── LỚP NỀN đen solid — chỉ mobile trang /custom ── */}
+        {isCustom && (
+          <div className="md:hidden absolute inset-0 pointer-events-none -z-10 bg-black" />
+        )}
 
         {/* ── NỘI DUNG HEADER ── */}
         <div
@@ -61,7 +68,7 @@ export default function Header() {
             />
           </TransitionLink>
 
-          {/* Hamburger Menu — chỉ hiện ở các trang con */}
+          {/* Hamburger Menu — chỉ hiện ở các trang con (không phải trang chủ) */}
           {!isHome && (
             <div className="relative">
               <button
@@ -77,42 +84,92 @@ export default function Header() {
 
               <AnimatePresence>
                 {menuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-full mt-2 w-48 bg-black/90 backdrop-blur-md border border-white/10 rounded-sm overflow-hidden z-50"
-                  >
-                    {menuItems.map((item) => (
-                      <TransitionLink
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMenuOpen(false)}
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          display: "block",
-                          padding: "12px 20px",
-                          fontSize: "12px",
-                          letterSpacing: "0.2em",
-                          textTransform: "uppercase",
-                          color: "rgba(255,255,255,0.7)",
-                          borderBottom: "1px solid rgba(255,255,255,0.05)",
-                          transition: "all 0.2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "white";
-                          e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "rgba(255,255,255,0.7)";
-                          e.currentTarget.style.background = "transparent";
-                        }}
+                  <>
+                    {/* Overlay trong suốt — bấm ra ngoài để đóng */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setMenuOpen(false)}
+                    />
+
+                    {/* Mobile /custom: full-width đen, dính liền ngay dưới header (không gap) */}
+                    {isCustom && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden fixed left-0 right-0 bg-black z-50"
+                        style={{ top: '60px' }}
                       >
-                        {item.label}
-                      </TransitionLink>
-                    ))}
-                  </motion.div>
+                        {menuItems.map((item) => (
+                          <TransitionLink
+                            key={`mobile-custom-${item.href}`}
+                            href={item.href}
+                            onClick={() => setMenuOpen(false)}
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              display: "block",
+                              padding: "14px 24px",
+                              fontSize: "12px",
+                              letterSpacing: "0.2em",
+                              textTransform: "uppercase",
+                              color: "rgba(255,255,255,0.7)",
+                              borderBottom: "1px solid rgba(255,255,255,0.08)",
+                              transition: "all 0.2s",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = "white";
+                              e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = "rgba(255,255,255,0.7)";
+                              e.currentTarget.style.background = "transparent";
+                            }}
+                          >
+                            {item.label}
+                          </TransitionLink>
+                        ))}
+                      </motion.div>
+                    )}
+
+                    {/* Desktop /custom + tất cả trang khác: dropdown bình thường */}
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className={`absolute right-0 top-full mt-2 w-48 bg-black/90 backdrop-blur-md border border-white/10 rounded-sm overflow-hidden z-50 ${isCustom ? "hidden md:block" : ""}`}
+                    >
+                      {menuItems.map((item) => (
+                        <TransitionLink
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMenuOpen(false)}
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            display: "block",
+                            padding: "12px 20px",
+                            fontSize: "12px",
+                            letterSpacing: "0.2em",
+                            textTransform: "uppercase",
+                            color: "rgba(255,255,255,0.7)",
+                            borderBottom: "1px solid rgba(255,255,255,0.05)",
+                            transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = "white";
+                            e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = "rgba(255,255,255,0.7)";
+                            e.currentTarget.style.background = "transparent";
+                          }}
+                        >
+                          {item.label}
+                        </TransitionLink>
+                      ))}
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </div>

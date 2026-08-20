@@ -27,34 +27,53 @@ export default function ProductOrderSelector({
 }: ProductOrderSelectorProps) {
 
   const [openGuide, setOpenGuide] = useState(false);
-  const [selectedStone, setSelectedStone] = useState<"CZ" | "MOIS">("CZ");
+
+  // Lấy các chất liệu có giá từ materialPrices
+  const availableMaterials = (
+    [
+      { key: "cz",   label: "CZ"   },
+      { key: "mois", label: "MOIS" },
+    ] as const
+  ).filter(({ key }) => !!product.materialPrices?.[key]?.price);
+
+  const [selectedMaterial, setSelectedMaterial] = useState<"cz" | "mois">(
+    availableMaterials[0]?.key ?? "cz"
+  );
+
+  // Giá hiển thị: lấy từ chất liệu đang chọn nếu có, không thì fallback về product.price
+  const displayPrice = availableMaterials.length > 0
+    ? (product.materialPrices?.[selectedMaterial]?.price || product.price)
+    : product.price;
   return (
     <div className="lg:col-span-3 flex flex-col gap-0 lg:pl-2 order-3 lg:order-none w-full relative h-full">
       {/* Explicit spacer to push text down on desktop */}
       <div className="hidden lg:block h-[50px] w-full shrink-0" />
-      <div className="flex items-center gap-4">
-        <span
-          className="text-[20px] font-bold text-white"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Stone
-        </span>
-
-        <div className="flex gap-2">
-          {["CZ", "MOIS"].map((stone) => (
-            <button
-              key={stone}
-              onClick={() => setSelectedStone(stone as "CZ" | "MOIS")}
-              className={`px-4 py-2 border transition-all duration-300 font-bold ${selectedStone === stone
-                ? "bg-white text-black border-white"
-                : "bg-transparent text-white border-zinc-600 hover:border-white"
+      {/* Stone / Material selector — chỉ hiện nếu có materialPrices */}
+      {availableMaterials.length > 0 && (
+        <div className="flex items-center gap-4">
+          <span
+            className="text-[20px] font-bold text-white"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Stone
+          </span>
+          <div className="flex gap-2">
+            {availableMaterials.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setSelectedMaterial(key)}
+                className={`px-4 py-2 border transition-all duration-300 font-bold ${
+                  selectedMaterial === key
+                    ? "bg-white text-black border-white"
+                    : "bg-transparent text-white border-zinc-600 hover:border-white"
                 }`}
-            >
-              {stone}
-            </button>
-          ))}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Colour Select */}
       <div className="flex flex-row items-center gap-4">
@@ -162,7 +181,7 @@ export default function ProductOrderSelector({
           className="text-[24px] font-black tracking-widest text-white whitespace-nowrap"
           style={{ fontFamily: "var(--font-display)", margin: "20px 0" }}
         >
-          {formatThousands(product.price)}
+          {formatThousands(displayPrice)}
         </span>
       </div>
 

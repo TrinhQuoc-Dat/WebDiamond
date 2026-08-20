@@ -6,7 +6,7 @@ import {
   Tag, Link2, LayoutGrid, DollarSign, Bookmark,
   ImagePlus, Upload, X, Trash2, Plus,
   Palette, Ruler, FileText, Info, Loader2, Images,
-  PenLine, Sparkles,
+  PenLine, Sparkles, Gem,
 } from "lucide-react";
 
 import { formatThousands } from "@/utils/formatPrice";
@@ -41,7 +41,6 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("NECKLACE");
-  const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [tag, setTag] = useState<string>("");
   const [spec, setSpec] = useState("");
@@ -57,12 +56,15 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
   const [selectedColors, setSelectedColors] = useState<{ id: string; name: string; hex: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
+  // Material prices: CZ / MOIS
+  const [czPrice, setCzPrice] = useState("");
+  const [moisPrice, setMoisPrice] = useState("");
+
   useEffect(() => {
     if (initialProduct) {
       setName(initialProduct.name);
       setSlug(initialProduct.slug);
       setCategory(initialProduct.category);
-      setPrice(formatThousands(initialProduct.price));
       setImage(initialProduct.image);
       setTag(initialProduct.tag || "");
       setSpec(initialProduct.spec || "");
@@ -71,11 +73,14 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
       setSelectedSizes(initialProduct.sizes || []);
       setAdditionalImages(initialProduct.images || [initialProduct.image]);
       setUploadedFileName("");
+      setCzPrice(initialProduct.materialPrices?.cz?.price || "");
+      setMoisPrice(initialProduct.materialPrices?.mois?.price || "");
     } else {
-      setName(""); setSlug(""); setCategory("NECKLACE"); setPrice("");
+      setName(""); setSlug(""); setCategory("NECKLACE");
       setImage(""); setTag(""); setSpec(""); setDescPoints([""]);
       setSelectedColors([]); setSelectedSizes([]);
       setUploadedFileName(""); setAdditionalImages([]);
+      setCzPrice(""); setMoisPrice("");
     }
   }, [initialProduct]);
 
@@ -155,15 +160,23 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
     e.preventDefault();
     if (!name.trim()) return alert("Vui lòng nhập tên sản phẩm");
     if (!slug.trim()) return alert("Vui lòng nhập slug");
-    if (!price.trim()) return alert("Vui lòng nhập giá sản phẩm");
     if (!image.trim()) return alert("Vui lòng nhập/chọn ảnh sản phẩm");
+
+    const materialPrices: AdminProduct["materialPrices"] = {};
+    if (czPrice.trim())   materialPrices.cz   = { price: czPrice.trim() };
+    if (moisPrice.trim()) materialPrices.mois = { price: moisPrice.trim() };
+
+    // Giá chính = CZ nếu có, không thì MOIS, không thì rỗng
+    const derivedPrice = czPrice.trim() || moisPrice.trim() || "";
+
     onSubmit({
       slug: slug.trim(), name: name.trim().toUpperCase(), category,
-      price: price.trim(), image: image.trim(),
+      price: derivedPrice, image: image.trim(),
       images: additionalImages.length > 0 ? additionalImages : [image.trim()],
       tag: tag || null, description: descPoints.filter((pt) => pt.trim() !== ""),
       spec: spec.trim(), colors: selectedColors, sizes: selectedSizes,
       hidden: initialProduct ? initialProduct.hidden : false,
+      materialPrices: Object.keys(materialPrices).length > 0 ? materialPrices : undefined,
     });
   };
 
@@ -231,14 +244,10 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             <div>
               <label className={labelCls} style={{ marginBottom: 10, display: 'flex' }}><LayoutGrid size={13} /> Danh mục <span style={{ color: '#D4AF37' }}>*</span></label>
               <Dropdown value={category} options={CATEGORIES} onChange={(e) => setCategory(e.value)} style={primeDropdownStyle} panelClassName="dark-dropdown-panel" />
-            </div>
-            <div>
-              <label className={labelCls} style={{ marginBottom: 10, display: 'flex' }}><DollarSign size={13} /> Giá bán <span style={{ color: '#D4AF37' }}>*</span></label>
-              <InputText value={price} onChange={(e) => setPrice(formatThousands(e.target.value))} placeholder="50.000.000 VNĐ" style={primeInputStyle} required />
             </div>
             <div>
               <label className={labelCls} style={{ marginBottom: 10, display: 'flex' }}><Bookmark size={13} /> Nhãn (Tag)</label>
@@ -392,7 +401,43 @@ export default function ProductForm({ initialProduct, onSubmit, onCancel }: Prod
         </div>
       </div>
 
-      {/* ═══════ 5. MÔ TẢ ═══════ */}
+      {/* ═══════ 5. CHẤT LIỆU & GIÁ ═══════ */}
+      <div className={sectionCls}>
+        <SectionHead icon={<Gem size={16} />} title="Chất liệu & Giá theo loại" />
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {([
+            { key: 'cz',   label: 'CZ',   value: czPrice,   set: setCzPrice,   color: '#60A5FA' },
+            { key: 'mois', label: 'MOIS', value: moisPrice, set: setMoisPrice, color: '#34D399' },
+          ] as const).map(({ key, label, value, set, color }) => (
+            <div key={key} style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: 14, alignItems: 'center', padding: '16px 20px', background: '#0A0A0C', border: '1px solid #1C1C1E', borderRadius: 14 }}>
+              {/* Badge tên chất liệu */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: color, flexShrink: 0, boxShadow: `0 0 8px ${color}80` }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: color, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</span>
+              </div>
+              {/* Giá bán */}
+              <div>
+                <label className={labelCls} style={{ marginBottom: 8, display: 'flex', fontSize: 10 }}>
+                  <DollarSign size={11} /> Giá bán
+                </label>
+                <InputText
+                  value={value}
+                  onChange={(e) => set(formatThousands(e.target.value))}
+                  placeholder="VD: 15.000.000"
+                  style={{ ...primeInputStyle, height: 44, fontSize: 12 }}
+                />
+              </div>
+            </div>
+          ))}
+
+          <p style={{ fontSize: 10, color: '#555', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Info size={10} /> Để trống nếu sản phẩm không có loại chất liệu tương ứng. Giá 1 / Giá 2 là 2 mức giá cho mỗi loại đá.
+          </p>
+        </div>
+      </div>
+
+      {/* ═══════ 6. MÔ TẢ ═══════ */}
       <div className={sectionCls}>
         <SectionHead icon={<FileText size={16} />} title="Mô tả sản phẩm" />
 
